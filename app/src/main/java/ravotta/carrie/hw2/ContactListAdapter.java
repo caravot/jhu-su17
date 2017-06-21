@@ -10,14 +10,14 @@ import java.util.Collections;
 import java.util.List;
 
 // an adapter for a RecyclerView to manage TodoItem objects
-public class _TodoListAdapter extends RecyclerView.Adapter<_TodoListAdapter.TodoViewHolder> {
+public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ContactViewHolder> {
 	// the real list of TodoItems that we're adapting
-	private List<TodoItem> items;
+	private List<Contact> items;
 
 	// the activity's layout inflater, needed to create instances of the row views
 	private LayoutInflater layoutInflater;
 
-	public _TodoListAdapter(LayoutInflater layoutInflater, List<TodoItem> items) {
+	public ContactListAdapter(LayoutInflater layoutInflater, List<Contact> items) {
 		this.layoutInflater = layoutInflater;
 		this.items = items;
 	}
@@ -34,24 +34,23 @@ public class _TodoListAdapter extends RecyclerView.Adapter<_TodoListAdapter.Todo
 
 	// create a ViewHolder that contains a view of the specified type
 	@Override
-	public TodoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View view = layoutInflater.inflate(R.layout.item, parent, false);
-		return new TodoViewHolder(view);
+	public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View view = layoutInflater.inflate(R.layout.contact, parent, false);
+		return new ContactViewHolder(view);
 	}
 
 	// fill the data into the view for the specified row
 	@Override
-	public void onBindViewHolder(TodoViewHolder holder, int position) {
-		final TodoItem todoItem = items.get(position);
+	public void onBindViewHolder(ContactViewHolder holder, int position) {
+		final Contact contact = items.get(position);
 //		holder.view.setBackgroundColor(position % 2 == 0 ? Color.LTGRAY : Color.WHITE);
-		holder.name.setText(todoItem.getName());
-		holder.priority.setText(String.valueOf(todoItem.getPriority()));
+		holder.first_name.setText(contact.getFirst_name());
 
 		// listen to the overall view for clicks - if clicked, notify
 		//   the listener so it can navigate
 		holder.view.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
-				todoListListener.itemSelected(todoItem);
+				contactListListener.itemSelected(contact);
 			}});
 	}
 
@@ -97,24 +96,25 @@ public class _TodoListAdapter extends RecyclerView.Adapter<_TodoListAdapter.Todo
 	// a data object that represents a currently-visible row in the recycler view
 	// typically this is used to look up the locations of subviews _once_ and hold
 	//   onto those view so
-	public static class TodoViewHolder extends RecyclerView.ViewHolder {
-		private TextView name;
-		private TextView priority;
+	public static class ContactViewHolder extends RecyclerView.ViewHolder {
+		private TextView first_name;
+		private TextView last_name;
 		private View view;
-		public TodoViewHolder(View view) {
+
+		public ContactViewHolder(View view) {
 			super(view);
 			this.view = view;
-			name = (TextView) view.findViewById(R.id.name);
-			priority = (TextView) view.findViewById(R.id.priority);
+			first_name = (TextView) view.findViewById(R.id.first_name);
+			last_name = (TextView) view.findViewById(R.id.last_name);
 		}
 	}
 
 	// lookup a to-do item by name and replace it in the list
-	public void update(TodoItem todoItem) {
+	public void update(Contact contact) {
 		for(int i = 0; i < items.size(); i++) {
-			TodoItem item = items.get(i);
-			if (item.getName().equals(todoItem.getName())) {
-				items.set(i, todoItem);
+			Contact contactItem = items.get(i);
+			if (contactItem.getFirst_name().equals(contactItem.getFirst_name())) {
+				items.set(i, contactItem);
 				notifyItemChanged(i);
 				break;
 			}
@@ -122,13 +122,13 @@ public class _TodoListAdapter extends RecyclerView.Adapter<_TodoListAdapter.Todo
 	}
 
 	// define a listener interface that we can call to indicate that an item has been clicked
-	private TodoListListener todoListListener;
+	private ContactListListener contactListListener;
 
-	public void setTodoListListener(TodoListListener todoListListener) {
-		this.todoListListener = todoListListener;
+	public void setContactListListener(ContactListListener contactListListener) {
+		this.contactListListener = contactListListener;
 	}
 
-	public interface TodoListListener {
-		void itemSelected(TodoItem todoItem);
+	public interface ContactListListener {
+		void itemSelected(Contact contact);
 	}
 }

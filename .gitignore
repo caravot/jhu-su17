@@ -3,8 +3,9 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+.idea
 .DS_Store
 /build
 /captures
 .externalNativeBuild
-./app/src/main/java/*/_*.java
+app/src/main/java/**/_*.java
