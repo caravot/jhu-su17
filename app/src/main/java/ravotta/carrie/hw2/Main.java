@@ -3,10 +3,13 @@ package ravotta.carrie.hw2;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,9 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contact_list);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         // get the recycler view
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -35,7 +41,13 @@ public class Main extends AppCompatActivity {
         items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
         items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
         items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        System.out.println(items.size());
+        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
+        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
+        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
+        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
+        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
+        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
+
         // wrap the data in our adapter to use as a model for the recycler view
         adapter = new ContactListAdapter(getLayoutInflater(), items);
         recyclerView.setAdapter(adapter);
@@ -80,6 +92,21 @@ public class Main extends AppCompatActivity {
 
         // attach the swipe/gesture support to the recycler view
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        // NEW: Set up the Floating Action Button to act as "add new item"
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        assert fab != null;
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // create a new dummy item with a unique ID
+                // and send it to the edit activity
+                Contact contact = new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com");
+                Intent intent = new Intent(Main.this, EditContact.class);
+                intent.putExtra("item", contact);
+                startActivityForResult(intent, REQUEST_EDIT);
+            }
+        });
     }
 
     @Override
