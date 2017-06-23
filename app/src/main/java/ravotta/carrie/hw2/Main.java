@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -16,7 +17,8 @@ import java.util.List;
 
 public class Main extends AppCompatActivity {
     // request code for the startActivityForResult call
-    private static final int REQUEST_EDIT = 42;
+    private static final int REQUEST_EDIT = 1;
+    private static final int REQUEST_VIEW = 2;
 
     // our model for the RecyclerView
     private ContactListAdapter adapter;
@@ -34,19 +36,22 @@ public class Main extends AppCompatActivity {
 
         // create some dummy data
         List<Contact> items = new ArrayList<>();
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
-        items.add(new Contact("Carrie", "Ravotta", "222", "333", "c.r@gmail.com"));
+        items.add(new Contact("Carrie", "Ravotta", "222-222-2222", "333-333-3333", "c.r@gmail.com"));
+        items.add(new Contact("Abhinav", "Kumar", "555-555-5555", "111-111-1111", "a.k@gmail.com"));
+        items.add(new Contact("Andrew", "Doyle", "888-888-8888", "999-999-9999", "c.r@hotmail.com"));
+        items.add(new Contact("Cindy", "Naughton", "111-111-1111", "222-222-2222", "c.n@comcast.net"));
+        items.add(new Contact("Carrie", "Ravotta", "222-222-2222", "333-333-3333", "c.r@gmail.com"));
+        items.add(new Contact("Abhinav", "Kumar", "555-555-5555", "111-111-1111", "a.k@gmail.com"));
+        items.add(new Contact("Andrew", "Doyle", "888-888-8888", "999-999-9999", "c.r@hotmail.com"));
+        items.add(new Contact("Cindy", "Naughton", "111-111-1111", "222-222-2222", "c.n@comcast.net"));
+        items.add(new Contact("Carrie", "Ravotta", "222-222-2222", "333-333-3333", "c.r@gmail.com"));
+        items.add(new Contact("Abhinav", "Kumar", "555-555-5555", "111-111-1111", "a.k@gmail.com"));
+        items.add(new Contact("Andrew", "Doyle", "888-888-8888", "999-999-9999", "c.r@hotmail.com"));
+        items.add(new Contact("Cindy", "Naughton", "111-111-1111", "222-222-2222", "c.n@comcast.net"));
+        items.add(new Contact("Carrie", "Ravotta", "222-222-2222", "333-333-3333", "c.r@gmail.com"));
+        items.add(new Contact("Abhinav", "Kumar", "555-555-5555", "111-111-1111", "a.k@gmail.com"));
+        items.add(new Contact("Andrew", "Doyle", "888-888-8888", "999-999-9999", "c.r@hotmail.com"));
+        items.add(new Contact("Cindy", "Naughton", "111-111-1111", "222-222-2222", "c.n@comcast.net"));
 
         // wrap the data in our adapter to use as a model for the recycler view
         adapter = new ContactListAdapter(getLayoutInflater(), items);
@@ -59,10 +64,19 @@ public class Main extends AppCompatActivity {
         adapter.setContactListListener(new ContactListAdapter.ContactListListener() {
             @Override public void itemSelected(Contact contactItem) {
                 // if an item is selected, send the item in an intent to the EditActivity
-                Intent intent = new Intent(Main.this, EditContact.class);
+                Intent intent = new Intent(Main.this, ViewContact.class);
                 intent.putExtra("item", contactItem);
-                startActivityForResult(intent, REQUEST_EDIT);
+                startActivityForResult(intent, REQUEST_VIEW);
             }});
+
+        // listen to the adapter to find out when an item has been selected
+//        adapter.setContactListListener(new ContactListAdapter.ContactListListener() {
+//            @Override public void itemSelected(Contact contactItem) {
+//                // if an item is selected, send the item in an intent to the EditActivity
+//                Intent intent = new Intent(Main.this, EditContact.class);
+//                intent.putExtra("item", contactItem);
+//                startActivityForResult(intent, REQUEST_EDIT);
+//            }});
 
         // set up support for drag/swipe gestures
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(

@@ -6,23 +6,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.widget.TextView;
 
-public class EditContact extends AppCompatActivity {
-    private EditText first_name;
-    private EditText last_name;
+public class ViewContact extends AppCompatActivity {
+    private TextView first_name;
+    private TextView last_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.contact_edit);
+        setContentView(R.layout.contact_view);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_view);
         setSupportActionBar(toolbar);
 
         // find the fields for the data
-        first_name = (EditText) findViewById(R.id.first_name);
-        last_name = (EditText) findViewById(R.id.last_name);
+        first_name = (TextView) findViewById(R.id.first_name);
+        last_name = (TextView) findViewById(R.id.last_name);
 
         // fetch the parcelable to-do item from the incoming intent
         Contact contact = getIntent().getParcelableExtra("item");
@@ -56,8 +56,9 @@ public class EditContact extends AppCompatActivity {
     // set up the actions on the Toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        System.out.println("HELLO WORLD THIS IS CARRIE");
         // Inflate the menu; this adds items to the tool bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit, menu);
+        getMenuInflater().inflate(R.menu.menu_contact_view, menu);
         return true;
     }
 
