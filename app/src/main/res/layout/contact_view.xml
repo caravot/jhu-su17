@@ -41,7 +41,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="First Name" />
+                android:text="First Name"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
 
             <TextView
                 android:id="@+id/first_name"
@@ -52,7 +54,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last Name" />
+                android:text="Last Name"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
 
             <TextView
                 android:id="@+id/last_name"
@@ -63,7 +67,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home Phone" />
+                android:text="Home Phone"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
 
             <TextView
                 android:id="@+id/home_phone"
@@ -74,7 +80,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Work Phone" />
+                android:text="Work Phone"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
 
             <TextView
                 android:id="@+id/work_phone"
@@ -85,7 +93,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email Address" />
+                android:text="Email Address"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
 
             <TextView
                 android:id="@+id/email_address"

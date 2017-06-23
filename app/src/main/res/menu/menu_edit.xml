@@ -3,11 +3,6 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="ravotta.carrie.hw2.EditContact">
 	<item
-		android:id="@+id/action_email"
-		android:title="@string/done"
-		android:icon="@drawable/ic_check_white_24dp"
-		app:showAsAction="ifRoom"/>
-	<item
 		android:id="@+id/action_done"
 		android:title="@string/done"
 		android:icon="@drawable/ic_check_white_24dp"

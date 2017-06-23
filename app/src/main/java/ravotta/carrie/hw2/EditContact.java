@@ -11,6 +11,11 @@ import android.widget.EditText;
 public class EditContact extends AppCompatActivity {
     private EditText first_name;
     private EditText last_name;
+    private EditText home_phone;
+    private EditText work_phone;
+    private EditText email_address;
+    Contact contact;
+    private static final int REQUEST_EDIT = 42;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,20 +28,22 @@ public class EditContact extends AppCompatActivity {
         // find the fields for the data
         first_name = (EditText) findViewById(R.id.first_name);
         last_name = (EditText) findViewById(R.id.last_name);
+        home_phone = (EditText) findViewById(R.id.home_phone);
+        work_phone = (EditText) findViewById(R.id.work_phone);
+        email_address = (EditText) findViewById(R.id.email_address);
 
         // fetch the parcelable to-do item from the incoming intent
-        Contact contact = getIntent().getParcelableExtra("item");
+        contact = getIntent().getParcelableExtra("item");
 
         // put the data from the item in the fields
         first_name.setText(contact.getFirst_name());
         last_name.setText(contact.getLast_name());
+        home_phone.setText(contact.getHome_phone());
+        work_phone.setText(contact.getWork_phone());
+        email_address.setText(contact.getEmail_address());
     }
 
-    @Override
-    public void onBackPressed() {
-        // when the user presses "back", we use that as "save" for now
-        //   (we'll replace this with ActionBar buttons later)
-
+    public void saveAndReturnData() {
         // create an intent to return
         Intent returnData = new Intent();
 
@@ -44,13 +51,14 @@ public class EditContact extends AppCompatActivity {
         Contact contact = new Contact();
         contact.setFirst_name(first_name.getText().toString());
         contact.setLast_name(last_name.getText().toString());
+        contact.setLast_name(last_name.getText().toString());
+        contact.setHome_phone(home_phone.getText().toString());
+        contact.setWork_phone(work_phone.getText().toString());
+        contact.setEmail_address(email_address.getText().toString());
         returnData.putExtra("item", contact);
 
         // set the result to "ok" with the return data
         setResult(RESULT_OK, returnData);
-
-        // WARNING: the super call here MUST appear AFTER setResult
-        super.onBackPressed();
     }
 
     // set up the actions on the Toolbar
@@ -66,7 +74,7 @@ public class EditContact extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_done:
-                //saveAndReturnData();
+                saveAndReturnData();
                 finish();
                 return true;
             case R.id.action_cancel:
