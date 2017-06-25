@@ -1,6 +1,7 @@
 package com.javadude.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.net.Uri;
 
 public class ViewFragment extends Fragment {
     private long id; // NEW: hold the id of the todoItem being viewed
@@ -58,6 +60,15 @@ public class ViewFragment extends Fragment {
         email_address.setText(item.getEmail_address());
     }
 
+    public void emailContact() {
+        String name = todoItem.getFirst_name() + " " + todoItem.getLast_name();
+
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", todoItem.getEmail_address(), null));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Hi " + name + "!");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Just wanted to say hi....");
+        startActivity(emailIntent);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_view, menu);
@@ -67,17 +78,15 @@ public class ViewFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_email:
-                //setupData();
-                //if (onViewFragmentListener != null)
-                    //onViewFragmentListener.onViewFragmentDone(todoItem);
+                emailContact();
                 return true;
             case R.id.action_edit:
                 if (onViewFragmentListener != null)
                     onViewFragmentListener.onViewFragmentEdit(todoItem);
                 return true;
             case R.id.action_help:
-                //if (onViewFragmentListener != null)
-                    //onViewFragmentListener.onViewFragmentCancel(todoItem);
+                if (onViewFragmentListener != null)
+                    onViewFragmentListener.onViewFragmentAbout();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -115,5 +124,6 @@ public class ViewFragment extends Fragment {
 
     public interface OnViewFragmentListener {
         void onViewFragmentEdit(TodoItem todoItem);
+        void onViewFragmentAbout();
     }
 }

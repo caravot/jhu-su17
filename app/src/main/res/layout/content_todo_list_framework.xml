@@ -20,4 +20,9 @@
 		android:name="com.javadude.fragments.ViewFragment"
 		android:layout_width="match_parent"
 	    android:layout_height="match_parent"/>
+	<fragment
+		android:id="@+id/aboutFragment"
+		android:name="com.javadude.fragments.AboutFragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
 </FrameLayout>

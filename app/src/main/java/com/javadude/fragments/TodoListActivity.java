@@ -33,11 +33,6 @@ implements TodoListFragment.OnTodoListFragmentListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_todo_list);
 
-		// NEW: Setup the Toolbar - find it and use it like an ActionBar
-		//      We could alternatively directly inflate a menu into it and
-		//      set a listener to handle actions. If you only have a single
-		//      toolbar and it should be at the top of the activity, it's
-		//      simpler to use the standard ActionBar support
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
@@ -64,7 +59,6 @@ implements TodoListFragment.OnTodoListFragmentListener,
 		if (sideBySide) {
 			editFragment.setTodoItem(todoItem);
 		} else {
-			System.out.println("I AM HERE");
 			// if an item is selected, send the item in an intent to the EditActivity
 			Intent intent = new Intent(TodoListActivity.this, ViewActivity.class);
 			intent.putExtra("item", todoItem);

@@ -11,9 +11,9 @@ public class ViewActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("HERE WE ARE carrie");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -27,6 +27,11 @@ public class ViewActivity extends AppCompatActivity
         Intent returnData = new Intent();
         returnData.putExtra("item", todoItem);
         setResult(RESULT_OK, returnData);
+        finish();
+    }
+
+    @Override
+    public void onViewFragmentAbout() {
         finish();
     }
 

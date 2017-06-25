@@ -71,7 +71,6 @@ public class TodoListFragment extends Fragment {
 		// listen to the adapter to find out when an item has been selected
 		adapter.setTodoListListener(new TodoListAdapter.TodoListListener() {
 			@Override public void itemSelected(TodoItem todoItem) {
-                System.out.println("HERE22222");
 				if (onTodoListFragmentListener != null)
 					onTodoListFragmentListener.onTodoListFragmentItemSelected(todoItem);
 			}});
