@@ -111,8 +111,9 @@ public class TodoListFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				TodoItem todoItem = new TodoItem(nextId++, "", "", "", "", "");
-				if (onTodoListFragmentListener != null)
+				if (onTodoListFragmentListener != null) {
 					onTodoListFragmentListener.onTodoListFragmentCreateItem(todoItem);
+				}
 			}
 		});
 
