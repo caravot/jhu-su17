@@ -21,6 +21,7 @@ public class EditFragment extends Fragment {
 	private EditText last_name;
 	private EditText home_phone;
 	private EditText work_phone;
+	private EditText mobile_phone;
 	private EditText email_address;
 	private TodoItem todoItem;
 
@@ -41,6 +42,7 @@ public class EditFragment extends Fragment {
 		last_name = (EditText) view.findViewById(R.id.last_name);
 		home_phone = (EditText) view.findViewById(R.id.home_phone);
 		work_phone = (EditText) view.findViewById(R.id.work_phone);
+		mobile_phone = (EditText) view.findViewById(R.id.mobile_phone);
 		email_address = (EditText) view.findViewById(R.id.email_address);
 
 		//todoItem = getIntent().getParcelableExtra("item");
@@ -63,6 +65,7 @@ public class EditFragment extends Fragment {
 		last_name.setText(item.getLast_name());
 		home_phone.setText(item.getHome_phone());
 		work_phone.setText(item.getWork_phone());
+		mobile_phone.setText(item.getMobile_phone());
 		email_address.setText(item.getEmail_address());
 	}
 
@@ -98,6 +101,7 @@ public class EditFragment extends Fragment {
 		todoItem.setLast_name(last_name.getText().toString());
 		todoItem.setHome_phone(home_phone.getText().toString());
 		todoItem.setWork_phone(work_phone.getText().toString());
+		todoItem.setMobile_phone(mobile_phone.getText().toString());
 		todoItem.setEmail_address(email_address.getText().toString());
 	}
 

@@ -71,8 +71,6 @@ public class TodoListFrameworkActivity extends FragmentFrameworkActivity<TodoLis
 
 	@Override
 	protected void onStateChanged(State state, TodoItem todoItem) {
-        System.out.println(todoItem);
-        System.out.println(todoItem.getFirst_name());
 		if (todoItem != null) {
             editFragment.setTodoItem(todoItem);
             viewFragment.setTodoItem(todoItem);

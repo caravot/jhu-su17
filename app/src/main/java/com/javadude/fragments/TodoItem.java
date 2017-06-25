@@ -10,6 +10,7 @@ public class TodoItem implements Parcelable {
 	private String last_name;
 	private String home_phone;
 	private String work_phone;
+	private String mobile_phone;
 	private String email_address;
 
 	public TodoItem() {}
@@ -19,12 +20,14 @@ public class TodoItem implements Parcelable {
 					String last_name,
 					String home_phone,
 					String work_phone,
+					String mobile_phone,
 					String email_address) {
 		this.id = id;
 		this.first_name = first_name;
 		this.last_name = last_name;
 		this.home_phone = home_phone;
 		this.work_phone = work_phone;
+		this.mobile_phone = mobile_phone;
 		this.email_address = email_address;
 	}
 
@@ -60,6 +63,14 @@ public class TodoItem implements Parcelable {
 		this.work_phone = work_phone;
 	}
 
+	public String getMobile_phone() {
+		return mobile_phone;
+	}
+
+	public void setMobile_phone(String mobile_phone) {
+		this.mobile_phone = mobile_phone;
+	}
+
 	public String getEmail_address() {
 		return email_address;
 	}
@@ -93,6 +104,7 @@ public class TodoItem implements Parcelable {
 		dest.writeString(last_name);
 		dest.writeString(home_phone);
 		dest.writeString(work_phone);
+		dest.writeString(mobile_phone);
 		dest.writeString(email_address);
 	}
 
@@ -109,6 +121,7 @@ public class TodoItem implements Parcelable {
 			todoItem.setLast_name(source.readString());
 			todoItem.setHome_phone(source.readString());
 			todoItem.setWork_phone(source.readString());
+			todoItem.setMobile_phone(source.readString());
 			todoItem.setEmail_address(source.readString());
 			return todoItem;
 		}

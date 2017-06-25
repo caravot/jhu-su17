@@ -20,6 +20,7 @@ public class ViewFragment extends Fragment {
     private TextView last_name;
     private TextView home_phone;
     private TextView work_phone;
+    private TextView mobile_phone;
     private TextView email_address;
     private TodoItem todoItem;
 
@@ -40,6 +41,7 @@ public class ViewFragment extends Fragment {
         last_name = (TextView) view.findViewById(R.id.last_name);
         home_phone = (TextView) view.findViewById(R.id.home_phone);
         work_phone = (TextView) view.findViewById(R.id.work_phone);
+        mobile_phone = (TextView) view.findViewById(R.id.mobile_phone);
         email_address = (TextView) view.findViewById(R.id.email_address);
         return view;
     }
@@ -57,6 +59,7 @@ public class ViewFragment extends Fragment {
         last_name.setText(item.getLast_name());
         home_phone.setText(item.getHome_phone());
         work_phone.setText(item.getWork_phone());
+        mobile_phone.setText(item.getMobile_phone());
         email_address.setText(item.getEmail_address());
     }
 
@@ -100,9 +103,9 @@ public class ViewFragment extends Fragment {
         todoItem.setId(id);
         todoItem.setFirst_name(first_name.getText().toString());
         todoItem.setLast_name(last_name.getText().toString());
-        todoItem.setLast_name(last_name.getText().toString());
         todoItem.setHome_phone(home_phone.getText().toString());
         todoItem.setWork_phone(work_phone.getText().toString());
+        todoItem.setMobile_phone(mobile_phone.getText().toString());
         todoItem.setEmail_address(email_address.getText().toString());
     }
 

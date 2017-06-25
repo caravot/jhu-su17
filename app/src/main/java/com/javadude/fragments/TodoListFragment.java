@@ -40,26 +40,26 @@ public class TodoListFragment extends Fragment {
 
 		// create some dummy data
 		List<TodoItem> items = new ArrayList<>();
-		items.add(new TodoItem(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "c.r@gmail.com"));
-		items.add(new TodoItem(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "a.k@gmail.com"));
-		items.add(new TodoItem(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "c.r@hotmail.com"));
-		items.add(new TodoItem(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "c.n@comcast.net"));
-        items.add(new TodoItem(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "c.r@gmail.com"));
-        items.add(new TodoItem(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "a.k@gmail.com"));
-        items.add(new TodoItem(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "c.r@hotmail.com"));
-        items.add(new TodoItem(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "c.n@comcast.net"));
-        items.add(new TodoItem(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "c.r@gmail.com"));
-        items.add(new TodoItem(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "a.k@gmail.com"));
-        items.add(new TodoItem(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "c.r@hotmail.com"));
-        items.add(new TodoItem(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "c.n@comcast.net"));
-        items.add(new TodoItem(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "c.r@gmail.com"));
-        items.add(new TodoItem(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "a.k@gmail.com"));
-        items.add(new TodoItem(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "c.r@hotmail.com"));
-        items.add(new TodoItem(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "c.n@comcast.net"));
-        items.add(new TodoItem(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "c.r@gmail.com"));
-        items.add(new TodoItem(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "a.k@gmail.com"));
-        items.add(new TodoItem(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "c.r@hotmail.com"));
-        items.add(new TodoItem(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "c.n@comcast.net"));
+		items.add(new TodoItem(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
+		items.add(new TodoItem(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "444-999-0000", "a.k@gmail.com"));
+		items.add(new TodoItem(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "444-999-0000", "c.r@hotmail.com"));
+		items.add(new TodoItem(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "444-999-0000", "c.n@comcast.net"));
+        items.add(new TodoItem(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
+        items.add(new TodoItem(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "444-999-0000", "a.k@gmail.com"));
+        items.add(new TodoItem(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "444-999-0000", "c.r@hotmail.com"));
+        items.add(new TodoItem(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "444-999-0000", "c.n@comcast.net"));
+        items.add(new TodoItem(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
+        items.add(new TodoItem(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "444-999-0000", "a.k@gmail.com"));
+        items.add(new TodoItem(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "444-999-0000", "c.r@hotmail.com"));
+        items.add(new TodoItem(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "444-999-0000", "c.n@comcast.net"));
+        items.add(new TodoItem(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
+        items.add(new TodoItem(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "444-999-0000", "a.k@gmail.com"));
+        items.add(new TodoItem(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "444-999-0000", "c.r@hotmail.com"));
+        items.add(new TodoItem(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "444-999-0000", "c.n@comcast.net"));
+        items.add(new TodoItem(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
+        items.add(new TodoItem(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "444-999-0000", "a.k@gmail.com"));
+        items.add(new TodoItem(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "444-999-0000", "c.r@hotmail.com"));
+        items.add(new TodoItem(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "444-999-0000", "c.n@comcast.net"));
 
 		// wrap the data in our adapter to use as a model for the recycler view
 		adapter = new TodoListAdapter(getActivity().getLayoutInflater(), items);
@@ -110,7 +110,7 @@ public class TodoListFragment extends Fragment {
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				TodoItem todoItem = new TodoItem(nextId++, "", "", "", "", "");
+				TodoItem todoItem = new TodoItem(nextId++, "", "", "", "", "", "");
 				if (onTodoListFragmentListener != null) {
 					onTodoListFragmentListener.onTodoListFragmentCreateItem(todoItem);
 				}

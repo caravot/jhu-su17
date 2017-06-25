@@ -25,7 +25,6 @@ public class EditActivity extends AppCompatActivity
 	public void onEditFragmentDone(TodoItem todoItem) {
 		Intent returnData = new Intent();
 		returnData.putExtra("item", todoItem);
-		System.out.println("Carrie is: " + todoItem.getFirst_name());
 		setResult(RESULT_OK, returnData);
 		finish();
 	}
