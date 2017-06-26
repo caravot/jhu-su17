@@ -12,11 +12,13 @@
 	<LinearLayout
 		android:orientation="vertical"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:layout_margin="@dimen/text_margin">
 
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:textAppearance="@style/LabelTextStyle"
 			android:text="First Name" />
 
 		<EditText
@@ -27,6 +29,7 @@
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:textAppearance="@style/LabelTextStyle"
 			android:text="Last Name" />
 
 		<EditText
@@ -37,6 +40,7 @@
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:textAppearance="@style/LabelTextStyle"
 			android:text="Home Phone" />
 
 		<EditText
@@ -47,6 +51,7 @@
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:textAppearance="@style/LabelTextStyle"
 			android:text="Work Phone" />
 
 		<EditText
@@ -57,6 +62,7 @@
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:textAppearance="@style/LabelTextStyle"
 			android:text="Mobile Phone" />
 
 		<EditText
@@ -67,6 +73,7 @@
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:textAppearance="@style/LabelTextStyle"
 			android:text="Email Address" />
 
 		<EditText

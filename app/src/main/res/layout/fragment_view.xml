@@ -12,11 +12,13 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/text_margin">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/LabelTextStyle"
             android:text="First Name" />
 
         <TextView
@@ -27,16 +29,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/LabelTextStyle"
             android:text="Last Name" />
 
         <TextView
             android:id="@+id/last_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Hellow my name is Carrie"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/LabelTextStyle"
             android:text="Home Phone" />
 
         <TextView
@@ -47,6 +52,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/LabelTextStyle"
             android:text="Work Phone" />
 
         <TextView
@@ -57,6 +63,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/LabelTextStyle"
             android:text="Mobile Phone" />
 
         <TextView
@@ -67,6 +74,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/LabelTextStyle"
             android:text="Email Address" />
 
         <TextView
