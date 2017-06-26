@@ -28,5 +28,10 @@
 			android:name="com.javadude.fragments.ViewFragment"
 			android:layout_width="match_parent"
 		    android:layout_height="match_parent"/>
+		<fragment
+			android:id="@+id/editFragment"
+			android:name="com.javadude.fragments.EditFragment"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
 	</FrameLayout>
 </LinearLayout>

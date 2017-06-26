@@ -50,6 +50,7 @@ public class TodoListFrameworkActivity
 
                 .state(State.View)
                     .fragmentPriority(R.id.viewFragment, R.id.todoListFragment)
+                    .on(Event.ItemSelected).goTo(State.View)
                     .on(Event.Edit).goTo(State.Edit)
                     .on(Event.Back).goTo(State.List)
 
