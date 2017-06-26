@@ -21,7 +21,7 @@ public class ViewFragment extends Fragment {
     private TextView home_phone;
     private TextView work_phone;
     private TextView mobile_phone;
-    private TextView email_address;
+    private TextView email;
     private TodoItem todoItem;
 
     @Override
@@ -42,7 +42,7 @@ public class ViewFragment extends Fragment {
         home_phone = (TextView) view.findViewById(R.id.home_phone);
         work_phone = (TextView) view.findViewById(R.id.work_phone);
         mobile_phone = (TextView) view.findViewById(R.id.mobile_phone);
-        email_address = (TextView) view.findViewById(R.id.email_address);
+        email = (TextView) view.findViewById(R.id.email);
         return view;
     }
 
@@ -60,13 +60,13 @@ public class ViewFragment extends Fragment {
         home_phone.setText(item.getHome_phone());
         work_phone.setText(item.getWork_phone());
         mobile_phone.setText(item.getMobile_phone());
-        email_address.setText(item.getEmail_address());
+        email.setText(item.getEmail());
     }
 
     public void emailContact() {
         String name = todoItem.getFirst_name() + " " + todoItem.getLast_name();
 
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", todoItem.getEmail_address(), null));
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", todoItem.getEmail(), null));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Hi " + name + "!");
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Just wanted to say hi....");
         startActivity(emailIntent);

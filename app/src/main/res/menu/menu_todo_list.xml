@@ -2,11 +2,4 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.javadude.fragments.TodoListActivity">
-
-	<item
-		android:id="@+id/action_help"
-		android:title="@string/help"
-		android:icon="@drawable/ic_help_white_24dp"
-		android:layout_width="match_parent"
-		app:showAsAction="ifRoom" />
 </menu>
