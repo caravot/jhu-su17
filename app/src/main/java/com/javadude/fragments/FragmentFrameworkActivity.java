@@ -195,6 +195,7 @@ public abstract class FragmentFrameworkActivity<
 		return result;
 	}
 
+    //@SuppressLint("RestrictedApi")
 	private void showCurrentState() {
 		Log.d("FragmentFramework", "Showing state " + currentState);
 		int[] fragmentPriority = fragmentPriorities.get(currentState);
@@ -251,7 +252,8 @@ public abstract class FragmentFrameworkActivity<
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		Log.d("FragmentFramework", "Saving state " + currentState);
-		outState.putString("currentState", currentState.name());
+        currentStateName = currentState.name();
+		outState.putString("currentState", currentStateName);
 	}
 
 	protected void handleEvent(EVENT_TYPE event, EVENT_DATA_TYPE eventData) {

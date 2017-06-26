@@ -30,10 +30,10 @@ public class ViewActivity extends AppCompatActivity
         finish();
     }
 
-    @Override
-    public void onViewFragmentAbout() {
-        finish();
-    }
+//    @Override
+//    public void onViewFragmentAbout() {
+//        finish();
+//    }
 
 //    @Override
 //    public void onViewFragmentDone(TodoItem todoItem) {

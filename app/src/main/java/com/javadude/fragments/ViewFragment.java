@@ -88,8 +88,8 @@ public class ViewFragment extends Fragment {
                     onViewFragmentListener.onViewFragmentEdit(todoItem);
                 return true;
             case R.id.action_help:
-                if (onViewFragmentListener != null)
-                    onViewFragmentListener.onViewFragmentAbout();
+                //if (onViewFragmentListener != null)
+                    //onViewFragmentListener.onViewFragmentAbout();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -127,6 +127,6 @@ public class ViewFragment extends Fragment {
 
     public interface OnViewFragmentListener {
         void onViewFragmentEdit(TodoItem todoItem);
-        void onViewFragmentAbout();
+        //void onViewFragmentAbout();
     }
 }

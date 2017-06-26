@@ -4,23 +4,22 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 // New version of the TodoListActivity that has a Toolbar
-public class TodoListFrameworkActivity extends FragmentFrameworkActivity<TodoListFrameworkActivity.State, TodoListFrameworkActivity.Event, TodoItem>
+public class TodoListFrameworkActivity
+        extends FragmentFrameworkActivity<TodoListFrameworkActivity.State, TodoListFrameworkActivity.Event, TodoItem>
         implements
         TodoListFragment.OnTodoListFragmentListener,
-        AboutFragment.OnAboutFragmentListener,
         ViewFragment.OnViewFragmentListener,
         EditFragment.OnEditFragmentListener {
 	public enum State implements FragmentFrameworkActivity.State {
-		List, Edit, Exit, View, About
+		List, Edit, Exit, View
 	}
 	public enum Event implements FragmentFrameworkActivity.Event {
-		ItemSelected, Done, Cancel, NewItem, Back, Edit, About
+		ItemSelected, Done, Cancel, NewItem, Back, Edit
 	}
 
 	private TodoListFragment todoListFragment;
 	private EditFragment editFragment;
     private ViewFragment viewFragment;
-    private AboutFragment aboutFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +32,6 @@ public class TodoListFrameworkActivity extends FragmentFrameworkActivity<TodoLis
 		todoListFragment = (TodoListFragment) getSupportFragmentManager().findFragmentById(R.id.todoListFragment);
 		editFragment = (EditFragment) getSupportFragmentManager().findFragmentById(R.id.editFragment);
         viewFragment = (ViewFragment) getSupportFragmentManager().findFragmentById(R.id.viewFragment);
-        aboutFragment = (AboutFragment) getSupportFragmentManager().findFragmentById(R.id.aboutFragment);
 
 		stateMachine()
 				.fragmentContainer(R.id.fragmentContainer1)
@@ -50,13 +48,8 @@ public class TodoListFrameworkActivity extends FragmentFrameworkActivity<TodoLis
                     .on(Event.NewItem).goTo(State.Edit)
                     .on(Event.Back).goTo(State.Exit)
 
-                .state(State.About)
-                    .fragmentPriority(R.id.aboutFragment, R.id.todoListFragment)
-                    .on(Event.Back).goTo(State.List)
-
                 .state(State.View)
                     .fragmentPriority(R.id.viewFragment, R.id.todoListFragment)
-                    .on(Event.About).goTo(State.About)
                     .on(Event.Edit).goTo(State.Edit)
                     .on(Event.Back).goTo(State.List)
 
@@ -85,8 +78,6 @@ public class TodoListFrameworkActivity extends FragmentFrameworkActivity<TodoLis
 
 	@Override
 	public void onTodoListFragmentCreateItem(TodoItem todoItem) {
-        System.out.println("Hello");
-        System.out.println("todoItem");
 		handleEvent(Event.NewItem, todoItem);
 	}
 
@@ -94,9 +85,6 @@ public class TodoListFrameworkActivity extends FragmentFrameworkActivity<TodoLis
     @Override
     public void onViewFragmentEdit(TodoItem todoItem) {
         handleEvent(Event.Edit, todoItem);
-    }
-    public void onViewFragmentAbout() {
-        handleEvent(Event.About, null);
     }
 
 	// Edit fragment
