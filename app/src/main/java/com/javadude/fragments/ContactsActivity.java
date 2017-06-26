@@ -20,7 +20,7 @@ implements ContactsFragment.OnTodoListFragmentListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_todo_list);
+		setContentView(R.layout.activity_contacts);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);

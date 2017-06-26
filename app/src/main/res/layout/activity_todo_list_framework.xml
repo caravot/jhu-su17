@@ -24,6 +24,6 @@
 
 	</android.support.design.widget.AppBarLayout>
 
-	<include layout="@layout/content_todo_list_framework"/>
+	<include layout="@layout/content_contacts_framework"/>
 
 </LinearLayout>

@@ -35,7 +35,7 @@ public class DisplayFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_display, container, false);
         // find the fields for the data
         first_name = (TextView) view.findViewById(R.id.first_name);
         last_name = (TextView) view.findViewById(R.id.last_name);
@@ -74,7 +74,7 @@ public class DisplayFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_view, menu);
+        inflater.inflate(R.menu.menu_display, menu);
     }
 
     public void showAbout() {
