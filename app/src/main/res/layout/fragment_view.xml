@@ -24,7 +24,8 @@
         <TextView
             android:id="@+id/first_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/single_item_margin_top"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,6 +37,7 @@
             android:id="@+id/last_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/single_item_margin_top"
             android:text="Hellow my name is Carrie"/>
 
         <TextView
@@ -47,7 +49,8 @@
         <TextView
             android:id="@+id/home_phone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/single_item_margin_top" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -58,7 +61,8 @@
         <TextView
             android:id="@+id/work_phone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/single_item_margin_top" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -69,7 +73,8 @@
         <TextView
             android:id="@+id/mobile_phone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/single_item_margin_top" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -80,6 +85,7 @@
         <TextView
             android:id="@+id/email_address"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/single_item_margin_top" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
