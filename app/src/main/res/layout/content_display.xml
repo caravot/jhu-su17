@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/displayFragment"
-    android:name="com.javadude.hw2.DisplayFragment"
+    android:name="ravotta.carrie.hw2.DisplayFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.javadude.hw2.DisplayActivity"
+    tools:context="ravotta.carrie.hw2.DisplayActivity"
     tools:showIn="@layout/activity_display"
     tools:layout="@layout/fragment_display"/>

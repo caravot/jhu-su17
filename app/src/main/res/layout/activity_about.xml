@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.javadude.hw2.AboutActivity">
+    tools:context="ravotta.carrie.hw2.AboutActivity">
 
     <include layout="@layout/content_about"/>
 </android.support.design.widget.CoordinatorLayout>

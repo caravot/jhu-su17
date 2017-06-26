@@ -1,4 +1,4 @@
-package com.javadude.hw2;
+package ravotta.carrie.hw2;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

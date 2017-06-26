@@ -4,9 +4,9 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/todoListFragment"
-	android:name="com.javadude.hw2.ContactsFragment"
+	android:name="ravotta.carrie.hw2.ContactsFragment"
 	android:layout_width="match_parent"
     android:layout_height="match_parent"
 	app:layout_behavior="@string/appbar_scrolling_view_behavior"
-	tools:context="com.javadude.hw2.ContactsActivity"
+	tools:context="ravotta.carrie.hw2.ContactsActivity"
 	tools:showIn="@layout/activity_contacts"/>

@@ -1,4 +1,4 @@
-package com.javadude.hw2;
+package ravotta.carrie.hw2;
 
 import org.junit.Test;
 

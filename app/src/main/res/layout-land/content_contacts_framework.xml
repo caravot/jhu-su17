@@ -13,7 +13,7 @@
 
 		<fragment
 			android:id="@+id/todoListFragment"
-			android:name="com.javadude.hw2.ContactsFragment"
+			android:name="ravotta.carrie.hw2.ContactsFragment"
 			android:layout_width="match_parent"
 		    android:layout_height="match_parent"/>
 	</FrameLayout>
@@ -25,12 +25,12 @@
 		android:layout_height="match_parent" >
 		<fragment
 			android:id="@+id/displayFragment"
-			android:name="com.javadude.hw2.DisplayFragment"
+			android:name="ravotta.carrie.hw2.DisplayFragment"
 			android:layout_width="match_parent"
 		    android:layout_height="match_parent"/>
 		<fragment
 			android:id="@+id/editFragment"
-			android:name="com.javadude.hw2.EditFragment"
+			android:name="ravotta.carrie.hw2.EditFragment"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"/>
 	</FrameLayout>
