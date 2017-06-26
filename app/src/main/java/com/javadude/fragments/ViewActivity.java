@@ -29,23 +29,4 @@ public class ViewActivity extends AppCompatActivity
         setResult(RESULT_OK, returnData);
         finish();
     }
-
-//    @Override
-//    public void onViewFragmentAbout() {
-//        finish();
-//    }
-
-//    @Override
-//    public void onViewFragmentDone(TodoItem todoItem) {
-//        Intent returnData = new Intent();
-//        returnData.putExtra("item", todoItem);
-//        setResult(RESULT_OK, returnData);
-//        finish();
-//    }
-
-//    @Override
-//    public void onViewFragmentCancel(TodoItem todoItem) {
-//        finish();
-//    }
-
 }

@@ -77,9 +77,21 @@ public class ViewFragment extends Fragment {
         inflater.inflate(R.menu.menu_view, menu);
     }
 
+    public void showAbout() {
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(this, AboutActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+        Intent intent = new Intent(getActivity(), AboutActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_email:
                 emailContact();
                 return true;
@@ -88,25 +100,11 @@ public class ViewFragment extends Fragment {
                     onViewFragmentListener.onViewFragmentEdit(todoItem);
                 return true;
             case R.id.action_help:
-                //if (onViewFragmentListener != null)
-                    //onViewFragmentListener.onViewFragmentAbout();
+                showAbout();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-    private void setupData() {
-        // when the user presses "back", we use that as "save" for now
-        //   (we'll replace this with ActionBar buttons later)
-        // create a to-do todoItem that we'll return
-        todoItem = new TodoItem();
-        todoItem.setId(id);
-        todoItem.setFirst_name(first_name.getText().toString());
-        todoItem.setLast_name(last_name.getText().toString());
-        todoItem.setHome_phone(home_phone.getText().toString());
-        todoItem.setWork_phone(work_phone.getText().toString());
-        todoItem.setMobile_phone(mobile_phone.getText().toString());
-        todoItem.setEmail_address(email_address.getText().toString());
     }
 
     @Override
@@ -127,6 +125,5 @@ public class ViewFragment extends Fragment {
 
     public interface OnViewFragmentListener {
         void onViewFragmentEdit(TodoItem todoItem);
-        //void onViewFragmentAbout();
     }
 }
