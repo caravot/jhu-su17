@@ -46,6 +46,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
 //		holder.view.setBackgroundColor(position % 2 == 0 ? Color.LTGRAY : Color.WHITE);
 		holder.first_name.setText(todoItem.getFirst_name());
 		holder.mobile_phone.setText(String.valueOf(todoItem.getMobile_phone()));
+		holder.last_name.setText(String.valueOf(todoItem.getLast_name()));
 
 		// listen to the overall view for clicks - if clicked, notify
 		//   the listener so it can navigate
@@ -99,6 +100,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
 	//   onto those view so
 	public static class TodoViewHolder extends RecyclerView.ViewHolder {
 		private TextView first_name;
+		private TextView last_name;
 		private TextView mobile_phone;
 		private View view;
 
@@ -106,6 +108,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
 			super(view);
 			this.view = view;
 			first_name = view.findViewById(R.id.first_name);
+			last_name = view.findViewById(R.id.last_name);
 			mobile_phone = view.findViewById(R.id.mobile_phone);
 		}
 	}

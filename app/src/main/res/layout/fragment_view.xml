@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/LabelTextStyle"
-            android:text="First Name" />
+            android:text="@string/first_name" />
 
         <TextView
             android:id="@+id/first_name"
@@ -31,20 +31,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/LabelTextStyle"
-            android:text="Last Name" />
+            android:text="@string/last_name" />
 
         <TextView
             android:id="@+id/last_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/single_item_margin_top"
-            android:text="Hellow my name is Carrie"/>
+            android:layout_marginBottom="@dimen/single_item_margin_top"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/LabelTextStyle"
-            android:text="Home Phone" />
+            android:text="@string/home_phone" />
 
         <TextView
             android:id="@+id/home_phone"
@@ -56,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/LabelTextStyle"
-            android:text="Work Phone" />
+            android:text="@string/work_phone" />
 
         <TextView
             android:id="@+id/work_phone"
@@ -68,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/LabelTextStyle"
-            android:text="Mobile Phone" />
+            android:text="@string/mobile_phone" />
 
         <TextView
             android:id="@+id/mobile_phone"
@@ -80,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/LabelTextStyle"
-            android:text="Email Address" />
+            android:text="@string/email_address" />
 
         <TextView
             android:id="@+id/email_address"

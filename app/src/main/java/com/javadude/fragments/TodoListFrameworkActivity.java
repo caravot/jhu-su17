@@ -34,8 +34,8 @@ public class TodoListFrameworkActivity
         viewFragment = (ViewFragment) getSupportFragmentManager().findFragmentById(R.id.viewFragment);
 
 		stateMachine()
-				.fragmentContainer(R.id.fragmentContainer1)
-				.fragmentContainer(R.id.fragmentContainer2)
+				.fragmentContainer(R.id.fragment_container1)
+				.fragmentContainer(R.id.fragment_container2)
 
 				.stateType(State.class)
 				.initialState(State.List)

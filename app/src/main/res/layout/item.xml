@@ -17,12 +17,15 @@
 		android:layout_margin="@dimen/single_item_margin">
 		<TextView
 			android:id="@+id/first_name"
-			android:text="SOME NAME"
+			android:layout_marginRight="5dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+		<TextView
+			android:id="@+id/last_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 		<TextView
 			android:id="@+id/mobile_phone"
-			android:text="42"
 			android:gravity="right"
 			android:layout_weight="1"
 			android:layout_width="0dp"
