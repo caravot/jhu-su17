@@ -13,7 +13,7 @@
 
 		<fragment
 			android:id="@+id/todoListFragment"
-			android:name="com.javadude.fragments.TodoListFragment"
+			android:name="com.javadude.fragments.ContactsFragment"
 			android:layout_width="match_parent"
 		    android:layout_height="match_parent"/>
 	</FrameLayout>
@@ -24,8 +24,8 @@
 		android:layout_width="0dp"
 		android:layout_height="match_parent" >
 		<fragment
-			android:id="@+id/viewFragment"
-			android:name="com.javadude.fragments.ViewFragment"
+			android:id="@+id/displayFragment"
+			android:name="com.javadude.fragments.DisplayFragment"
 			android:layout_width="match_parent"
 		    android:layout_height="match_parent"/>
 		<fragment

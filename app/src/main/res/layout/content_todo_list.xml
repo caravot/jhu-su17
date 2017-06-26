@@ -4,9 +4,9 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/todoListFragment"
-	android:name="com.javadude.fragments.TodoListFragment"
+	android:name="com.javadude.fragments.ContactsFragment"
 	android:layout_width="match_parent"
     android:layout_height="match_parent"
 	app:layout_behavior="@string/appbar_scrolling_view_behavior"
-	tools:context="com.javadude.fragments.TodoListActivity"
+	tools:context="com.javadude.fragments.ContactsActivity"
 	tools:showIn="@layout/activity_todo_list"/>

@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 // a parcelable object representing a single to-do item
-public class TodoItem implements Parcelable {
+public class Contact implements Parcelable {
 	private long id; // NEW: use an id so we can handle updates better
 	private String first_name;
 	private String last_name;
@@ -13,15 +13,15 @@ public class TodoItem implements Parcelable {
 	private String mobile_phone;
 	private String email;
 
-	public TodoItem() {}
+	public Contact() {}
 
-	public TodoItem(long id,
-					String first_name,
-					String last_name,
-					String home_phone,
-					String work_phone,
-					String mobile_phone,
-					String email) {
+	public Contact(long id,
+				   String first_name,
+				   String last_name,
+				   String home_phone,
+				   String work_phone,
+				   String mobile_phone,
+				   String email) {
 		this.id = id;
 		this.first_name = first_name;
 		this.last_name = last_name;
@@ -110,25 +110,25 @@ public class TodoItem implements Parcelable {
 
 	// read the data and create a new instance
 	// note that the field MUST be named "CREATOR", all uppercase
-	public static Creator<TodoItem> CREATOR = new Creator<TodoItem>() {
+	public static Creator<Contact> CREATOR = new Creator<Contact>() {
 		// read the data from the parcel - note that the data read MUST be in the same
 		//   order it was written in writeToParcel!
 		@Override
-		public TodoItem createFromParcel(Parcel source) {
-			TodoItem todoItem = new TodoItem();
-			todoItem.setId(source.readLong());
-			todoItem.setFirst_name(source.readString());
-			todoItem.setLast_name(source.readString());
-			todoItem.setHome_phone(source.readString());
-			todoItem.setWork_phone(source.readString());
-			todoItem.setMobile_phone(source.readString());
-			todoItem.setEmail(source.readString());
-			return todoItem;
+		public Contact createFromParcel(Parcel source) {
+			Contact contact = new Contact();
+			contact.setId(source.readLong());
+			contact.setFirst_name(source.readString());
+			contact.setLast_name(source.readString());
+			contact.setHome_phone(source.readString());
+			contact.setWork_phone(source.readString());
+			contact.setMobile_phone(source.readString());
+			contact.setEmail(source.readString());
+			return contact;
 		}
 
 		@Override
-		public TodoItem[] newArray(int size) {
-			return new TodoItem[size];
+		public Contact[] newArray(int size) {
+			return new Contact[size];
 		}
 	};
 }

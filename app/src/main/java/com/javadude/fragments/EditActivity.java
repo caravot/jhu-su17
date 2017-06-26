@@ -17,22 +17,22 @@ public class EditActivity extends AppCompatActivity
 		setSupportActionBar(toolbar);
 
 		EditFragment editFragment = (EditFragment) getSupportFragmentManager().findFragmentById(R.id.editFragment);
-		TodoItem item = getIntent().getParcelableExtra("item");
-		editFragment.setTodoItem(item);
+		Contact item = getIntent().getParcelableExtra("item");
+		editFragment.setContact(item);
 	}
 
 	@Override
-	public void onEditFragmentDone(TodoItem todoItem) {
+	public void onEditFragmentDone(Contact contact) {
 		Intent returnData = new Intent();
-		returnData.putExtra("item", todoItem);
+		returnData.putExtra("item", contact);
 		setResult(RESULT_OK, returnData);
 		finish();
 	}
 
 	@Override
-	public void onEditFragmentCancel(TodoItem todoItem) {
+	public void onEditFragmentCancel(Contact contact) {
 		Intent returnData = new Intent();
-		returnData.putExtra("item", todoItem);
+		returnData.putExtra("item", contact);
 		setResult(RESULT_CANCELED, returnData);
 		finish();
 	}

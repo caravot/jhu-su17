@@ -16,14 +16,14 @@ import android.widget.EditText;
  * Created by scott on 4/17/2016.
  */
 public class EditFragment extends Fragment {
-	private long id; // NEW: hold the id of the todoItem being edited
+	private long id; // NEW: hold the id of the contact being edited
 	private EditText first_name;
 	private EditText last_name;
 	private EditText home_phone;
 	private EditText work_phone;
 	private EditText mobile_phone;
 	private EditText email;
-	private TodoItem todoItem;
+	private Contact contact;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,9 +45,9 @@ public class EditFragment extends Fragment {
 		mobile_phone = (EditText) view.findViewById(R.id.mobile_phone);
 		email = (EditText) view.findViewById(R.id.email);
 
-		//todoItem = getIntent().getParcelableExtra("item");
+		//contact = getIntent().getParcelableExtra("item");
 
-		//first_name.setText(todoItem.getFirst_name());
+		//first_name.setText(contact.getFirst_name());
 		return view;
 	}
 
@@ -57,10 +57,10 @@ public class EditFragment extends Fragment {
 		outState.putLong("id", id);
 	}
 
-	public void setTodoItem(TodoItem item) {
-		this.todoItem = item;
-		// put the data from the todoItem in the fields
-		id = (item.getId()); // NEW: get the id of the todoItem being edited
+	public void setContact(Contact item) {
+		this.contact = item;
+		// put the data from the contact in the fields
+		id = (item.getId()); // NEW: get the id of the contact being edited
 		first_name.setText(item.getFirst_name());
 		last_name.setText(item.getLast_name());
 		home_phone.setText(item.getHome_phone());
@@ -80,11 +80,11 @@ public class EditFragment extends Fragment {
 			case R.id.action_done:
 				setupData();
 				if (onEditFragmentListener != null)
-					onEditFragmentListener.onEditFragmentDone(todoItem);
+					onEditFragmentListener.onEditFragmentDone(contact);
 				return true;
 			case R.id.action_cancel:
 				if (onEditFragmentListener != null)
-					onEditFragmentListener.onEditFragmentCancel(todoItem);
+					onEditFragmentListener.onEditFragmentCancel(contact);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -93,16 +93,16 @@ public class EditFragment extends Fragment {
 	private void setupData() {
 		// when the user presses "back", we use that as "save" for now
 		//   (we'll replace this with ActionBar buttons later)
-		// create a to-do todoItem that we'll return
-		todoItem = new TodoItem();
-		todoItem.setId(id); // NEW: store the id of the todoItem so we can look it up in the list adapter
-		todoItem.setFirst_name(first_name.getText().toString());
-		todoItem.setLast_name(last_name.getText().toString());
-		todoItem.setLast_name(last_name.getText().toString());
-		todoItem.setHome_phone(home_phone.getText().toString());
-		todoItem.setWork_phone(work_phone.getText().toString());
-		todoItem.setMobile_phone(mobile_phone.getText().toString());
-		todoItem.setEmail(email.getText().toString());
+		// create a to-do contact that we'll return
+		contact = new Contact();
+		contact.setId(id); // NEW: store the id of the contact so we can look it up in the list adapter
+		contact.setFirst_name(first_name.getText().toString());
+		contact.setLast_name(last_name.getText().toString());
+		contact.setLast_name(last_name.getText().toString());
+		contact.setHome_phone(home_phone.getText().toString());
+		contact.setWork_phone(work_phone.getText().toString());
+		contact.setMobile_phone(mobile_phone.getText().toString());
+		contact.setEmail(email.getText().toString());
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class EditFragment extends Fragment {
 	private OnEditFragmentListener onEditFragmentListener;
 
 	public interface OnEditFragmentListener {
-		void onEditFragmentDone(TodoItem todoItem);
-		void onEditFragmentCancel(TodoItem todoItem);
+		void onEditFragmentDone(Contact contact);
+		void onEditFragmentCancel(Contact contact);
 	}
 }

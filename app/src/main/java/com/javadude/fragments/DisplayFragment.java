@@ -14,15 +14,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.net.Uri;
 
-public class ViewFragment extends Fragment {
-    private long id; // NEW: hold the id of the todoItem being viewed
+public class DisplayFragment extends Fragment {
+    private long id; // NEW: hold the id of the contact being viewed
     private TextView first_name;
     private TextView last_name;
     private TextView home_phone;
     private TextView work_phone;
     private TextView mobile_phone;
     private TextView email;
-    private TodoItem todoItem;
+    private Contact contact;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,9 +52,9 @@ public class ViewFragment extends Fragment {
         outState.putLong("id", id);
     }
 
-    public void setTodoItem(TodoItem item) {
-        this.todoItem = item;
-        id = (item.getId()); // NEW: get the id of the todoItem being viewed
+    public void setContact(Contact item) {
+        this.contact = item;
+        id = (item.getId()); // NEW: get the id of the contact being viewed
         first_name.setText(item.getFirst_name());
         last_name.setText(item.getLast_name());
         home_phone.setText(item.getHome_phone());
@@ -64,9 +64,9 @@ public class ViewFragment extends Fragment {
     }
 
     public void emailContact() {
-        String name = todoItem.getFirst_name() + " " + todoItem.getLast_name();
+        String name = contact.getFirst_name() + " " + contact.getLast_name();
 
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", todoItem.getEmail(), null));
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", contact.getEmail(), null));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Hi " + name + "!");
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Just wanted to say hi....");
         startActivity(emailIntent);
@@ -96,8 +96,8 @@ public class ViewFragment extends Fragment {
                 emailContact();
                 return true;
             case R.id.action_edit:
-                if (onViewFragmentListener != null)
-                    onViewFragmentListener.onViewFragmentEdit(todoItem);
+                if (onDisplayFragmentListener != null)
+                    onDisplayFragmentListener.onDisplayFragmentEdit(contact);
                 return true;
             case R.id.action_help:
                 showAbout();
@@ -110,20 +110,20 @@ public class ViewFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof OnViewFragmentListener))
-            throw new IllegalStateException("Activities using ViewFragment must implement ViewFragment.OnViewFragmentListener");
-        onViewFragmentListener = (OnViewFragmentListener) context;
+        if (!(context instanceof OnDisplayFragmentListener))
+            throw new IllegalStateException("Activities using DisplayFragment must implement DisplayFragment.OnDisplayFragmentListener");
+        onDisplayFragmentListener = (OnDisplayFragmentListener) context;
     }
 
     @Override
     public void onDetach() {
-        onViewFragmentListener = null;
+        onDisplayFragmentListener = null;
         super.onDetach();
     }
 
-    private OnViewFragmentListener onViewFragmentListener;
+    private OnDisplayFragmentListener onDisplayFragmentListener;
 
-    public interface OnViewFragmentListener {
-        void onViewFragmentEdit(TodoItem todoItem);
+    public interface OnDisplayFragmentListener {
+        void onDisplayFragmentEdit(Contact contact);
     }
 }

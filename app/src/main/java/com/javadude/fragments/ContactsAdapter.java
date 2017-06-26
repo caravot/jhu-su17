@@ -9,15 +9,15 @@ import android.widget.TextView;
 import java.util.Collections;
 import java.util.List;
 
-// an adapter for a RecyclerView to manage TodoItem objects
-public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoViewHolder> {
+// an adapter for a RecyclerView to manage Contact objects
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.TodoViewHolder> {
 	// the real list of TodoItems that we're adapting
-	private List<TodoItem> items;
+	private List<Contact> items;
 
 	// the activity's layout inflater, needed to create instances of the row views
 	private LayoutInflater layoutInflater;
 
-	public TodoListAdapter(LayoutInflater layoutInflater, List<TodoItem> items) {
+	public ContactsAdapter(LayoutInflater layoutInflater, List<Contact> items) {
 		this.layoutInflater = layoutInflater;
 		this.items = items;
 	}
@@ -42,17 +42,17 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
 	// fill the data into the view for the specified row
 	@Override
 	public void onBindViewHolder(TodoViewHolder holder, int position) {
-		final TodoItem todoItem = items.get(position);
+		final Contact contact = items.get(position);
 //		holder.view.setBackgroundColor(position % 2 == 0 ? Color.LTGRAY : Color.WHITE);
-		holder.first_name.setText(todoItem.getFirst_name());
-		holder.mobile_phone.setText(String.valueOf(todoItem.getMobile_phone()));
-		holder.last_name.setText(String.valueOf(todoItem.getLast_name()));
+		holder.first_name.setText(contact.getFirst_name());
+		holder.mobile_phone.setText(String.valueOf(contact.getMobile_phone()));
+		holder.last_name.setText(String.valueOf(contact.getLast_name()));
 
 		// listen to the overall view for clicks - if clicked, notify
 		//   the listener so it can navigate
 		holder.view.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
-				todoListListener.itemSelected(todoItem);
+				todoListListener.itemSelected(contact);
 			}});
 	}
 
@@ -120,12 +120,12 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
 	//      This would have required more changes so I skipped that approach.
 	//      Better still... we really should use a database, which is in a later
 	//      module in the course)
-	public void update(TodoItem todoItem) {
+	public void update(Contact contact) {
 		boolean found = false;
 		for (int i = 0; i < items.size(); i++) {
-			TodoItem item = items.get(i);
-			if (item.getId() == todoItem.getId()) {
-				items.set(i, todoItem);
+			Contact item = items.get(i);
+			if (item.getId() == contact.getId()) {
+				items.set(i, contact);
 				found = true;
 				notifyItemChanged(i);
 				break;
@@ -133,7 +133,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
 		}
 		// if item not found create new row
 		if (!found) {
-			items.add(todoItem);
+			items.add(contact);
 			notifyItemInserted(items.size()-1);
 		}
 	}
@@ -146,6 +146,6 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
 	}
 
 	public interface TodoListListener {
-		void itemSelected(TodoItem todoItem);
+		void itemSelected(Contact contact);
 	}
 }

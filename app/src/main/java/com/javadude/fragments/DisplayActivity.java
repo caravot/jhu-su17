@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 // View activity that uses a Toolbar for actions
-public class ViewActivity extends AppCompatActivity
-        implements ViewFragment.OnViewFragmentListener {
+public class DisplayActivity extends AppCompatActivity
+        implements DisplayFragment.OnDisplayFragmentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,15 +17,15 @@ public class ViewActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ViewFragment viewFragment = (ViewFragment) getSupportFragmentManager().findFragmentById(R.id.viewFragment);
-        TodoItem item = getIntent().getParcelableExtra("item");
-        viewFragment.setTodoItem(item);
+        DisplayFragment displayFragment = (DisplayFragment) getSupportFragmentManager().findFragmentById(R.id.displayFragment);
+        Contact item = getIntent().getParcelableExtra("item");
+        displayFragment.setContact(item);
     }
 
     @Override
-    public void onViewFragmentEdit(TodoItem todoItem) {
+    public void onDisplayFragmentEdit(Contact contact) {
         Intent returnData = new Intent();
-        returnData.putExtra("item", todoItem);
+        returnData.putExtra("item", contact);
         setResult(RESULT_OK, returnData);
         finish();
     }

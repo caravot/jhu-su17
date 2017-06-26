@@ -2,30 +2,19 @@ package com.javadude.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
-
-// New version of the TodoListActivity that has a Toolbar
-public class TodoListActivity extends AppCompatActivity
-implements TodoListFragment.OnTodoListFragmentListener,
+// New version of the ContactsActivity that has a Toolbar
+public class ContactsActivity extends AppCompatActivity
+implements ContactsFragment.OnTodoListFragmentListener,
 	EditFragment.OnEditFragmentListener {
 	// request code for the startActivityForResult call
 	private static final int REQUEST_EDIT = 42;
 	private static final int REQUEST_VIEW = 55;
-	private TodoListFragment todoListFragment;
+	private ContactsFragment contactsFragment;
 	private EditFragment editFragment;
-	private ViewFragment viewFragment;
+	private DisplayFragment displayFragment;
 	private boolean sideBySide;
 
 	@Override
@@ -36,7 +25,7 @@ implements TodoListFragment.OnTodoListFragmentListener,
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		todoListFragment = (TodoListFragment) getSupportFragmentManager().findFragmentById(R.id.todoListFragment);
+		contactsFragment = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.todoListFragment);
 		editFragment = (EditFragment) getSupportFragmentManager().findFragmentById(R.id.editFragment);
 
 		sideBySide = (editFragment != null && editFragment.isInLayout());
@@ -47,45 +36,45 @@ implements TodoListFragment.OnTodoListFragmentListener,
 		// when we get an item back from editing, update it in the adapter
 		if (requestCode == REQUEST_EDIT) {
 			if (resultCode == RESULT_OK) {
-				TodoItem todoItem = data.getParcelableExtra("item");
-				todoListFragment.update(todoItem);
+				Contact contact = data.getParcelableExtra("item");
+				contactsFragment.update(contact);
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
-	public void onTodoListFragmentItemSelected(TodoItem todoItem) {
+	public void onTodoListFragmentItemSelected(Contact contact) {
 		if (sideBySide) {
-			editFragment.setTodoItem(todoItem);
+			editFragment.setContact(contact);
 		} else {
 			// if an item is selected, send the item in an intent to the EditActivity
-			Intent intent = new Intent(TodoListActivity.this, ViewActivity.class);
-			intent.putExtra("item", todoItem);
+			Intent intent = new Intent(ContactsActivity.this, DisplayActivity.class);
+			intent.putExtra("item", contact);
 			startActivityForResult(intent, REQUEST_VIEW);
 		}
 	}
 
 	@Override
-	public void onTodoListFragmentCreateItem(TodoItem todoItem) {
+	public void onTodoListFragmentCreateItem(Contact contact) {
 		if (sideBySide) {
-			editFragment.setTodoItem(todoItem);
+			editFragment.setContact(contact);
 		} else {
 			// create a new dummy item with a unique ID
 			// and send it to the edit activity
-			Intent intent = new Intent(TodoListActivity.this, ViewActivity.class);
-			intent.putExtra("item", todoItem);
+			Intent intent = new Intent(ContactsActivity.this, DisplayActivity.class);
+			intent.putExtra("item", contact);
 			startActivityForResult(intent, REQUEST_VIEW);
 		}
 	}
 
 	@Override
-	public void onEditFragmentDone(TodoItem todoItem) {
-		todoListFragment.update(todoItem);
+	public void onEditFragmentDone(Contact contact) {
+		contactsFragment.update(contact);
 	}
 
 	@Override
-	public void onEditFragmentCancel(TodoItem todoItem) {
+	public void onEditFragmentCancel(Contact contact) {
 		// do nothing!
 	}
 }
