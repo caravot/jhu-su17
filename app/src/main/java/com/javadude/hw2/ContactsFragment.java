@@ -1,4 +1,4 @@
-package com.javadude.fragments;
+package com.javadude.hw2;
 
 import android.content.Context;
 import android.os.Bundle;

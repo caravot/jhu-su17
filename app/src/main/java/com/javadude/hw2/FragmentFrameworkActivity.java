@@ -1,4 +1,4 @@
-package com.javadude.fragments;
+package com.javadude.hw2;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -219,7 +219,7 @@ public abstract class FragmentFrameworkActivity<
 						// show this fragment
 						tx.show(fragment);
 
-						// hide the other fragments in this container
+						// hide the other hw2 in this container
 						for(Fragment otherFragment : getSupportFragmentManager().getFragments()) {
 							if (otherFragment != fragment && isContainerFor(fragmentContainer, otherFragment)) {
 								tx.hide(otherFragment);
@@ -231,7 +231,7 @@ public abstract class FragmentFrameworkActivity<
 				}
 			}
 
-			// dump fragments
+			// dump hw2
 			Log.d("FRAGMENT FRAMEWORK", "Fragment " + fragment.getClass().getSimpleName() + " was asked to be displayed for state " + currentState.name() + " but is not contained in any Fragment Containers in the current configuration");
 			Log.d("FRAGMENT FRAMEWORK", "....Current Fragment Containers:");
 			for(View fragmentContainer : fragmentContainers) {
@@ -240,7 +240,7 @@ public abstract class FragmentFrameworkActivity<
 					if (isContainerFor(fragmentContainer, testFragment))
 						fragmentsContained += testFragment.getClass().getSimpleName() + " ";
 				}
-				Log.d("FRAGMENT FRAMEWORK", "........" + fragmentContainer.getId() + " contains fragments " + fragmentsContained);
+				Log.d("FRAGMENT FRAMEWORK", "........" + fragmentContainer.getId() + " contains hw2 " + fragmentsContained);
 			}
 
 			throw new IllegalStateException("Requested fragment not contained");

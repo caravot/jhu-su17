@@ -5,7 +5,7 @@ android {
 	buildToolsVersion '26.0.0'
 
 	defaultConfig {
-		applicationId "com.javadude.fragments"
+		applicationId "com.javadude.hw2"
 		minSdkVersion 19
 		targetSdkVersion 26
 		versionCode 1

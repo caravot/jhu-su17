@@ -1,8 +1,7 @@
-package com.javadude.fragments;
+package com.javadude.hw2;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 public class AboutActivity extends AppCompatActivity {
 
