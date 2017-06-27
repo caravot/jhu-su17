@@ -12,11 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-/**
- * Created by scott on 4/17/2016.
- */
 public class EditFragment extends Fragment {
-	private long id; // NEW: hold the id of the contact being edited
+	private long id;
 	private EditText first_name;
 	private EditText last_name;
 	private EditText home_phone;
@@ -45,9 +42,6 @@ public class EditFragment extends Fragment {
 		mobile_phone = (EditText) view.findViewById(R.id.mobile_phone);
 		email = (EditText) view.findViewById(R.id.email);
 
-		//contact = getIntent().getParcelableExtra("item");
-
-		//first_name.setText(contact.getFirst_name());
 		return view;
 	}
 
@@ -57,16 +51,34 @@ public class EditFragment extends Fragment {
 		outState.putLong("id", id);
 	}
 
-	public void setContact(Contact item) {
-		this.contact = item;
-		// put the data from the contact in the fields
-		id = (item.getId()); // NEW: get the id of the contact being edited
-		first_name.setText(item.getFirst_name());
-		last_name.setText(item.getLast_name());
-		home_phone.setText(item.getHome_phone());
-		work_phone.setText(item.getWork_phone());
-		mobile_phone.setText(item.getMobile_phone());
-		email.setText(item.getEmail());
+	public void setContactId(long id) {
+		this.id = id;
+		if (id == -1) {
+			first_name.setText("");
+			last_name.setText("");
+			home_phone.setText("");
+			work_phone.setText("");
+			mobile_phone.setText("");
+			email.setText("");
+		} else {
+			Contact contact = Util.findContact(getContext(), id);
+			if (contact == null) {
+				first_name.setText("");
+				last_name.setText("");
+				home_phone.setText("");
+				work_phone.setText("");
+				mobile_phone.setText("");
+				email.setText("");
+				this.id = -1;
+			} else {
+				first_name.setText(contact.getFirst_name());
+				last_name.setText(contact.getLast_name());
+				home_phone.setText(contact.getHome_phone());
+				work_phone.setText(contact.getWork_phone());
+				mobile_phone.setText(contact.getMobile_phone());
+				email.setText(contact.getEmail());
+			}
+		}
 	}
 
 	@Override
@@ -78,22 +90,20 @@ public class EditFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 			case R.id.action_done:
-				setupData();
+				saveData();
 				if (onEditFragmentListener != null)
-					onEditFragmentListener.onEditFragmentDone(contact);
+					onEditFragmentListener.onEditFragmentDone(id);
 				return true;
 			case R.id.action_cancel:
 				if (onEditFragmentListener != null)
-					onEditFragmentListener.onEditFragmentCancel(contact);
+					onEditFragmentListener.onEditFragmentCancel(id);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
-	private void setupData() {
-		// when the user presses "back", we use that as "save" for now
-		//   (we'll replace this with ActionBar buttons later)
-		// create a to-do contact that we'll return
+
+	private void saveData() {
 		contact = new Contact();
 		contact.setId(id); // NEW: store the id of the contact so we can look it up in the list adapter
 		contact.setFirst_name(first_name.getText().toString());
@@ -103,13 +113,16 @@ public class EditFragment extends Fragment {
 		contact.setWork_phone(work_phone.getText().toString());
 		contact.setMobile_phone(mobile_phone.getText().toString());
 		contact.setEmail(email.getText().toString());
+
+		Util.updateContact(getContext(), contact);
 	}
 
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		if (!(context instanceof OnEditFragmentListener))
+		if (!(context instanceof OnEditFragmentListener)) {
 			throw new IllegalStateException("Activities using EditFragment must implement EditFragment.OnEditFragmentListener");
+		}
 		onEditFragmentListener = (OnEditFragmentListener) context;
 	}
 
@@ -122,7 +135,7 @@ public class EditFragment extends Fragment {
 	private OnEditFragmentListener onEditFragmentListener;
 
 	public interface OnEditFragmentListener {
-		void onEditFragmentDone(Contact contact);
-		void onEditFragmentCancel(Contact contact);
+		void onEditFragmentDone(long id);
+		void onEditFragmentCancel(long id);
 	}
 }

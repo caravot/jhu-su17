@@ -1,10 +1,14 @@
 package ravotta.carrie.hw2;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -15,17 +19,11 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by scott on 4/17/2016.
- */
 public class ContactsFragment extends Fragment {
-	// NEW: used to generate unique IDs within this run
-	//      note that this is a bad idea in general; we should
-	//      use a database (and will in a later module)
-	private long nextId = 1000;
+	private static final int CONTACTS_LOADER = 42;
 
 	// our model for the RecyclerView
-	private ContactsAdapter adapter;
+	private ContactCursorAdapter adapter;
 
 	@Nullable
 	@Override
@@ -36,39 +34,20 @@ public class ContactsFragment extends Fragment {
 
 		// create some dummy data
 		List<Contact> items = new ArrayList<>();
-		items.add(new Contact(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
-		items.add(new Contact(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "444-999-0000", "a.k@gmail.com"));
-		items.add(new Contact(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "444-999-0000", "c.r@hotmail.com"));
-		items.add(new Contact(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "444-999-0000", "c.n@comcast.net"));
-        items.add(new Contact(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
-        items.add(new Contact(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "444-999-0000", "a.k@gmail.com"));
-        items.add(new Contact(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "444-999-0000", "c.r@hotmail.com"));
-        items.add(new Contact(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "444-999-0000", "c.n@comcast.net"));
-        items.add(new Contact(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
-        items.add(new Contact(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "444-999-0000", "a.k@gmail.com"));
-        items.add(new Contact(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "444-999-0000", "c.r@hotmail.com"));
-        items.add(new Contact(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "444-999-0000", "c.n@comcast.net"));
-        items.add(new Contact(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
-        items.add(new Contact(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "444-999-0000", "a.k@gmail.com"));
-        items.add(new Contact(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "444-999-0000", "c.r@hotmail.com"));
-        items.add(new Contact(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "444-999-0000", "c.n@comcast.net"));
-        items.add(new Contact(nextId++, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
-        items.add(new Contact(nextId++, "Abhinav", "Kumar", "555-555-5555", "111-111-1111", "444-999-0000", "a.k@gmail.com"));
-        items.add(new Contact(nextId++, "Andrew", "Doyle", "888-888-8888", "999-999-9999", "444-999-0000", "c.r@hotmail.com"));
-        items.add(new Contact(nextId++, "Cindy", "Naughton", "111-111-1111", "222-222-2222", "444-999-0000", "c.n@comcast.net"));
+		//Util.updateContact(getContext(), new Contact(-1, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
 
 		// wrap the data in our adapter to use as a model for the recycler view
-		adapter = new ContactsAdapter(getActivity().getLayoutInflater(), items);
+		adapter = new ContactCursorAdapter(getActivity(), getActivity().getLayoutInflater());
 		recyclerView.setAdapter(adapter);
 
 		// layout the items in the recycler view as a vertical list
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 		// listen to the adapter to find out when an item has been selected
-		adapter.setTodoListListener(new ContactsAdapter.TodoListListener() {
-			@Override public void itemSelected(Contact contact) {
-				if (onTodoListFragmentListener != null)
-					onTodoListFragmentListener.onTodoListFragmentItemSelected(contact);
+		adapter.setContactsListener(new ContactCursorAdapter.ContactsListener() {
+			@Override public void itemSelected(long id) {
+				if (onContactsFragmentListener != null)
+					onContactsFragmentListener.onContactsFragmentItemSelected(id);
 			}});
 
 		// set up support for drag/swipe gestures
@@ -78,21 +57,19 @@ public class ContactsFragment extends Fragment {
 					@Override
 					public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
 						int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-						int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-						return makeMovementFlags(dragFlags, swipeFlags);
+						return makeMovementFlags(0, swipeFlags);
 					}
 
 					// if an item is being dragged, tell the adapter
 					@Override
 					public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-						adapter.onItemMoved(viewHolder, target);
 						return true;
 					}
 
 					// if an item is being swiped, tell the adapter
 					@Override
 					public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-						adapter.onItemDismissed(viewHolder);
+						Util.delete(getContext(), viewHolder.getItemId());
 					}
 				}
 		);
@@ -106,9 +83,8 @@ public class ContactsFragment extends Fragment {
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Contact contact = new Contact(nextId++, "", "", "", "", "", "");
-				if (onTodoListFragmentListener != null) {
-					onTodoListFragmentListener.onTodoListFragmentCreateItem(contact);
+				if (onContactsFragmentListener != null) {
+					onContactsFragmentListener.onContactsFragmentCreateItem();
 				}
 			}
 		});
@@ -116,29 +92,61 @@ public class ContactsFragment extends Fragment {
 		return view;
 	}
 
-	private OnTodoListFragmentListener onTodoListFragmentListener;
+	private OnContactsFragmentListener onContactsFragmentListener;
 
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		if (!(context instanceof OnTodoListFragmentListener))
-			throw new IllegalStateException("Activities using ContactsFragment must implement ContactsFragment.OnTodoListFragmentListener");
-		onTodoListFragmentListener = (OnTodoListFragmentListener) context;
+		if (!(context instanceof OnContactsFragmentListener)) {
+			throw new IllegalStateException("Activities using ContactsFragment must implement ContactsFragment.OnContactsFragmentListener");
+		}
+		onContactsFragmentListener = (OnContactsFragmentListener) context;
+		getActivity().getSupportLoaderManager().initLoader(CONTACTS_LOADER, null, loaderCallbacks);
 	}
 
 	@Override
 	public void onDetach() {
-		onTodoListFragmentListener = null;
+		onContactsFragmentListener = null;
 		super.onDetach();
-	}
-
-	public void update(Contact contact) {
-		adapter.update(contact);
+		getActivity().getSupportLoaderManager().destroyLoader(CONTACTS_LOADER);
 	}
 
 
-	public interface OnTodoListFragmentListener {
-		void onTodoListFragmentItemSelected(Contact contact);
-		void onTodoListFragmentCreateItem(Contact contact);
+	private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
+		@Override
+		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+			String[] projection = {
+					ContactsContentProvider.COLUMN_ID,
+					ContactsContentProvider.COLUMN_FIRST_NAME,
+					ContactsContentProvider.COLUMN_LAST_NAME,
+					ContactsContentProvider.COLUMN_HOME_PHONE,
+					ContactsContentProvider.COLUMN_WORK_PHONE,
+					ContactsContentProvider.COLUMN_MOBILE_PHONE,
+					ContactsContentProvider.COLUMN_EMAIL
+			};
+
+			return new CursorLoader(
+					getActivity(), ContactsContentProvider.CONTENT_URI, projection, null, null,
+					ContactsContentProvider.COLUMN_LAST_NAME + " ASC"
+			);
+		}
+
+		@Override
+		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+			if (adapter != null)
+				adapter.changeCursor(cursor);
+		}
+
+		@Override
+		public void onLoaderReset(Loader<Cursor> loader) {
+			if (adapter != null) {
+				adapter.changeCursor(null);
+			}
+		}
+	};
+
+	public interface OnContactsFragmentListener {
+		void onContactsFragmentItemSelected(long id);
+		void onContactsFragmentCreateItem();
 	}
 }

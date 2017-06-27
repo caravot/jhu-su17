@@ -5,9 +5,9 @@ import android.support.v7.widget.Toolbar;
 
 // New version of the ContactsActivity that has a Toolbar
 public class ContactsFrameworkActivity
-        extends FragmentFrameworkActivity<ContactsFrameworkActivity.State, ContactsFrameworkActivity.Event, Contact>
+        extends FragmentFrameworkActivity<ContactsFrameworkActivity.State, ContactsFrameworkActivity.Event, Long>
         implements
-        ContactsFragment.OnTodoListFragmentListener,
+        ContactsFragment.OnContactsFragmentListener,
         DisplayFragment.OnDisplayFragmentListener,
         EditFragment.OnEditFragmentListener {
 	public enum State implements FragmentFrameworkActivity.State {
@@ -64,40 +64,39 @@ public class ContactsFrameworkActivity
 	}
 
 	@Override
-	protected void onStateChanged(State state, Contact contact) {
-		if (contact != null) {
-            editFragment.setContact(contact);
-            displayFragment.setContact(contact);
+	protected void onStateChanged(State state, Long id) {
+		if (id == null) {
+			id = -1L;
         }
+		editFragment.setContactId(id);
+		displayFragment.setContactId(id);
 	}
 
     // Todolist fragment
 	@Override
-	public void onTodoListFragmentItemSelected(Contact contact) {
-		handleEvent(Event.ItemSelected, contact);
+	public void onContactsFragmentItemSelected(long id) {
+		handleEvent(Event.ItemSelected, id);
 	}
 
 	@Override
-	public void onTodoListFragmentCreateItem(Contact contact) {
-		handleEvent(Event.NewItem, contact);
+	public void onContactsFragmentCreateItem() {
+		handleEvent(Event.NewItem, -1L);
 	}
 
     // Display fragment
     @Override
-    public void onDisplayFragmentEdit(Contact contact) {
-        handleEvent(Event.Edit, contact);
+    public void onDisplayFragmentEdit(long id) {
+        handleEvent(Event.Edit, id);
     }
 
 	// Edit fragment
 	@Override
-	public void onEditFragmentDone(Contact contact) {
-		contactsFragment.update(contact);
-		handleEvent(Event.Done, contact);
+	public void onEditFragmentDone(long id) {
+		handleEvent(Event.Done, id);
 	}
 
 	@Override
-	public void onEditFragmentCancel(Contact contact) {
-		System.out.println(contact);
-        handleEvent(Event.Cancel, contact);
+	public void onEditFragmentCancel(long id) {
+        handleEvent(Event.Cancel, id);
 	}
 }

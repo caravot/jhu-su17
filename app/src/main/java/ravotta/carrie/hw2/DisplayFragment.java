@@ -3,6 +3,7 @@ package ravotta.carrie.hw2;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -52,6 +53,36 @@ public class DisplayFragment extends Fragment {
         outState.putLong("id", id);
     }
 
+    public void setContactId(long id) {
+        this.id = id;
+        if (id == -1) {
+            first_name.setText("");
+            last_name.setText("");
+            home_phone.setText("");
+            work_phone.setText("");
+            mobile_phone.setText("");
+            email.setText("");
+        } else {
+            Contact contact = Util.findContact(getContext(), id);
+            if (contact == null) {
+                first_name.setText("");
+                last_name.setText("");
+                home_phone.setText("");
+                work_phone.setText("");
+                mobile_phone.setText("");
+                email.setText("");
+                this.id = -1;
+            } else {
+                first_name.setText(contact.getFirst_name());
+                last_name.setText(contact.getLast_name());
+                home_phone.setText(contact.getHome_phone());
+                work_phone.setText(contact.getWork_phone());
+                mobile_phone.setText(contact.getMobile_phone());
+                email.setText(contact.getEmail());
+            }
+        }
+    }
+
     public void setContact(Contact item) {
         this.contact = item;
         id = (item.getId()); // NEW: get the id of the contact being viewed
@@ -78,13 +109,6 @@ public class DisplayFragment extends Fragment {
     }
 
     public void showAbout() {
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(this, AboutActivity.class);
-//                startActivity(intent);
-//            }
-//        });
         Intent intent = new Intent(getActivity(), AboutActivity.class);
         startActivity(intent);
     }
@@ -97,7 +121,7 @@ public class DisplayFragment extends Fragment {
                 return true;
             case R.id.action_edit:
                 if (onDisplayFragmentListener != null)
-                    onDisplayFragmentListener.onDisplayFragmentEdit(contact);
+                    onDisplayFragmentListener.onDisplayFragmentEdit(id);
                 return true;
             case R.id.action_help:
                 showAbout();
@@ -124,6 +148,6 @@ public class DisplayFragment extends Fragment {
     private OnDisplayFragmentListener onDisplayFragmentListener;
 
     public interface OnDisplayFragmentListener {
-        void onDisplayFragmentEdit(Contact contact);
+        void onDisplayFragmentEdit(long id);
     }
 }

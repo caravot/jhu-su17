@@ -22,16 +22,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.TodoVi
 		this.items = items;
 	}
 
-// if we want to have different views for different rows, override getItemViewType
-//   and return a number representing the row. The entire set of numbers should be
-//   contiguous starting with 0
-//	@Override
-//	public int getItemViewType(int position) {
-//		if (position % 2 == 0)
-//			return 0;
-//		return 1;
-//	}
-
 	// create a ViewHolder that contains a view of the specified type
 	@Override
 	public TodoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,7 +33,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.TodoVi
 	@Override
 	public void onBindViewHolder(TodoViewHolder holder, int position) {
 		final Contact contact = items.get(position);
-//		holder.view.setBackgroundColor(position % 2 == 0 ? Color.LTGRAY : Color.WHITE);
 		holder.first_name.setText(contact.getFirst_name());
 		holder.mobile_phone.setText(String.valueOf(contact.getMobile_phone()));
 		holder.last_name.setText(String.valueOf(contact.getLast_name()));
@@ -52,7 +41,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.TodoVi
 		//   the listener so it can navigate
 		holder.view.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
-				todoListListener.itemSelected(contact);
+				contactsListener.itemSelected(contact);
 			}});
 	}
 
@@ -139,13 +128,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.TodoVi
 	}
 
 	// define a listener interface that we can call to indicate that an item has been clicked
-	private TodoListListener todoListListener;
+	private ContactsListener contactsListener;
 
-	public void setTodoListListener(TodoListListener todoListListener) {
-		this.todoListListener = todoListListener;
+	public void setTodoListListener(ContactsListener contactsListener) {
+		this.contactsListener = contactsListener;
 	}
 
-	public interface TodoListListener {
+	public interface ContactsListener {
 		void itemSelected(Contact contact);
 	}
 }

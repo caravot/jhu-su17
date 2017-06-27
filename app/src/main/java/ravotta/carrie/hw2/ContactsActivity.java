@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 
 // New version of the ContactsActivity that has a Toolbar
 public class ContactsActivity extends AppCompatActivity
-implements ContactsFragment.OnTodoListFragmentListener,
+implements ContactsFragment.OnContactsFragmentListener,
 	EditFragment.OnEditFragmentListener {
 	// request code for the startActivityForResult call
 	private static final int REQUEST_EDIT = 42;
@@ -32,49 +32,37 @@ implements ContactsFragment.OnTodoListFragmentListener,
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// when we get an item back from editing, update it in the adapter
-		if (requestCode == REQUEST_EDIT) {
-			if (resultCode == RESULT_OK) {
-				Contact contact = data.getParcelableExtra("item");
-				contactsFragment.update(contact);
-			}
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	@Override
-	public void onTodoListFragmentItemSelected(Contact contact) {
+	public void onContactsFragmentItemSelected(long id) {
 		if (sideBySide) {
-			editFragment.setContact(contact);
+			editFragment.setContactId(id);
 		} else {
 			// if an item is selected, send the item in an intent to the EditActivity
 			Intent intent = new Intent(ContactsActivity.this, DisplayActivity.class);
-			intent.putExtra("item", contact);
+			intent.putExtra("item", id);
 			startActivityForResult(intent, REQUEST_VIEW);
 		}
 	}
 
 	@Override
-	public void onTodoListFragmentCreateItem(Contact contact) {
+	public void onContactsFragmentCreateItem() {
 		if (sideBySide) {
-			editFragment.setContact(contact);
+			editFragment.setContactId(-1);
 		} else {
 			// create a new dummy item with a unique ID
 			// and send it to the edit activity
 			Intent intent = new Intent(ContactsActivity.this, DisplayActivity.class);
-			intent.putExtra("item", contact);
+			intent.putExtra("item", -1L);
 			startActivityForResult(intent, REQUEST_VIEW);
 		}
 	}
 
 	@Override
-	public void onEditFragmentDone(Contact contact) {
-		contactsFragment.update(contact);
+	public void onEditFragmentDone(long id) {
+		// do nothing
 	}
 
 	@Override
-	public void onEditFragmentCancel(Contact contact) {
-		// do nothing!
+	public void onEditFragmentCancel(long id) {
+		// do nothing
 	}
 }

@@ -20,6 +20,13 @@
 		<activity
 			android:name="ravotta.carrie.hw2.AboutActivity"
 			android:label="About Activity"/>
+
+		<provider
+			android:name="ravotta.carrie.hw2.ContactsContentProvider"
+			android:authorities="ravotta.carrie.com"
+			android:enabled="true"
+			android:exported="false">
+		</provider>
 	</application>
 
 </manifest>
