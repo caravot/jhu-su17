@@ -18,14 +18,14 @@ public class DisplayActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DisplayFragment displayFragment = (DisplayFragment) getSupportFragmentManager().findFragmentById(R.id.displayFragment);
-        long id = getIntent().getLongExtra("item", -1);
+        long id = getIntent().getLongExtra("itemId", -1);
         displayFragment.setContactId(id);
     }
 
     @Override
     public void onDisplayFragmentEdit(long id) {
         Intent returnData = new Intent();
-        returnData.putExtra("item", id);
+        returnData.putExtra("itemId", id);
         setResult(RESULT_OK, returnData);
         finish();
     }

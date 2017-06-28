@@ -17,14 +17,14 @@ public class EditActivity extends AppCompatActivity
 		setSupportActionBar(toolbar);
 
 		EditFragment editFragment = (EditFragment) getSupportFragmentManager().findFragmentById(R.id.editFragment);
-		long id = getIntent().getLongExtra("item", -1);
+		long id = getIntent().getLongExtra("itemId", -1);
 		editFragment.setContactId(id);
 	}
 
 	@Override
 	public void onEditFragmentDone(long id) {
 		Intent returnData = new Intent();
-		returnData.putExtra("item", id);
+		returnData.putExtra("itemId", id);
 		setResult(RESULT_OK, returnData);
 		finish();
 	}

@@ -32,10 +32,6 @@ public class ContactsFragment extends Fragment {
 		// get the recycler view
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
-		// create some dummy data
-		List<Contact> items = new ArrayList<>();
-		//Util.updateContact(getContext(), new Contact(-1, "Carrie", "Ravotta", "222-222-2222", "333-333-3333", "444-999-0000", "c.r@gmail.com"));
-
 		// wrap the data in our adapter to use as a model for the recycler view
 		adapter = new ContactCursorAdapter(getActivity(), getActivity().getLayoutInflater());
 		recyclerView.setAdapter(adapter);

@@ -64,6 +64,7 @@ public class DisplayFragment extends Fragment {
             email.setText("");
         } else {
             Contact contact = Util.findContact(getContext(), id);
+
             if (contact == null) {
                 first_name.setText("");
                 last_name.setText("");
@@ -81,17 +82,6 @@ public class DisplayFragment extends Fragment {
                 email.setText(contact.getEmail());
             }
         }
-    }
-
-    public void setContact(Contact item) {
-        this.contact = item;
-        id = (item.getId()); // NEW: get the id of the contact being viewed
-        first_name.setText(item.getFirst_name());
-        last_name.setText(item.getLast_name());
-        home_phone.setText(item.getHome_phone());
-        work_phone.setText(item.getWork_phone());
-        mobile_phone.setText(item.getMobile_phone());
-        email.setText(item.getEmail());
     }
 
     public void emailContact() {
