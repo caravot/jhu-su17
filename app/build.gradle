@@ -5,7 +5,7 @@ android {
 	buildToolsVersion '26.0.0'
 
 	defaultConfig {
-		applicationId "ravotta.carrie.hw2"
+		applicationId "ravotta.carrie.hw3"
 		minSdkVersion 19
 		targetSdkVersion 26
 		versionCode 1
