@@ -12,5 +12,8 @@
 	<dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="preferredWidth">200dp</dimen>
 	<dimen name="preferredHeight">300dp</dimen>
-	<dimen name="strokeWidth">10dp</dimen>
+	<dimen name="strokeWidth">2dp</dimen>
+
+    <dimen name="shapeSize">40dp</dimen>
+    <dimen name="lineWidth">3dp</dimen>
 </resources>

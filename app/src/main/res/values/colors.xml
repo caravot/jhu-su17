@@ -3,5 +3,20 @@
 	<color name="colorPrimary">#3F51B5</color>
 	<color name="colorPrimaryDark">#303F9F</color>
 	<color name="colorAccent">#FF4081</color>
-	<color name="cardBackground">#EEEEEE</color>
+
+    <color name="lightTan">#F6E4B9</color>
+    <color name="lightBlue">#ABECF2</color>
+    <color name="lightGreen">#AED56B</color>
+    <color name="slateBlue">#476C76</color>
+    <color name="darkGray">#393C35</color>
+
+
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="triangleColor">#FF0000</color>
+    <color name="circleColor">#00FF00</color>
+    <color name="squareColor">#0000FF</color>
+    <color name="lineColor">#555555</color>
 </resources>
