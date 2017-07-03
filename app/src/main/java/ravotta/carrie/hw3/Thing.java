@@ -2,12 +2,9 @@ package ravotta.carrie.hw3;
 
 import android.graphics.Rect;
 
-/**
- * Created by scott on 5/8/2016.
- */
 public class Thing {
 	public enum Type {
-		Square, Circle, Heart, Star;
+		Square, Circle, Heart, Star, Blank
 	}
 	private Type type;
 	private Rect bounds;
@@ -16,6 +13,10 @@ public class Thing {
 		this.type = type;
 		this.bounds = bounds;
 	}
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 
 	public void setBounds(Rect bounds) {
 		this.bounds = bounds;

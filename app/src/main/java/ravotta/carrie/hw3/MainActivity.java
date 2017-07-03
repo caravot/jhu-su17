@@ -3,6 +3,7 @@ package ravotta.carrie.hw3;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private ShapeDrawable starDrawable;
@@ -28,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
     private int lineColor;
     private DrawingArea drawingArea;
     private Thing tappedThing = null;
+    private Thing[][] tiles = new Thing[8][8];
 
     private enum Mode {
-        AddSquare, AddCircle, AddTriangle, Select, SelectFirstEndpoint, SelectSecondEndpoint;
+        AddSquare, AddCircle, AddTriangle, Select, SelectFirstEndpoint, SelectSecondEndpoint
     }
     private Mode mode = null;
     private volatile boolean blink = false;
@@ -93,6 +96,17 @@ public class MainActivity extends AppCompatActivity {
         assert mainLayout != null;
 
         mainLayout.addView(drawingArea);
+
+        // initialize tiles
+        createInitalTiles();
+    }
+
+    public void createInitalTiles() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                tiles[i][j] = new Thing(Thing.Type.Blank, null);
+            }
+        }
     }
 
     private ShapeDrawable createStar(int strokeWidth, int triangleFillColor, ColorStateList strokeColor) {
@@ -166,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         private Thing selectedThing = null;
         private Thing thing1 = null;
         private Paint linePaint = new Paint();
+        private Random random = new Random();
 
         public DrawingArea(Context context) {
             super(context);
@@ -253,6 +268,41 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onDraw(Canvas canvas) {
+            Drawable drawableToUse = null;
+            int size = (int) shapeSize;
+
+            // draw game board as 8x8 tiles
+            for(int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {
+                    int r = random.nextInt(4);
+
+                    switch(r) {
+                        case 0:
+                            drawableToUse = squareDrawable;
+                            tiles[i][j].setType(Thing.Type.Square);
+                            break;
+                        case 1:
+                            drawableToUse = circleDrawable;
+                            tiles[i][j].setType(Thing.Type.Circle);
+                            break;
+                        case 2:
+                            drawableToUse = heartDrawable;
+                            tiles[i][j].setType(Thing.Type.Heart);
+                            break;
+                        case 3:
+                            drawableToUse = starDrawable;
+                            tiles[i][j].setType(Thing.Type.Star);
+                            break;
+                    }
+
+                    drawableToUse.setBounds(size*j, size*i, size+(size*j), size+(size*i));
+                    drawableToUse.draw(canvas);
+
+                    tiles[i][j].setBounds(drawableToUse.getBounds());
+                }
+            }
+
+
             for(Line line : lines) {
                 int x1 = line.getEnd1().getBounds().centerX();
                 int y1 = line.getEnd1().getBounds().centerY();
@@ -260,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                 int y2 = line.getEnd2().getBounds().centerY();
                 canvas.drawLine(x1, y1, x2, y2, linePaint);
             }
-            Drawable drawableToUse = null;
+
             for(Thing thing : things) {
                 switch(thing.getType()) {
                     case Square:
