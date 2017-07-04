@@ -3,17 +3,25 @@ package ravotta.carrie.hw3;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private Thing tappedThing = null;
     private Thing[][] tiles = new Thing[8][8];
     private boolean redraw = true;
+
+    private DrawingBoard drawingBoard;
 
     private enum Mode {
         AddSquare, AddCircle, AddTriangle, Select
@@ -65,12 +75,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         float strokeWidth = getResources().getDimension(R.dimen.strokeWidth);
         int triangleFillColor = getResources().getColor(R.color.triangleColor);
 
-        shapeSize = getResources().getDimension(R.dimen.shapeSize);
+        // get window size
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+
+        System.out.println(screenWidth);
+        System.out.println(screenHeight);
+
+        float w = screenWidth / 8;
+        float h = screenHeight / 8;
+
+        System.out.println(w);
+        System.out.println(h);
+
+
+        shapeSize = w;
         ColorStateList strokeColor = getResources().getColorStateList(R.color.stroke);
 
         squareDrawable = getResources().getDrawable(R.drawable.square);
@@ -81,28 +107,19 @@ public class MainActivity extends AppCompatActivity {
         lineColor = getResources().getColor(R.color.lineColor);
         lineWidth = getResources().getDimension(R.dimen.lineWidth);
 
-        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
+        LinearLayout mainLayout = new LinearLayout(MainActivity.this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        //params.setMargins(20, 20, 20, 20);
+        mainLayout.setLayoutParams(params);
+        setContentView(mainLayout);
+
         drawingArea = new DrawingArea(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         drawingArea.setLayoutParams(layoutParams);
 
         assert mainLayout != null;
 
         mainLayout.addView(drawingArea);
-
-        // initialize tiles
-        //createInitialTiles();
-    }
-
-    public void createInitialTiles() {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                Thing thing = new Thing(Thing.Type.Blank, null);
-
-                tiles[i][j] = thing;
-
-            }
-        }
     }
 
     private ShapeDrawable createStar(int strokeWidth, int triangleFillColor, ColorStateList strokeColor) {
@@ -143,6 +160,30 @@ public class MainActivity extends AppCompatActivity {
         shapeDrawable.setIntrinsicWidth((int) shapeSize);
         shapeDrawable.setBounds(0, 0, (int) shapeSize, (int) shapeSize);
         return shapeDrawable;
+    }
+
+    private class DrawingBoard extends LinearLayout {
+        private Context context;
+        private Button plus;
+
+        public DrawingBoard(Context context) {
+            super(context);
+            init(context);
+        }
+        public DrawingBoard(Context context, AttributeSet attrs) {
+            super(context, attrs);
+            init(context);
+        }
+        private void init(Context context) {
+            this.context = context;
+            LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT, 0);
+            plus = new Button(context);
+            plus.setText("Score: 00");
+            plus.setLayoutParams(params);
+            setOrientation(LinearLayout.VERTICAL);
+
+            addView(plus);
+        }
     }
 
     private class DrawingArea extends View {
@@ -281,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         thing.setBounds(new Rect(size * j, size * i, size + (size * j), size + (size * i)));
-
                         drawableToUse.setBounds(thing.getBounds());
                         drawableToUse.draw(canvas);
 
