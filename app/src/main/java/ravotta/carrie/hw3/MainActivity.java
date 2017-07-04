@@ -3,7 +3,6 @@ package ravotta.carrie.hw3;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    // four shapes
     private ShapeDrawable starDrawable;
     private ShapeDrawable heartDrawable;
     private Drawable squareDrawable;
@@ -31,10 +31,12 @@ public class MainActivity extends AppCompatActivity {
     private DrawingArea drawingArea;
     private Thing tappedThing = null;
     private Thing[][] tiles = new Thing[8][8];
+    private boolean redraw = true;
 
     private enum Mode {
-        AddSquare, AddCircle, AddTriangle, Select, SelectFirstEndpoint, SelectSecondEndpoint
+        AddSquare, AddCircle, AddTriangle, Select
     }
+
     private Mode mode = null;
     private volatile boolean blink = false;
 
@@ -65,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView heartImageView = (ImageView) findViewById(R.id.heartButton);
-        ImageView starImageView = (ImageView) findViewById(R.id.starButton);
-
         float strokeWidth = getResources().getDimension(R.dimen.strokeWidth);
         int triangleFillColor = getResources().getColor(R.color.triangleColor);
 
@@ -82,12 +81,6 @@ public class MainActivity extends AppCompatActivity {
         lineColor = getResources().getColor(R.color.lineColor);
         lineWidth = getResources().getDimension(R.dimen.lineWidth);
 
-        assert heartImageView != null;
-        heartImageView.setImageDrawable(createHeart((int) strokeWidth, triangleFillColor, strokeColor));
-
-        assert starImageView != null;
-        starImageView.setImageDrawable(createStar((int) strokeWidth, triangleFillColor, strokeColor));
-
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
         drawingArea = new DrawingArea(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1);
@@ -98,13 +91,16 @@ public class MainActivity extends AppCompatActivity {
         mainLayout.addView(drawingArea);
 
         // initialize tiles
-        createInitalTiles();
+        //createInitialTiles();
     }
 
-    public void createInitalTiles() {
+    public void createInitialTiles() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                tiles[i][j] = new Thing(Thing.Type.Blank, null);
+                Thing thing = new Thing(Thing.Type.Blank, null);
+
+                tiles[i][j] = thing;
+
             }
         }
     }
@@ -149,38 +145,12 @@ public class MainActivity extends AppCompatActivity {
         return shapeDrawable;
     }
 
-    public void buttonPressed(View view) {
-        switch(view.getId()) {
-            case R.id.circleButton:
-                mode = Mode.AddCircle;
-                break;
-            case R.id.squareButton:
-                mode = Mode.AddSquare;
-                break;
-            case R.id.heartButton:
-                mode = Mode.SelectFirstEndpoint;
-                break;
-            case R.id.starButton:
-                mode = Mode.AddTriangle;
-                break;
-        }
-        ViewGroup group = (ViewGroup) view.getParent();
-        for(int i = 0; i < group.getChildCount(); i++) {
-            View child = group.getChildAt(i);
-            if (child != view) {
-                child.setSelected(false);
-            }
-        }
-        view.setSelected(true);
-    }
-
     private class DrawingArea extends View {
         private List<Thing> things = new ArrayList<>();
-        private List<Line> lines = new ArrayList<>();
         private Thing selectedThing = null;
-        private Thing thing1 = null;
         private Paint linePaint = new Paint();
         private Random random = new Random();
+        int actionX, actionY;
 
         public DrawingArea(Context context) {
             super(context);
@@ -190,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private Thing findThingAt(int x, int y) {
-            for(int i = things.size()-1; i>=0; i--) {
+            for (int i = things.size() - 1; i >= 0; i--) {
                 Thing thing = things.get(i);
                 if (thing.getBounds().contains(x, y)) {
                     return thing;
@@ -198,63 +168,75 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+
         private Rect thingBounds(int x, int y, int size) {
             int halfSize = size / 2;
             return new Rect(x - halfSize, y - halfSize, x + halfSize, y + halfSize);
         }
 
+//        public void buttonPressed(View view) {
+//            switch(view.getId()) {
+//                case R.id.circleButton:
+//                    mode = Mode.AddCircle;
+//                    break;
+//                case R.id.squareButton:
+//                    mode = Mode.AddSquare;
+//                    break;
+//                case R.id.starButton:
+//                    mode = Mode.AddTriangle;
+//                    break;
+//                case R.id.heartButton:
+//                    mode = Mode.Select;
+//                    break;
+//            }
+//            ViewGroup group = (ViewGroup) view.getParent();
+//            for(int i = 0; i < group.getChildCount(); i++) {
+//                View child = group.getChildAt(i);
+//                if (child != view) {
+//                    child.setSelected(false);
+//                }
+//            }
+//            view.setSelected(true);
+//        }
+
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            switch(event.getAction()) {
+            actionX = (int) event.getX();
+            actionY = (int) event.getY();
+
+            switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    switch(mode) {
-                        case AddSquare:
-                            things.add(new Thing(Thing.Type.Square,
-                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
-                            break;
-                        case AddCircle:
-                            things.add(new Thing(Thing.Type.Circle,
-                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
-                            break;
-                        case AddTriangle:
-                            things.add(new Thing(Thing.Type.Heart,
-                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
-                            break;
-                        case Select:
-                            selectedThing = findThingAt((int) event.getX(), (int) event.getY());
-                            if(selectedThing != null) {
-                                tappedThing = selectedThing;
-                                things.remove(selectedThing);
-                                things.add(selectedThing);
-                                new Thread(blinker).start();
-                            }
-                            break;
-                        case SelectFirstEndpoint:
-                            thing1 = findThingAt((int) event.getX(), (int) event.getY());
-                            if (thing1 != null) {
-                                mode = Mode.SelectSecondEndpoint;
-                            }
-                            return true;
-                        case SelectSecondEndpoint:
-                            Thing thing2 = findThingAt((int) event.getX(), (int) event.getY());
-                            if (thing2 != null) {
-                                if (thing1 == thing2) {
-                                    thing1 = null;
-                                } else {
-                                    Line line = new Line(thing1, thing2);
-                                    lines.add(line);
-                                    thing1 = null;
-                                    invalidate();
-                                }
-                                mode = Mode.SelectFirstEndpoint;
-                            }
-                            return true;
-                    }
+                    Thing thing = findThingAt(actionX, actionY);
+                    System.out.println(thing.getType());
+                    // AddSquare, AddCircle, AddTriangle, Select
+//                    switch(mode) {
+//                        case AddSquare:
+//                            things.add(new Thing(Thing.Type.Square,
+//                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
+//                            break;
+//                        case AddCircle:
+//                            things.add(new Thing(Thing.Type.Circle,
+//                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
+//                            break;
+//                        case AddTriangle:
+//                            things.add(new Thing(Thing.Type.Heart,
+//                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
+//                            break;
+//                        case Select:
+//                            selectedThing = findThingAt((int) event.getX(), (int) event.getY());
+//                            if(selectedThing != null) {
+//                                tappedThing = selectedThing;
+//                                things.remove(selectedThing);
+//                                things.add(selectedThing);
+//                                new Thread(blinker).start();
+//                            }
+//                            break;
+//                    }
                     invalidate();
                     return true;
                 case MotionEvent.ACTION_MOVE:
                     if (selectedThing != null) {
-                        selectedThing.setBounds(thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize));
+                        selectedThing.setBounds(thingBounds((int) event.getX(), (int) event.getY(), (int) shapeSize));
                     }
                     invalidate();
                     return true;
@@ -263,7 +245,8 @@ public class MainActivity extends AppCompatActivity {
                     invalidate();
                     return true;
             }
-            return super.onTouchEvent(event);
+            //return super.onTouchEvent(event);
+            return false;
         }
 
         @Override
@@ -272,47 +255,46 @@ public class MainActivity extends AppCompatActivity {
             int size = (int) shapeSize;
 
             // draw game board as 8x8 tiles
-            for(int i = 0; i < 8; i++) {
-                for(int j = 0; j < 8; j++) {
-                    int r = random.nextInt(4);
+            if (redraw) {
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        int r = random.nextInt(4);
+                        Thing thing = new Thing(Thing.Type.Blank, null);
 
-                    switch(r) {
-                        case 0:
-                            drawableToUse = squareDrawable;
-                            tiles[i][j].setType(Thing.Type.Square);
-                            break;
-                        case 1:
-                            drawableToUse = circleDrawable;
-                            tiles[i][j].setType(Thing.Type.Circle);
-                            break;
-                        case 2:
-                            drawableToUse = heartDrawable;
-                            tiles[i][j].setType(Thing.Type.Heart);
-                            break;
-                        case 3:
-                            drawableToUse = starDrawable;
-                            tiles[i][j].setType(Thing.Type.Star);
-                            break;
+                        switch (r) {
+                            case 0:
+                                drawableToUse = squareDrawable;
+                                thing.setType(Thing.Type.Square);
+                                break;
+                            case 1:
+                                drawableToUse = circleDrawable;
+                                thing.setType(Thing.Type.Circle);
+                                break;
+                            case 2:
+                                drawableToUse = heartDrawable;
+                                thing.setType(Thing.Type.Heart);
+                                break;
+                            case 3:
+                                drawableToUse = starDrawable;
+                                thing.setType(Thing.Type.Star);
+                                break;
+                        }
+
+                        thing.setBounds(new Rect(size * j, size * i, size + (size * j), size + (size * i)));
+
+                        drawableToUse.setBounds(thing.getBounds());
+                        drawableToUse.draw(canvas);
+
+                        things.add(thing);
                     }
-
-                    drawableToUse.setBounds(size*j, size*i, size+(size*j), size+(size*i));
-                    drawableToUse.draw(canvas);
-
-                    tiles[i][j].setBounds(drawableToUse.getBounds());
                 }
+                redraw = false;
             }
 
-
-            for(Line line : lines) {
-                int x1 = line.getEnd1().getBounds().centerX();
-                int y1 = line.getEnd1().getBounds().centerY();
-                int x2 = line.getEnd2().getBounds().centerX();
-                int y2 = line.getEnd2().getBounds().centerY();
-                canvas.drawLine(x1, y1, x2, y2, linePaint);
-            }
-
-            for(Thing thing : things) {
-                switch(thing.getType()) {
+            for (Thing thing : things) {
+//                System.out.println(thing.getType());
+//                System.out.println(thing.getBounds());
+                switch (thing.getType()) {
                     case Square:
                         drawableToUse = squareDrawable;
                         break;
@@ -322,19 +304,23 @@ public class MainActivity extends AppCompatActivity {
                     case Heart:
                         drawableToUse = heartDrawable;
                         break;
+                    case Star:
+                        drawableToUse = starDrawable;
+                        break;
                 }
 
-                if (thing == selectedThing || (blink && tappedThing != null && thing.getType() == tappedThing.getType())) {
-                    drawableToUse.setState(selectedState);
-                } else {
-                    drawableToUse.setState(unselectedState);
-                }
+//                if (thing == selectedThing || (blink && tappedThing != null && thing.getType() == tappedThing.getType())) {
+//                    drawableToUse.setState(selectedState);
+//                } else {
+//                    drawableToUse.setState(unselectedState);
+//                }
 
                 drawableToUse.setBounds(thing.getBounds());
                 drawableToUse.draw(canvas);
             }
         }
     }
+
     private static final int[] selectedState = {android.R.attr.state_selected};
     private static final int[] unselectedState = {};
 }
