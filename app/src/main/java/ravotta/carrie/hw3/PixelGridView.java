@@ -8,6 +8,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +18,8 @@ import android.view.View;
 import java.util.Random;
 
 import static android.R.attr.strokeColor;
+import static android.R.attr.x;
+import static android.R.attr.y;
 import static ravotta.carrie.hw3.R.dimen.shapeSize;
 
 /**
@@ -42,6 +47,9 @@ public class PixelGridView extends View {
     private int top = 0;
     private int bottom = 0;
 
+    // score
+    private Score score;
+
     public PixelGridView(Context context) {
         this(context, null);
     }
@@ -61,6 +69,8 @@ public class PixelGridView extends View {
         starDrawable = createStar((int) strokeWidth, triangleFillColor, strokeColor);
 
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        score = new Score(context);
     }
 
     public void setNumColumns(int numColumns) {
@@ -104,7 +114,7 @@ public class PixelGridView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(Color.LTGRAY);
 
         Drawable drawableToUse = null;
         int size = (int) shapeSize;
@@ -162,6 +172,18 @@ public class PixelGridView extends View {
                 }
             }
         }
+
+//        String text = getResources().getString(R.string.score) + ": " + score;
+//
+//        TextPaint textPaint = new TextPaint();
+//        textPaint.setAntiAlias(true);
+//        textPaint.setTextSize(16 * getResources().getDisplayMetrics().density);
+//        textPaint.setColor(Color.BLACK);
+//        int textWidth = (int) textPaint.measureText(text);
+
+            //canvas.drawText(text, (width/2) - (textWidth/2), cellHeight/2, textPaint);
+//        StaticLayout staticLayout = new StaticLayout(text, textPaint, (int) width, Layout.Alignment.ALIGN_CENTER, 1.0f, 0, false);
+        //staticLayout.draw(canvas);
 
 //        for (int i = 1; i < numColumns; i++) {
 //            canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, blackPaint);

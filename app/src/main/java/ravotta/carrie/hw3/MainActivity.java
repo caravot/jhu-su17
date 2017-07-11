@@ -94,10 +94,6 @@ public class MainActivity extends AppCompatActivity {
         float w = screenWidth / GAME_BOARD_SIZE;
         float h = screenHeight / GAME_BOARD_SIZE;
 
-//        System.out.println(w);
-//        System.out.println(h);
-
-
         shapeSize = w;
         ColorStateList strokeColor = getResources().getColorStateList(R.color.stroke);
 
@@ -223,31 +219,6 @@ public class MainActivity extends AppCompatActivity {
             return new Rect(x - halfSize, y - halfSize, x + halfSize, y + halfSize);
         }
 
-//        public void buttonPressed(View view) {
-//            switch(view.getId()) {
-//                case R.id.circleButton:
-//                    mode = Mode.AddCircle;
-//                    break;
-//                case R.id.squareButton:
-//                    mode = Mode.AddSquare;
-//                    break;
-//                case R.id.starButton:
-//                    mode = Mode.AddTriangle;
-//                    break;
-//                case R.id.heartButton:
-//                    mode = Mode.Select;
-//                    break;
-//            }
-//            ViewGroup group = (ViewGroup) view.getParent();
-//            for(int i = 0; i < group.getChildCount(); i++) {
-//                View child = group.getChildAt(i);
-//                if (child != view) {
-//                    child.setSelected(false);
-//                }
-//            }
-//            view.setSelected(true);
-//        }
-
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             actionX = (int) event.getX();
@@ -340,8 +311,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             for (Thing thing : things) {
-//                System.out.println(thing.getType());
-//                System.out.println(thing.getBounds());
                 switch (thing.getType()) {
                     case Square:
                         drawableToUse = squareDrawable;
