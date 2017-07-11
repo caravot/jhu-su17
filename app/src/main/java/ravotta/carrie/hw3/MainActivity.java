@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    // game square size
+    private int GAME_BOARD_SIZE = 10;
     // four shapes
     private ShapeDrawable starDrawable;
     private ShapeDrawable heartDrawable;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private int lineColor;
     private DrawingArea drawingArea;
     private Thing tappedThing = null;
-    private Thing[][] tiles = new Thing[8][8];
+    private Thing[][] tiles = new Thing[GAME_BOARD_SIZE][GAME_BOARD_SIZE];
     private boolean redraw = true;
 
     private DrawingBoard drawingBoard;
@@ -89,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(screenWidth);
         System.out.println(screenHeight);
 
-        float w = screenWidth / 8;
-        float h = screenHeight / 8;
+        float w = screenWidth / GAME_BOARD_SIZE;
+        float h = screenHeight / GAME_BOARD_SIZE;
 
-        System.out.println(w);
-        System.out.println(h);
+//        System.out.println(w);
+//        System.out.println(h);
 
 
         shapeSize = w;
@@ -119,7 +121,13 @@ public class MainActivity extends AppCompatActivity {
 
         assert mainLayout != null;
 
-        mainLayout.addView(drawingArea);
+        //mainLayout.addView(drawingArea);
+
+        PixelGridView pixelGrid = new PixelGridView(this);
+        pixelGrid.setNumColumns(GAME_BOARD_SIZE);
+        pixelGrid.setNumRows(GAME_BOARD_SIZE);
+
+        setContentView(pixelGrid);
     }
 
     private ShapeDrawable createStar(int strokeWidth, int triangleFillColor, ColorStateList strokeColor) {
@@ -297,8 +305,8 @@ public class MainActivity extends AppCompatActivity {
 
             // draw game board as 8x8 tiles
             if (redraw) {
-                for (int i = 0; i < 8; i++) {
-                    for (int j = 0; j < 8; j++) {
+                for (int i = 0; i < GAME_BOARD_SIZE; i++) {
+                    for (int j = 0; j < GAME_BOARD_SIZE; j++) {
                         int r = random.nextInt(4);
                         Thing thing = new Thing(Thing.Type.Blank, null);
 
