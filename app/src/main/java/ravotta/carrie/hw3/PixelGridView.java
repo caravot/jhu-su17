@@ -34,6 +34,8 @@ public class PixelGridView extends View {
     private boolean[][] cellChecked;
     private Thing[][] things;
     private int shapePadding;
+    private Thing selectedThing;
+    private boolean redraw = true;
 
     // four shapes
     private ShapeDrawable starDrawable;
@@ -120,12 +122,14 @@ public class PixelGridView extends View {
         int size = (int) shapeSize;
         Random random = new Random();
 
-        if (numColumns == 0 || numRows == 0) {
+        if (numColumns == 0 || numRows == 0 || !redraw) {
             return;
         }
 
         int width = getWidth();
         int height = getHeight();
+
+        redraw = false;
 
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
@@ -162,7 +166,7 @@ public class PixelGridView extends View {
                     top = (j * cellHeight) + shapePadding;
                     right = ((i + 1) * cellWidth) - shapePadding;
                     bottom = ((j + 1) * cellHeight) - shapePadding;
-                    System.out.println(left + " | " + top + " | " + right + " | " + bottom + " = " + shapePadding);
+                    //System.out.println(left + " | " + top + " | " + right + " | " + bottom + " = " + shapePadding);
                     // l, t, r, b
                     thing.setBounds(new Rect(left, top, right, bottom));
                     drawableToUse.setBounds(thing.getBounds());
@@ -196,13 +200,60 @@ public class PixelGridView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int column = (int)(event.getX() / cellWidth);
-            int row = (int)(event.getY() / cellHeight);
+        int column = (int)(event.getX() / cellWidth);
+        int row = (int)(event.getY() / cellHeight);
 
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             cellChecked[column][row] = !cellChecked[column][row];
             //System.out.println(column + " - " + row);
             //invalidate();
+        }
+
+        if (selectedThing == null) {
+            System.out.println(column + " - " + row);
+            selectedThing = things[column][row];
+        }
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                //System.out.println(selectedThing.getType());
+                // AddSquare, AddCircle, AddTriangle, Select
+//                    switch(mode) {
+//                        case AddSquare:
+//                            things.add(new Thing(Thing.Type.Square,
+//                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
+//                            break;
+//                        case AddCircle:
+//                            things.add(new Thing(Thing.Type.Circle,
+//                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
+//                            break;
+//                        case AddTriangle:
+//                            things.add(new Thing(Thing.Type.Heart,
+//                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
+//                            break;
+//                        case Select:
+//                            selectedThing = findThingAt((int) event.getX(), (int) event.getY());
+//                            if(selectedThing != null) {
+//                                tappedThing = selectedThing;
+//                                things.remove(selectedThing);
+//                                things.add(selectedThing);
+//                                new Thread(blinker).start();
+//                            }
+//                            break;
+//                    }
+                //invalidate();
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                if (selectedThing != null) {
+                    System.out.println(selectedThing.getBounds());
+                    //selectedThing.setBounds(thingBounds((int) event.getX(), (int) event.getY(), (int) shapeSize));
+                }
+                //invalidate();
+                return true;
+            case MotionEvent.ACTION_UP:
+                selectedThing = null;
+                //invalidate();
+                return true;
         }
 
         return true;

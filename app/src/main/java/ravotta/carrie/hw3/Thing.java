@@ -8,6 +8,7 @@ public class Thing {
 	}
 	private Type type;
 	private Rect bounds;
+    private boolean shown;
 
 	public Thing(Type type, Rect bounds) {
 		this.type = type;
@@ -29,4 +30,12 @@ public class Thing {
 	public Type getType() {
 		return type;
 	}
+
+    public boolean isShown() {
+        return shown;
+    }
+
+    public void setShown(boolean shown) {
+        this.shown = shown;
+    }
 }

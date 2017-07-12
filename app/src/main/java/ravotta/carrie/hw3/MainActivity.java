@@ -88,9 +88,6 @@ public class MainActivity extends AppCompatActivity {
         int screenWidth = size.x;
         int screenHeight = size.y;
 
-        System.out.println(screenWidth);
-        System.out.println(screenHeight);
-
         float w = screenWidth / GAME_BOARD_SIZE;
         float h = screenHeight / GAME_BOARD_SIZE;
 
