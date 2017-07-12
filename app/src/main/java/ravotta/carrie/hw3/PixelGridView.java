@@ -8,8 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.text.Layout;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -17,10 +15,10 @@ import android.view.View;
 
 import java.util.Random;
 
-import static android.R.attr.strokeColor;
-import static android.R.attr.x;
-import static android.R.attr.y;
+import static android.R.attr.width;
 import static ravotta.carrie.hw3.R.dimen.shapeSize;
+import static ravotta.carrie.hw3.Thing.Type.Circle;
+import static ravotta.carrie.hw3.Thing.Type.Square;
 
 /**
  * Copied from https://stackoverflow.com/questions/24842550/2d-array-grid-on-drawing-canvas
@@ -49,8 +47,12 @@ public class PixelGridView extends View {
     private int top = 0;
     private int bottom = 0;
 
+    // when moving save start state
+    int initialColumn = -1;
+    int initialRow = -1;
+
     // score
-    private Score score;
+    private int score = 0;
 
     public PixelGridView(Context context) {
         this(context, null);
@@ -64,15 +66,14 @@ public class PixelGridView extends View {
         float strokeWidth = getResources().getDimension(R.dimen.strokeWidth);
         ColorStateList strokeColor = getResources().getColorStateList(R.color.stroke);
         int triangleFillColor = getResources().getColor(R.color.triangleColor);
+        int starFillColor = getResources().getColor(R.color.starColor);
 
         squareDrawable = getResources().getDrawable(R.drawable.square);
         circleDrawable = getResources().getDrawable(R.drawable.circle);
         heartDrawable = createHeart((int) strokeWidth, triangleFillColor, strokeColor);
-        starDrawable = createStar((int) strokeWidth, triangleFillColor, strokeColor);
+        starDrawable = createStar((int) strokeWidth, starFillColor, strokeColor);
 
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        score = new Score(context);
     }
 
     public void setNumColumns(int numColumns) {
@@ -122,30 +123,35 @@ public class PixelGridView extends View {
         int size = (int) shapeSize;
         Random random = new Random();
 
-        if (numColumns == 0 || numRows == 0 || !redraw) {
+        // add score
+        drawScore(canvas);
+
+        if (!redraw) {
+            redrawBoard(canvas);
             return;
         }
 
-        int width = getWidth();
-        int height = getHeight();
+        if (numColumns == 0 || numRows == 0) {
+            return;
+        }
 
         redraw = false;
 
+        // initialize board drawing
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
+                Thing thing = new Thing(Thing.Type.Blank, null);
                 if (i != 0 && i != numColumns-1 && j != 0 && j != numRows-1) {
-                    //if (cellChecked[i][j])
                     int r = random.nextInt(4);
-                    Thing thing = new Thing(Thing.Type.Blank, null);
 
                     switch (r) {
                         case 0:
                             drawableToUse = squareDrawable;
-                            thing.setType(Thing.Type.Square);
+                            thing.setType(Square);
                             break;
                         case 1:
                             drawableToUse = circleDrawable;
-                            thing.setType(Thing.Type.Circle);
+                            thing.setType(Circle);
                             break;
                         case 2:
                             drawableToUse = heartDrawable;
@@ -157,102 +163,137 @@ public class PixelGridView extends View {
                             break;
                     }
 
-                    //thing.setBounds(new Rect(size * j, size * i, size + (size * j), size + (size * i)));
-//                    left = i * cellWidth;
-//                    top = j * cellHeight;
-//                    right = (i + 1) * cellWidth;
-//                    bottom = (j + 1) * cellHeight;
                     left = (i * cellWidth) + shapePadding;
                     top = (j * cellHeight) + shapePadding;
                     right = ((i + 1) * cellWidth) - shapePadding;
                     bottom = ((j + 1) * cellHeight) - shapePadding;
-                    //System.out.println(left + " | " + top + " | " + right + " | " + bottom + " = " + shapePadding);
-                    // l, t, r, b
+
                     thing.setBounds(new Rect(left, top, right, bottom));
                     drawableToUse.setBounds(thing.getBounds());
                     drawableToUse.draw(canvas);
-                    //System.out.println(thing.getType());
-                    things[i][j] = thing;
+                }
+
+                things[i][j] = thing;
+            }
+        }
+    }
+
+    public void drawScore(Canvas canvas) {
+        String text = getResources().getString(R.string.score) + ": " + score;
+
+        TextPaint textPaint = new TextPaint();
+        textPaint.setAntiAlias(true);
+        textPaint.setTextSize(16 * getResources().getDisplayMetrics().density);
+        textPaint.setColor(Color.BLACK);
+        int textWidth = (int) textPaint.measureText(text);
+
+        canvas.drawText(text, (width/2) - (textWidth/2), cellHeight/2, textPaint);
+    }
+
+    public void redrawBoard(Canvas canvas) {
+        Drawable drawableToUse = null;
+
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+                if (i != 0 && i != numColumns-1 && j != 0 && j != numRows-1) {
+                    Thing thing = things[i][j];
+                    drawableToUse = getDrawable(thing.getType());
+                    drawableToUse.setBounds(thing.getBounds());
+                    drawableToUse.draw(canvas);
                 }
             }
         }
+    }
 
-//        String text = getResources().getString(R.string.score) + ": " + score;
-//
-//        TextPaint textPaint = new TextPaint();
-//        textPaint.setAntiAlias(true);
-//        textPaint.setTextSize(16 * getResources().getDisplayMetrics().density);
-//        textPaint.setColor(Color.BLACK);
-//        int textWidth = (int) textPaint.measureText(text);
+    public boolean checkForMatches() {
+        // if no match move things back to original view
+        return false;
+    }
 
-            //canvas.drawText(text, (width/2) - (textWidth/2), cellHeight/2, textPaint);
-//        StaticLayout staticLayout = new StaticLayout(text, textPaint, (int) width, Layout.Alignment.ALIGN_CENTER, 1.0f, 0, false);
-        //staticLayout.draw(canvas);
+    public void swapThings(Thing original, Thing target) {
+//        Thing.Type targetType = things[x][y].getType();
+//        Thing.Type originalType = things[initialRow][initialColumn].getType();
 
-//        for (int i = 1; i < numColumns; i++) {
-//            canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, blackPaint);
+        // if row doesn't change, only swap if moving +/- one column
+        // if column doesn't change, only swap if moving +/- one row
+//        if ((x == initialRow && (y - 1 == initialColumn || y + 1 == initialColumn))
+//                || (y == initialColumn && (x - 1 == initialRow || x + 1 == initialRow))
+//                && (targetType != originalType)) {
+            Thing targetClone = target;
+            System.out.println("Original: " + original.getType() + " Target: " + targetClone.getType());
+            // target
+            target.setType(original.getType());
+
+            // original
+            original.setType(targetClone.getType());
 //        }
-//
-//        for (int i = 1; i < numRows; i++) {
-//            canvas.drawLine(0, i * cellHeight, width, i * cellHeight, blackPaint);
-//        }
+    }
+
+    public Drawable getDrawable(Thing.Type type) {
+        Drawable drawableToUse = null;
+
+        switch (type) {
+            case Square:
+                drawableToUse = squareDrawable;
+                break;
+            case Circle:
+                drawableToUse = circleDrawable;
+                break;
+            case Heart:
+                drawableToUse = heartDrawable;
+                break;
+            case Star:
+                drawableToUse = starDrawable;
+                break;
+        }
+        return drawableToUse;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int column = (int)(event.getX() / cellWidth);
-        int row = (int)(event.getY() / cellHeight);
+        int x = (int)(event.getX() / cellWidth);
+        int y = (int)(event.getY() / cellHeight);
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            cellChecked[column][row] = !cellChecked[column][row];
-            //System.out.println(column + " - " + row);
-            //invalidate();
-        }
+        Thing target = things[x][y];
 
         if (selectedThing == null) {
-            System.out.println(column + " - " + row);
-            selectedThing = things[column][row];
+            System.out.println("Init selectedThing");
+            initialRow = (int)(event.getX() / cellWidth);
+            initialColumn = (int)(event.getY() / cellHeight);
+            selectedThing = things[x][y];
         }
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                //System.out.println(selectedThing.getType());
-                // AddSquare, AddCircle, AddTriangle, Select
-//                    switch(mode) {
-//                        case AddSquare:
-//                            things.add(new Thing(Thing.Type.Square,
-//                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
-//                            break;
-//                        case AddCircle:
-//                            things.add(new Thing(Thing.Type.Circle,
-//                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
-//                            break;
-//                        case AddTriangle:
-//                            things.add(new Thing(Thing.Type.Heart,
-//                                    thingBounds((int)event.getX(), (int)event.getY(), (int)shapeSize)));
-//                            break;
-//                        case Select:
-//                            selectedThing = findThingAt((int) event.getX(), (int) event.getY());
-//                            if(selectedThing != null) {
-//                                tappedThing = selectedThing;
-//                                things.remove(selectedThing);
-//                                things.add(selectedThing);
-//                                new Thread(blinker).start();
-//                            }
-//                            break;
-//                    }
-                //invalidate();
+//            cellChecked[column][row] = !cellChecked[column][row];
                 return true;
             case MotionEvent.ACTION_MOVE:
                 if (selectedThing != null) {
-                    System.out.println(selectedThing.getBounds());
-                    //selectedThing.setBounds(thingBounds((int) event.getX(), (int) event.getY(), (int) shapeSize));
+                    //System.out.println(x + " - " + initialRow + " : " + y + " - " + initialColumn);
+                    // if row doesn't change, only swap if moving +/- one column
+                    // if column doesn't change, only swap if moving +/- one row
+                    if ((x == initialRow && (y - 1 == initialColumn || y + 1 == initialColumn))
+                            || (y == initialColumn && (x - 1 == initialRow || x + 1 == initialRow))
+                            && (target.getType() != selectedThing.getType())) {
+                        swapThings(selectedThing, target);
+                        invalidate();
+                    }
+//                    System.out.println("FROM: " + initialRow + " - " + initialColumn + " TO: " + row + " - " + column);
+//                    swapThings(row, column);
+//                    invalidate();
                 }
-                //invalidate();
                 return true;
             case MotionEvent.ACTION_UP:
+                if (!checkForMatches()) {
+                    System.out.println("Swapping back");
+                    swapThings(target, selectedThing);
+                }
+
                 selectedThing = null;
-                //invalidate();
+                initialColumn = -1;
+                initialRow = -1;
+
+                invalidate();
                 return true;
         }
 
@@ -274,9 +315,11 @@ public class PixelGridView extends View {
                 return true;
             }
         };
+
         shapeDrawable.setIntrinsicHeight((int) shapeSize);
         shapeDrawable.setIntrinsicWidth((int) shapeSize);
         shapeDrawable.setBounds(0, 0, (int) shapeSize, (int) shapeSize);
+
         return shapeDrawable;
     }
 
@@ -294,9 +337,11 @@ public class PixelGridView extends View {
                 return true;
             }
         };
+
         shapeDrawable.setIntrinsicHeight((int) shapeSize);
         shapeDrawable.setIntrinsicWidth((int) shapeSize);
         shapeDrawable.setBounds(0, 0, (int) shapeSize, (int) shapeSize);
+
         return shapeDrawable;
     }
 

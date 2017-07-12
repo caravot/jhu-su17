@@ -16,5 +16,6 @@
 	<dimen name="strokeWidth">2dp</dimen>
 
     <dimen name="shapeSize">40dp</dimen>
+	<dimen name="ovalWidthSize">20dp</dimen>
     <dimen name="lineWidth">3dp</dimen>
 </resources>

@@ -15,8 +15,9 @@
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
-    <color name="triangleColor">#FF0000</color>
-    <color name="circleColor">#00FF00</color>
-    <color name="squareColor">#0000FF</color>
+    <color name="triangleColor">#531919</color>
+    <color name="circleColor">#1e681e</color>
+    <color name="starColor">#461e61</color>
+    <color name="squareColor">#181894</color>
     <color name="lineColor">#555555</color>
 </resources>

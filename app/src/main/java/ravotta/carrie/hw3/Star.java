@@ -2,9 +2,7 @@ package ravotta.carrie.hw3;
 
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.drawable.shapes.Shape;
 
@@ -39,7 +37,7 @@ public class Star extends Shape {
     @Override
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawPath(path, fillPaint);
-        canvas.drawPath(path, strokePaint);
+        //canvas.drawPath(path, strokePaint);
     }
 
     @Override
