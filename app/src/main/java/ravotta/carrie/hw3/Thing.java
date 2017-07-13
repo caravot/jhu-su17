@@ -13,6 +13,7 @@ public class Thing {
 	public Thing(Type type, Rect bounds) {
 		this.type = type;
 		this.bounds = bounds;
+        this.shown = true;
 	}
 
     public void setType(Type type) {
@@ -37,5 +38,14 @@ public class Thing {
 
     public void setShown(boolean shown) {
         this.shown = shown;
+    }
+
+    @Override
+    public String toString() {
+        return "Thing{" +
+                "type=" + type +
+                ", bounds=" + bounds +
+                ", shown=" + shown +
+                '}';
     }
 }

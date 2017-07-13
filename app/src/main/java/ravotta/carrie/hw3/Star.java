@@ -37,7 +37,7 @@ public class Star extends Shape {
     @Override
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawPath(path, fillPaint);
-        //canvas.drawPath(path, strokePaint);
+        canvas.drawPath(path, strokePaint);
     }
 
     @Override
