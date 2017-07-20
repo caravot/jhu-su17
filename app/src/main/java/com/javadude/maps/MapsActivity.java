@@ -8,10 +8,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.renderscript.Double2;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,12 +29,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,8 +53,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maps);
 		// Obtain the SupportMapFragment and get notified when the map is ready to be used.
-		mapFragment = (SupportMapFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.map);
+		mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
 		blueCar = BitmapDescriptorFactory.fromResource(R.mipmap.car_blue);
 	}
