@@ -2,8 +2,6 @@ package com.javadude.maps;
 
 import android.app.Service;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
@@ -31,8 +29,8 @@ import java.util.concurrent.Future;
 
 import static java.security.AccessController.getContext;
 
-public class UFOService extends Service {
-    UFOPositionAIDL.Stub binder = new UFOPositionAIDL.Stub() {
+public class UFOServiceImpl extends Service {
+    UFOService.Stub binder = new UFOService.Stub() {
         public void reset() {
             i = 1;
         }
@@ -45,27 +43,41 @@ public class UFOService extends Service {
     };
     private List<UFOPositionReporter> reporters = new ArrayList<>();
 
-    private String server;
-
-    public UFOService() {
-        //server = "http://10.0.2.2:8080/restserver/todo";
-        server = "http://javadude.com/aliens/";
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d("StartedService", "onCreate");
     }
 
+    private String server = "http://javadude.com/aliens";
+
     private volatile int i = 1;
+
+    // number of seconds between thread counts
+    private static int intervalSeconds = 1;
+
     private class CounterThread extends Thread {
         @Override public void run() {
-            for(i = 1; !isInterrupted() && i <=100; i++) {
+            for(i = 1; !isInterrupted() && i <= 100; i++) {
                 Log.d("StartedService", "count = " + i);
-                for(UFOPositionReporter reporter : reporters) {
+                try {
+                    getUFOPosition(i);
+                } catch (Exception e) {
+                    Log.e(getClass().getSimpleName(), "Could not get UFO position");
+                    Log.e(getClass().getSimpleName(), e.getMessage());
+                    interrupt();
+                }
+
+                for (UFOPositionReporter reporter : reporters) {
                     try {
                         reporter.report(i);
                     } catch (RemoteException e) {
                         Log.e(getClass().getSimpleName(), "Could not send report", e);
                     }
                 }
+
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(intervalSeconds * 1000);
                 } catch (InterruptedException e) {
                     interrupt();
                 }
@@ -99,65 +111,35 @@ public class UFOService extends Service {
         return super.onUnbind(intent);
     }
 
-    public Cursor getUFOPosition(Uri uri, String[] projection, String selection,
-                        String[] selectionArgs, String sortOrder) {
-        if (selection != null) {
-            throw new IllegalArgumentException("Selection arguments not supported by this content provider");
-        }
-
+    public void getUFOPosition(int i) {
         if (getContext() == null) {
             throw new RuntimeException("No context available!");
         }
 
-        String id = uri.getLastPathSegment();
-        String uriString = server + "/" + id;
+        String uriString = server + "/" + i + ".json";
+
         try {
-            Result result = httpRequest(Method.GET, uriString, null);
-            if (result.getStatusCode() < 300) {
-                JSONObject jsonObject = new JSONObject(result.getContent());
-//                MatrixCursor matrixCursor = new MatrixCursor(PROJECTION_ALL);
-//                matrixCursor.newRow()
-//                        .add(jsonObject.optLong("id"))
-//                        .add(jsonObject.optString("name"))
-//                        .add(jsonObject.optString("description"))
-//                        .add(jsonObject.optInt("priority"));
-//                matrixCursor.setNotificationUri(getContext().getContentResolver(), uri);
-//                return matrixCursor;
-            } else {
-                throw new RuntimeException("Could not access data: " + result.getStatusCode() + ": " + result.getStatusMessage());
-            }
-        } catch (Throwable e) {
-            throw new RuntimeException("Could not access data", e);
-        }
-    }
-
-    public Cursor getAllUFOPositions(Uri uri, String[] projection, String selection,
-                             String[] selectionArgs, String sortOrder) {
-        if (selection != null) {
-            throw new IllegalArgumentException("Selection arguments not supported by this content provider");
-        }
-
-        if (getContext() == null) {
-            throw new RuntimeException("No context available!");
-        }
-
-        String uriString = server;
-        try {
-            Result result = httpRequest(Method.GET, uriString, null);
+            Result result = httpRequest(uriString, null);
             if (result.getStatusCode() < 300) {
                 JSONArray jsonArray = new JSONArray(result.getContent());
-                //MatrixCursor matrixCursor = new MatrixCursor(PROJECTION_ALL);
-                for(int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.optJSONObject(i);
-//                    matrixCursor.newRow()
-//                            .add(jsonObject.optLong("id"))
-//                            .add(jsonObject.optString("name"))
-//                            .add(jsonObject.optString("description"))
-//                            .add(jsonObject.optInt("priority"));
+
+
+                for (int j = 0 ; j < jsonArray.length(); j++) {
+                    JSONObject obj = jsonArray.getJSONObject(j);
+
+                    int shipNumber = obj.getInt("ship");
+                    double lat = obj.getDouble("lat");
+                    double lon = obj.getDouble("lon");
+
+                    UFOPosition ufoPosition = new UFOPosition(shipNumber, lat, lon);
+                    System.out.println(ufoPosition.toString());
                 }
-                //matrixCursor.setNotificationUri(getContext().getContentResolver(), uri);
-                //return matrixCursor;
-            } else {
+
+                // TODO use HttpStatus.SC_NOT_FOUND instead
+            } else if (result.getStatusCode() == 404) {
+                // TODO add throw for http status of 404
+            }
+            else {
                 throw new RuntimeException("Could not access data: " + result.getStatusCode() + ": " + result.getStatusMessage());
             }
         } catch (Throwable e) {
@@ -166,7 +148,7 @@ public class UFOService extends Service {
     }
 
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
-    private Result httpRequest(final Method method, final String uriString, final UFOPosition ufoPosition) {
+    private Result httpRequest(final String uriString, final UFOPosition ufoPosition) {
         Callable<Result> callable = new Callable<Result>() {
             @Override
             public Result call() throws Exception {
@@ -174,7 +156,7 @@ public class UFOService extends Service {
                     URL url = new URL(uriString);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                    connection.setRequestMethod(method.name());
+                    connection.setRequestMethod("GET");
                     connection.connect();
 
                     if (ufoPosition != null) {

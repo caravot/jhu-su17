@@ -8,14 +8,12 @@ import org.json.JSONObject;
 
 // a parcelable object representing a single to-do item
 public class UFOPosition implements Parcelable {
-	private long id; // NEW: use an id so we can handle updates better
 	private int shipNumber;
 	private double lat;
 	private double lon;
 
     public UFOPosition() {}
-	public UFOPosition(long id, int shipNumber, double lat, double lon) {
-		this.id = id;
+	public UFOPosition(int shipNumber, double lat, double lon) {
 		this.shipNumber = shipNumber;
 		this.lat = lat;
 		this.lon = lon;
@@ -27,14 +25,6 @@ public class UFOPosition implements Parcelable {
 
     public static void setCREATOR(Creator<UFOPosition> CREATOR) {
         UFOPosition.CREATOR = CREATOR;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
 	public int getShipNumber() {
@@ -73,7 +63,6 @@ public class UFOPosition implements Parcelable {
 	//   we don't need to write metadata describing the class and fields
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeLong(id);
 		dest.writeInt(shipNumber);
         dest.writeDouble(lat);
         dest.writeDouble(lon);
@@ -87,7 +76,6 @@ public class UFOPosition implements Parcelable {
 		@Override
 		public UFOPosition createFromParcel(Parcel source) {
             UFOPosition ufoPosition = new UFOPosition();
-            ufoPosition.setId(source.readLong());
             ufoPosition.setShipNumber(Integer.parseInt(source.readString()));
             ufoPosition.setLat(Double.parseDouble(source.readString()));
             ufoPosition.setLon(Double.parseDouble(source.readString()));
@@ -99,12 +87,21 @@ public class UFOPosition implements Parcelable {
 			return new UFOPosition[size];
 		}
 	};
-	public String toJsonString() throws JSONException {
+
+    @Override
+    public String toString() {
+        return "UFOPosition{" +
+                "shipNumber=" + shipNumber +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                '}';
+    }
+
+    public String toJsonString() throws JSONException {
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("id", id);
 		jsonObject.put("shipNumber", shipNumber);
 		jsonObject.put("lat", lat);
 		jsonObject.put("lon", lon);
-		return jsonObject.toString(4);
+		return jsonObject.toString(3);
 	}
 }

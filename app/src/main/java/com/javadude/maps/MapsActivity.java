@@ -1,15 +1,21 @@
 package com.javadude.maps;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -47,6 +53,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private LatLng savedPosition;
 	private Marker marker;
 	private Polyline route;
+
+    private UFOPositionReporter.Stub reporter = new UFOPositionReporter.Stub() {
+        @Override
+        public void report(int i) {
+            //System.out.println("HELLO FROM HERE" + i);
+        }
+    };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +103,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 			);
 		}
 		permissionManager.run(enableMyLocationAction);
+
+
+        Intent intent = new Intent();
+        intent.setClassName("com.javadude.maps", "com.javadude.maps.UFOServiceImpl");
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override
@@ -231,5 +249,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 			}
 		}
 	}
+    private UFOService remoteService;
 
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            remoteService = UFOService.Stub.asInterface(service);
+            try {
+                Log.d("onServiceConnected", "Got here to add service");
+                remoteService.add(reporter);
+            } catch (RemoteException e) {
+                Log.e(getClass().getSimpleName(), "Cannot add reporter", e);
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            remoteService = null;
+        }
+    };
 }
