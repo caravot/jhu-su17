@@ -41,36 +41,42 @@ public class UFOServiceImpl extends Service {
             reporters.remove(reporter);
         }
     };
+
     private List<UFOPositionReporter> reporters = new ArrayList<>();
+    private ArrayList<UFOPosition> ufoPositions = new ArrayList<>();
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d("StartedService", "onCreate");
-    }
-
+    // the alien REST web server
     private String server = "http://javadude.com/aliens";
 
+    // used to count our alien requests
     private volatile int i = 1;
 
     // number of seconds between thread counts
     private static int intervalSeconds = 1;
 
+    // number of times to call for alien positions
+    private static int alienCounter = 2;
+
+    private CounterThread counterThread;
+
     private class CounterThread extends Thread {
         @Override public void run() {
-            for(i = 1; !isInterrupted() && i <= 100; i++) {
-                Log.d("StartedService", "count = " + i);
+            for(i = 1; !isInterrupted() && i <= alienCounter; i++) {
+                Log.d("UFOServiceCounter", "count = " + i);
+
                 try {
-                    getUFOPosition(i);
+                    UFOPosition ufoPosition = getUFOPosition(i);
+                    ufoPositions.add(ufoPosition);
                 } catch (Exception e) {
                     Log.e(getClass().getSimpleName(), "Could not get UFO position");
                     Log.e(getClass().getSimpleName(), e.getMessage());
                     interrupt();
+                    stopSelf();
                 }
 
                 for (UFOPositionReporter reporter : reporters) {
                     try {
-                        reporter.report(i);
+                        reporter.report(ufoPositions);
                     } catch (RemoteException e) {
                         Log.e(getClass().getSimpleName(), "Could not send report", e);
                     }
@@ -86,7 +92,11 @@ public class UFOServiceImpl extends Service {
         }
     }
 
-    private CounterThread counterThread;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d("StartedService", "onCreate");
+    }
 
     @Nullable
     @Override
@@ -111,15 +121,19 @@ public class UFOServiceImpl extends Service {
         return super.onUnbind(intent);
     }
 
-    public void getUFOPosition(int i) {
+    // get an alien position from the REST web server
+    public UFOPosition getUFOPosition(int i) {
         if (getContext() == null) {
             throw new RuntimeException("No context available!");
         }
 
+        // build the GET request
         String uriString = server + "/" + i + ".json";
 
         try {
             Result result = httpRequest(uriString, null);
+
+            // result is ok
             if (result.getStatusCode() < 300) {
                 JSONArray jsonArray = new JSONArray(result.getContent());
 
@@ -132,7 +146,8 @@ public class UFOServiceImpl extends Service {
                     double lon = obj.getDouble("lon");
 
                     UFOPosition ufoPosition = new UFOPosition(shipNumber, lat, lon);
-                    System.out.println(ufoPosition.toString());
+//                    System.out.println(ufoPosition.toString());
+                    return ufoPosition;
                 }
 
                 // TODO use HttpStatus.SC_NOT_FOUND instead
@@ -145,6 +160,8 @@ public class UFOServiceImpl extends Service {
         } catch (Throwable e) {
             throw new RuntimeException("Could not access data", e);
         }
+
+        return null;
     }
 
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
