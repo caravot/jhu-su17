@@ -3,8 +3,6 @@ package com.javadude.maps;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,23 +11,13 @@ public class UFOPosition implements Parcelable {
 	private int shipNumber;
 	private double lat;
 	private double lon;
-	private LatLng savedPosition;
 
     public UFOPosition() {}
 	public UFOPosition(int shipNumber, double lat, double lon) {
 		this.shipNumber = shipNumber;
 		this.lat = lat;
 		this.lon = lon;
-        savedPosition = new LatLng(this.lat, this.lon);
 	}
-
-    public static Creator<UFOPosition> getCREATOR() {
-        return CREATOR;
-    }
-
-    public static void setCREATOR(Creator<UFOPosition> CREATOR) {
-        UFOPosition.CREATOR = CREATOR;
-    }
 
 	public int getShipNumber() {
 		return shipNumber;
@@ -54,14 +42,6 @@ public class UFOPosition implements Parcelable {
 	public void setLon(double lon) {
 		this.lon = lon;
 	}
-
-    public LatLng getSavedPosition() {
-        return savedPosition;
-    }
-
-    public void setSavedPosition(LatLng savedPosition) {
-        this.savedPosition = savedPosition;
-    }
 
     // only used by framework code for "special" cases
 	// you should always return 0

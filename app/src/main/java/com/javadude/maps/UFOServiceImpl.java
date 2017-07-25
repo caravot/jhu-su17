@@ -55,7 +55,7 @@ public class UFOServiceImpl extends Service {
     private static int intervalSeconds = 1;
 
     // number of times to call for alien positions
-    private static int alienCounter = 2;
+    private static int alienCounter = 15;
 
     private CounterThread counterThread;
 
@@ -63,6 +63,8 @@ public class UFOServiceImpl extends Service {
         @Override public void run() {
             for(i = 1; !isInterrupted() && i <= alienCounter; i++) {
                 Log.d("UFOServiceCounter", "count = " + i);
+                // remove old UFO positions
+                ufoPositions.clear();
 
                 try {
                     UFOPosition ufoPosition = getUFOPosition(i);

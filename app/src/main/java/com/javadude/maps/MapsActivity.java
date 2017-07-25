@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,12 +14,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -39,53 +40,105 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 	private GoogleMap mMap;
 	private PermissionManager permissionManager = new PermissionManager();
 	private SupportMapFragment mapFragment;
-	private BitmapDescriptor blueCar;
-	private LatLng savedPosition;
+	private BitmapDescriptor redUfo;
 	private Marker marker;
 	private Polyline route;
+    private LatLngBounds.Builder bounds;
+    private List<LatLng> latLngs;
+    private int padding;
+
+    // save all markers on map
+    // https://stackoverflow.com/questions/13692398/remove-a-marker-from-a-googlemap
+    private final Map<Integer, Marker> mMarkers = new ConcurrentHashMap<>();
+
+    // saved list of
 
     private UFOPositionReporter.Stub reporter = new UFOPositionReporter.Stub() {
         @Override
         public void report(List<UFOPosition> ufoPositions) {
             final ArrayList<UFOPosition> ufoPositionList = (ArrayList) ufoPositions;
+            final List<Integer> currentUFOShips = new ArrayList<>();
 
             runOnUiThread(new Runnable() {
                 public void run() {
-                    System.out.println("HELLO FROM HERE: " + ufoPositionList.size());
-
-                    //if (ufoPositionList != null && ufoPositionList.size() > 0) {
-                    Log.d("createUFOs", "creating a UFO");
+                    // loop over current list of UFO positions
                     for (int i = 0; i < ufoPositionList.size(); i++) {
-                        UFOPosition ufoPosition = ufoPositionList.get(i);
+                        // clear old latlon values
+                        latLngs = new ArrayList<>();
 
-                        LatLng savedPosition = ufoPosition.getSavedPosition();
+                        // get current UFO
+                        UFOPosition currentUFO = ufoPositionList.get(i);
 
+                        // save UFO id to list
+                        currentUFOShips.add(currentUFO.getShipNumber());
+
+                        // save current UFO position
+                        LatLng currentPosition = new LatLng(currentUFO.getLat(), currentUFO.getLon());
+
+                        // save current latlon in list for drawing lines
+                        latLngs.add(currentPosition);
+
+                        Log.d("ShipNumber", ""+currentUFO.getShipNumber());
+
+                        // ensure there are current UFOs saved
+                        if (mMarkers.size() > 0) {
+                            // try to get current UFO ship marker
+                            Marker oldUFO = mMarkers.get(currentUFO.getShipNumber());
+
+                            // check to see if ship already has been seen
+                            if (oldUFO != null) {
+                                LatLng previousPosition = oldUFO.getPosition();
+
+                                // if it has moved then remove old marker
+                                // draw line between both points
+                                if (previousPosition.latitude != currentUFO.getLat() && previousPosition.longitude != currentUFO.getLon()) {
+                                    // save last position latlon in list for drawing lines
+                                    latLngs.add(previousPosition);
+
+                                    route = mMap.addPolyline(new PolylineOptions()
+                                            .addAll(latLngs)
+                                            .color(Color.RED)
+                                            .width(8)
+                                    );
+
+                                    // remove old marker
+                                    oldUFO.remove();
+
+                                    mMarkers.remove(currentUFO.getShipNumber());
+                                }
+                            }
+                        }
+
+                        // add UFO marker to map
                         marker = mMap.addMarker(new MarkerOptions()
                                 .anchor(0.5f, 0.5f)
-                                .icon(blueCar)
-                                .title("Saved Location")
-                                .snippet("Lat/Lng: " + savedPosition.latitude + ", " + savedPosition.longitude)
-                                .position(savedPosition)
+                                .icon(redUfo)
+                                .title("UFO Ship: " + currentUFO.getShipNumber())
+                                .snippet("Lat/Lng: " + currentPosition.latitude + ", " + currentPosition.longitude)
+                                .position(currentPosition)
                         );
 
-                        marker = mMap.addMarker(new MarkerOptions()
-                                .anchor(0.5f, 0.5f)
-                                .icon(blueCar)
-                                .title("Saved Location")
-                                .snippet("Lat/Lng: " + savedPosition.latitude + ", " + savedPosition.longitude)
-                                .position(savedPosition)
-                        );
+                        // save current position
+                        mMarkers.put(currentUFO.getShipNumber(), marker);
 
-                        Log.d("createUFOs", "creating a UFO");
-//                        Uri uri = Uri.parse("google.navigation:q=" + savedPosition.latitude + "," + savedPosition.longitude);
-//                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                        bounds = bounds.include(currentPosition);
                     }
+
+                    //set bounds with all the map points
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), padding));
+
+                    // check if UFO was not returned
+//                    for (int i = 0; i < mMarkers.size(); i++) {
+//                        int ship = mMarkers.get(i);
+//                    }
                 }
             });
         }
@@ -100,7 +153,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 		// Obtain the SupportMapFragment and get notified when the map is ready to be used.
 		mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
-		blueCar = BitmapDescriptorFactory.fromResource(R.mipmap.car_blue);
+		redUfo = BitmapDescriptorFactory.fromResource(R.mipmap.red_ufo);
+
+        padding = (int) getResources().getDimension(R.dimen.padding);
 	}
 
 	/**
@@ -116,30 +171,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 	public void onMapReady(GoogleMap googleMap) {
 		mMap = googleMap;
 
-		SharedPreferences preferences = getSharedPreferences("position", MODE_PRIVATE);
-		String latitudeString = preferences.getString("latitude", null);
-		String longitudeString = preferences.getString("longitude", null);
-
-		if (latitudeString != null && longitudeString != null) {
-			savedPosition = new LatLng(
-					Double.parseDouble(latitudeString),
-					Double.parseDouble(longitudeString)
-			);
-
-            if (marker != null) {
-                marker.remove();
-            }
-
-			marker = mMap.addMarker(new MarkerOptions()
-					.anchor(0.5f, 0.5f)
-					.icon(blueCar)
-					.title("Saved Location")
-					.snippet("Lat/Lng: " + savedPosition.latitude + ", " + savedPosition.longitude)
-					.position(savedPosition)
-			);
-		}
-
 		permissionManager.run(enableMyLocationAction);
+
+        bounds = new LatLngBounds.Builder();
 
         Intent intent = new Intent();
         intent.setClassName("com.javadude.maps", "com.javadude.maps.UFOServiceImpl");
@@ -154,14 +188,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             //noinspection MissingPermission
             mMap.setMyLocationEnabled(false);
         }
-
-		if (savedPosition != null) {
-			getSharedPreferences("position", MODE_PRIVATE)
-					.edit()
-					.putString("latitude", savedPosition.latitude + "")
-					.putString("longitude", savedPosition.longitude + "")
-					.apply();
-		}
 	}
 
 	@Override
@@ -187,10 +213,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 		permissionManager.handleRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
-//    case R.id.action_navigate: {
-//        Uri uri = Uri.parse("google.navigation:q=" + savedPosition.latitude + "," + savedPosition.longitude);
-//        startActivity(new Intent(Intent.ACTION_VIEW, uri));
-//
 //    case R.id.action_show_route: {
 //        Location myLocation = mMap.getMyLocation();
 //        new RouteFetcher().execute(myLocation.getLatitude(), myLocation.getLongitude(), savedPosition.latitude, savedPosition.longitude);
@@ -205,7 +227,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //
 //        marker = mMap.addMarker(new MarkerOptions()
 //                .anchor(0.5f, 0.5f)
-//                .icon(blueCar)
+//                .icon(redUfo)
 //                .title("Saved Location")
 //                .position(savedPosition)
 //        );
