@@ -30,18 +30,6 @@ import java.util.concurrent.Future;
 import static java.security.AccessController.getContext;
 
 public class UFOServiceImpl extends Service {
-    UFOService.Stub binder = new UFOService.Stub() {
-        public void reset() {
-            i = 1;
-        }
-        public void add(UFOPositionReporter reporter) {
-            reporters.add(reporter);
-        }
-        public void remove(UFOPositionReporter reporter) {
-            reporters.remove(reporter);
-        }
-    };
-
     private List<UFOPositionReporter> reporters = new ArrayList<>();
     private ArrayList<UFOPosition> ufoPositions = new ArrayList<>();
 
@@ -54,21 +42,31 @@ public class UFOServiceImpl extends Service {
     // number of seconds between thread counts
     private static int intervalSeconds = 1;
 
-    // number of times to call for alien positions
-    private static int alienCounter = 15;
-
     private CounterThread counterThread;
+
+    UFOService.Stub binder = new UFOService.Stub() {
+        public void reset() {
+            i = 1;
+        }
+        public void add(UFOPositionReporter reporter) {
+            reporters.add(reporter);
+        }
+        public void remove(UFOPositionReporter reporter) {
+            reporters.remove(reporter);
+        }
+    };
 
     private class CounterThread extends Thread {
         @Override public void run() {
-            for(i = 1; !isInterrupted() && i <= alienCounter; i++) {
-                Log.d("UFOServiceCounter", "count = " + i);
+            // run until we are interrupted
+            for(i = 1; !isInterrupted(); i++) {
+                Log.d("Alien Counter", i+"");
                 // remove old UFO positions
                 ufoPositions.clear();
 
                 try {
-                    UFOPosition ufoPosition = getUFOPosition(i);
-                    ufoPositions.add(ufoPosition);
+                    getUFOPosition(i);
+                    //ufoPositions.add(ufoPosition);
                 } catch (Exception e) {
                     Log.e(getClass().getSimpleName(), "Could not get UFO position");
                     Log.e(getClass().getSimpleName(), e.getMessage());
@@ -76,6 +74,7 @@ public class UFOServiceImpl extends Service {
                     stopSelf();
                 }
 
+                // send ufo positions to all reporters
                 for (UFOPositionReporter reporter : reporters) {
                     try {
                         reporter.report(ufoPositions);
@@ -96,8 +95,20 @@ public class UFOServiceImpl extends Service {
 
     @Override
     public void onCreate() {
+        Log.d("onCreate", "onCreate method called");
         super.onCreate();
-        Log.d("StartedService", "onCreate");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("onDestroy", "onDestroy method called");
+        counterThread.interrupt();
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
     }
 
     @Nullable
@@ -110,21 +121,8 @@ public class UFOServiceImpl extends Service {
         return binder;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        counterThread.interrupt();
-        Log.d("StartedService", "onDestroy");
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        Log.d("StartedService", "onUnbind");
-        return super.onUnbind(intent);
-    }
-
     // get an alien position from the REST web server
-    public UFOPosition getUFOPosition(int i) {
+    public void getUFOPosition(int i) {
         if (getContext() == null) {
             throw new RuntimeException("No context available!");
         }
@@ -147,14 +145,11 @@ public class UFOServiceImpl extends Service {
                     double lat = obj.getDouble("lat");
                     double lon = obj.getDouble("lon");
 
-                    UFOPosition ufoPosition = new UFOPosition(shipNumber, lat, lon);
-//                    System.out.println(ufoPosition.toString());
-                    return ufoPosition;
+                    ufoPositions.add(new UFOPosition(shipNumber, lat, lon));
                 }
-
-                // TODO use HttpStatus.SC_NOT_FOUND instead
             } else if (result.getStatusCode() == 404) {
-                // TODO add throw for http status of 404
+                Log.d("Error", "404 Error");
+                this.onDestroy();
             }
             else {
                 throw new RuntimeException("Could not access data: " + result.getStatusCode() + ": " + result.getStatusMessage());
@@ -162,8 +157,6 @@ public class UFOServiceImpl extends Service {
         } catch (Throwable e) {
             throw new RuntimeException("Could not access data", e);
         }
-
-        return null;
     }
 
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
@@ -193,7 +186,8 @@ public class UFOServiceImpl extends Service {
                         InputStreamReader isr = new InputStreamReader(in);
                         BufferedReader br = new BufferedReader(isr);
                         String line;
-                        while((line = br.readLine()) != null) {
+
+                        while ((line = br.readLine()) != null) {
                             content += line + "\n";
                         }
                     }

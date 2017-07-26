@@ -10,6 +10,5 @@
 	<string name="cancel">Cancel</string>
 	<string name="perform_this_action">perform this action</string>
 	<string name="item">Item</string>
-	<string name="show_route">Show Route</string>
 	<string name="navigate">Navigate</string>
 </resources>
