@@ -50,6 +50,8 @@ public class UFOServiceImpl extends Service {
         }
         public void add(UFOPositionReporter reporter) {
             reporters.add(reporter);
+            startThread();
+
         }
         public void remove(UFOPositionReporter reporter) {
             reporters.remove(reporter);
@@ -114,11 +116,14 @@ public class UFOServiceImpl extends Service {
     @Nullable
     @Override
     public synchronized IBinder onBind(Intent intent) {
+        return binder;
+    }
+
+    public void startThread() {
         if (counterThread == null) {
             counterThread = new CounterThread();
             counterThread.start();
         }
-        return binder;
     }
 
     // get an alien position from the REST web server
