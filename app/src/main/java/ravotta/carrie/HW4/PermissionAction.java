@@ -1,4 +1,4 @@
-package com.javadude.maps;
+package ravotta.carrie.HW4;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

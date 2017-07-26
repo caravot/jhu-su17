@@ -1,4 +1,4 @@
-package com.javadude.maps;
+package ravotta.carrie.HW4;
 
 import android.os.Parcel;
 import android.os.Parcelable;

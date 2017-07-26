@@ -16,4 +16,4 @@
           map:uiTiltGestures="true"
           map:uiZoomControls="true"
           map:uiZoomGestures="true"
-          tools:context="com.javadude.maps.MapsActivity"/>
+          tools:context="ravotta.carrie.HW4.MapsActivity"/>

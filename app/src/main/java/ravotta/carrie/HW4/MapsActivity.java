@@ -1,4 +1,4 @@
-package com.javadude.maps;
+package ravotta.carrie.HW4;
 
 import android.Manifest;
 import android.content.ComponentName;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.javadude.maps.R.id.map;
+import static ravotta.carrie.HW4.R.id.map;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -170,7 +170,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bounds = new LatLngBounds.Builder();
 
         Intent intent = new Intent();
-        intent.setClassName("com.javadude.maps", "com.javadude.maps.UFOServiceImpl");
+        intent.setClassName("ravotta.carrie.HW4", "ravotta.carrie.HW4.UFOServiceImpl");
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 	}
 

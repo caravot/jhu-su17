@@ -1,5 +1,5 @@
-package com.javadude.maps;
-import com.javadude.maps.UFOPositionReporter;
+package ravotta.carrie.HW4;
+import ravotta.carrie.HW4.UFOPositionReporter;
 
 interface UFOService {
 	void reset();

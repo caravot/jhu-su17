@@ -1,4 +1,4 @@
-package com.javadude.maps;
+package ravotta.carrie.HW4;
 
 public class Result {
 	private int statusCode;
