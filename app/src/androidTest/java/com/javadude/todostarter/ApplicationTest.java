@@ -1,4 +1,4 @@
-package com.javadude.todostarter;
+package ravotta.carrie.hw5;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
