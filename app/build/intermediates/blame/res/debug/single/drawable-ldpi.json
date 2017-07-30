@@ -1,5 +1,13 @@
 [
     {
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/drawable-ldpi/ic_check_24dp.png",
+        "source": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/generated/res/pngs/debug/drawable-ldpi/ic_check_24dp.png"
+    },
+    {
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/drawable-ldpi/ic_snooze_24dp.png",
+        "source": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/generated/res/pngs/debug/drawable-ldpi/ic_snooze_24dp.png"
+    },
+    {
         "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/drawable-ldpi/ic_save_24dp.png",
         "source": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/generated/res/pngs/debug/drawable-ldpi/ic_save_24dp.png"
     },

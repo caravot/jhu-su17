@@ -12,12 +12,12 @@
         "source": "/Users/carrie/.android/build-cache/2bcfedb46003127e30e2ae3a64d9264b4b322e42/output/res/layout/design_layout_tab_text.xml"
     },
     {
-        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/layout/abc_search_dropdown_item_icons_2line.xml",
-        "source": "/Users/carrie/.android/build-cache/713ea6a62dd1e1f8fd163d92209caea009ff4f22/output/res/layout/abc_search_dropdown_item_icons_2line.xml"
-    },
-    {
         "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/layout/abc_activity_chooser_view_list_item.xml",
         "source": "/Users/carrie/.android/build-cache/713ea6a62dd1e1f8fd163d92209caea009ff4f22/output/res/layout/abc_activity_chooser_view_list_item.xml"
+    },
+    {
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/layout/abc_search_dropdown_item_icons_2line.xml",
+        "source": "/Users/carrie/.android/build-cache/713ea6a62dd1e1f8fd163d92209caea009ff4f22/output/res/layout/abc_search_dropdown_item_icons_2line.xml"
     },
     {
         "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/layout/design_navigation_menu.xml",
@@ -80,16 +80,16 @@
         "source": "/Users/carrie/.android/build-cache/713ea6a62dd1e1f8fd163d92209caea009ff4f22/output/res/layout/notification_action_tombstone.xml"
     },
     {
-        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/layout/notification_template_icon_group.xml",
-        "source": "/Users/carrie/.android/build-cache/713ea6a62dd1e1f8fd163d92209caea009ff4f22/output/res/layout/notification_template_icon_group.xml"
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/layout/abc_popup_menu_header_item_layout.xml",
+        "source": "/Users/carrie/.android/build-cache/713ea6a62dd1e1f8fd163d92209caea009ff4f22/output/res/layout/abc_popup_menu_header_item_layout.xml"
     },
     {
         "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/layout/notification_template_part_time.xml",
         "source": "/Users/carrie/.android/build-cache/713ea6a62dd1e1f8fd163d92209caea009ff4f22/output/res/layout/notification_template_part_time.xml"
     },
     {
-        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/layout/abc_popup_menu_header_item_layout.xml",
-        "source": "/Users/carrie/.android/build-cache/713ea6a62dd1e1f8fd163d92209caea009ff4f22/output/res/layout/abc_popup_menu_header_item_layout.xml"
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/layout/notification_template_icon_group.xml",
+        "source": "/Users/carrie/.android/build-cache/713ea6a62dd1e1f8fd163d92209caea009ff4f22/output/res/layout/notification_template_icon_group.xml"
     },
     {
         "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/layout/design_bottom_sheet_dialog.xml",
