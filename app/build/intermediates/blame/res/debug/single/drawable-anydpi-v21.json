@@ -1,0 +1,30 @@
+[
+    {
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_clear_24dp.xml",
+        "source": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_clear_24dp.xml"
+    },
+    {
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/design_ic_visibility.xml",
+        "source": "/Users/carrie/.android/build-cache/2bcfedb46003127e30e2ae3a64d9264b4b322e42/output/res/drawable-anydpi-v21/design_ic_visibility.xml"
+    },
+    {
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_snooze_24dp.xml",
+        "source": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_snooze_24dp.xml"
+    },
+    {
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_check_24dp.xml",
+        "source": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_check_24dp.xml"
+    },
+    {
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_add_24dp.xml",
+        "source": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_add_24dp.xml"
+    },
+    {
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/ic_save_24dp.xml",
+        "source": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_save_24dp.xml"
+    },
+    {
+        "merged": "/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/design_ic_visibility_off.xml",
+        "source": "/Users/carrie/.android/build-cache/2bcfedb46003127e30e2ae3a64d9264b4b322e42/output/res/drawable-anydpi-v21/design_ic_visibility_off.xml"
+    }
+]

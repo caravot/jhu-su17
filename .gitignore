@@ -6,6 +6,7 @@
 .idea
 .DS_Store
 /build
+/app/build
 /captures
 .externalNativeBuild
 app/src/main/java/**/_*.java
