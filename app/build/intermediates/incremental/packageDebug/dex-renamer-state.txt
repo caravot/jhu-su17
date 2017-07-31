@@ -1,7 +1,0 @@
-#Sun Jul 30 14:46:35 EDT 2017
-base.0=/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_72dc060948b7aa125beee440893bbf63b3d4b5d8
-renamed.1=classes.dex
-renamed.0=classes2.dex
-file.1=/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_68bc10c15f07aad869a8042d43b62a5f39825b54/classes.dex
-base.1=/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_68bc10c15f07aad869a8042d43b62a5f39825b54
-file.0=/Users/carrie/Documents/IdeaProjects/HW5/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_72dc060948b7aa125beee440893bbf63b3d4b5d8/classes.dex
