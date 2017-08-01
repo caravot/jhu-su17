@@ -8,13 +8,13 @@
         <variable name="todoItem" type="ravotta.carrie.hw5.TodoItem" />
     </data>
 
-    <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-        <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-        <!--tools:showIn="@layout/activity_edit"-->
-        <!--tools:context=".EditActivity">-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:showIn="@layout/activity_edit"
+        tools:context=".EditActivity">
 
         <LinearLayout
             android:orientation="vertical"
@@ -43,47 +43,47 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{todoItem.name}"/>
+                android:text="@={todoItem.name}"/>
 
-            <!--<TextView android:text="@string/description"-->
-                <!--android:layout_marginTop="16dp"-->
-                <!--android:layout_marginLeft="16dp"-->
-                <!--android:layout_marginRight="16dp"-->
-                <!--android:layout_marginBottom="8dp"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content" />-->
-            <!--<EditText-->
-                <!--android:id="@+id/description"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:layout_marginLeft="16dp"-->
-                <!--android:layout_marginRight="16dp"-->
-                <!--android:layout_marginBottom="16dp"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-                <!--android:inputType="text|textAutoComplete"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@={todoItem.description}" />-->
+            <TextView android:text="@string/description"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/description"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:inputType="text|textAutoComplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@={todoItem.description}" />
 
-            <!--<TextView android:text="@string/priority"-->
-                <!--android:layout_marginTop="16dp"-->
-                <!--android:layout_marginLeft="16dp"-->
-                <!--android:layout_marginRight="16dp"-->
-                <!--android:layout_marginBottom="8dp"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content" />-->
-            <!--<EditText-->
-                <!--android:id="@+id/priority"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:layout_marginLeft="16dp"-->
-                <!--android:layout_marginRight="16dp"-->
-                <!--android:layout_marginBottom="16dp"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-                <!--android:inputType="number"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text=""  />-->
+            <TextView android:text="@string/priority"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/priority"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""  />
         </LinearLayout>
-    <!--</ScrollView>-->
+    </ScrollView>
 </layout>
