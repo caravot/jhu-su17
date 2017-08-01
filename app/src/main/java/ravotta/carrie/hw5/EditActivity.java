@@ -19,7 +19,6 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_edit);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit);
 
@@ -38,7 +37,10 @@ public class EditActivity extends AppCompatActivity {
             item = new TodoItem();
         }
 
-        binding.editContent.setItem(item);
+        Log.d("ITEM", item.toString());
+        binding.setTodoItem(item);
+//        binding.editcontent.setTodoItem(item);
+        //bindingActivity.editContent.setTodoItem(item);
     }
 
     // set up the action bar

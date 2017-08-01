@@ -12,6 +12,7 @@ public class TodoItem {
         this.description = "";
         this.priority = 1;
     }
+
     public TodoItem(long id, String name, String description, int priority) {
         this.id = id;
         this.name = name;
