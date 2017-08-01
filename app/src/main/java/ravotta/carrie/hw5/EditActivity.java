@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 import ravotta.carrie.hw5.databinding.ActivityEditBinding;
 
-// an activty to edit a todo item
+// an activity to edit a todo item
 public class EditActivity extends AppCompatActivity {
     private TodoItem item;
     private ActivityEditBinding binding;
@@ -39,8 +39,6 @@ public class EditActivity extends AppCompatActivity {
 
         Log.d("ITEM", item.toString());
         binding.setTodoItem(item);
-//        binding.editcontent.setTodoItem(item);
-        //bindingActivity.editContent.setTodoItem(item);
     }
 
     // set up the action bar

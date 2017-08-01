@@ -5,19 +5,22 @@ public class TodoItem {
     private String name;
     private String description;
     private int priority;
+    private Status status;
 
     public TodoItem() {
         this.id = -1;
         this.name = "";
         this.description = "";
         this.priority = 1;
+        this.status = Status.PENDING;
     }
 
-    public TodoItem(long id, String name, String description, int priority) {
+    public TodoItem(long id, String name, String description, int priority, Status status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.priority = priority;
+        this.status = status;
     }
 
     public long getId() {
@@ -52,6 +55,14 @@ public class TodoItem {
         this.priority = priority;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "TodoItem{" +
@@ -59,6 +70,7 @@ public class TodoItem {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", priority=" + priority +
+                ", status=" + status +
                 '}';
     }
 }
