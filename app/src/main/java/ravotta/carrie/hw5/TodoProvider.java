@@ -18,7 +18,9 @@ public class TodoProvider extends ContentProvider {
     public static final String DESCRIPTION = "description"; // description column
     public static final String DONE = "done";               // done column - added in version 2
     public static final String PRIORITY = "priority";       // priority column added in version 3
-    public static final int DB_VERSION = 4;                 // current database version
+    public static final String STATUS = "status";
+    public static final String DUE = "due";
+    public static final int DB_VERSION = 5;                 // current database version
 
     // URI Constants
     public static final int TODOS = 1;
@@ -54,8 +56,8 @@ public class TodoProvider extends ContentProvider {
                 db.beginTransaction();
                 // always keep version 1 creation
                 String sql = String.format(
-                        "create table %s (%s integer primary key autoincrement, %s text, %s text)",
-                        TODO_TABLE, ID, NAME, DESCRIPTION);
+                        "create table %s (%s integer primary key autoincrement, %s text, %s text, %s text, %s text)",
+                        TODO_TABLE, ID, NAME, DESCRIPTION, STATUS, DUE);
                 db.execSQL(sql);
                 onUpgrade(db, 1, DB_VERSION);  // run the upgrades starting from version 1
                 db.setTransactionSuccessful();
@@ -83,6 +85,11 @@ public class TodoProvider extends ContentProvider {
                     case 2:
                         // do upgrades from version 2 -> version 3
                         db.execSQL(String.format("alter table %s add %s text", TODO_TABLE, PRIORITY));
+                        // FALL THROUGH TO APPLY FURTHER UPGRADES
+                    case 4:
+                        // do upgrades from version 3 -> version 4
+                        db.execSQL(String.format("alter table %s add %s text", TODO_TABLE, STATUS));
+                        db.execSQL(String.format("alter table %s add %s text", TODO_TABLE, DUE));
                         // FALL THROUGH TO APPLY FURTHER UPGRADES
                 }
                 db.setTransactionSuccessful();

@@ -61,6 +61,10 @@ public class TodoAdapter extends CursorRecyclerViewAdapter<TodoAdapter.ViewHolde
         // - replace the contents of the view with that element
         holder.itemView.setSelected(selectedRows.contains(position));
         TodoItem todoItem = Util.todoItemFromCursor(cursor);
+        holder.nameView.setText("Carrie");
+        holder.descriptionView.setText("Carrie");
+        holder.priorityView.setText("5");
+        holder.id = 1;
 //        holder.nameView.setText(todoItem.getName());
 //        holder.descriptionView.setText(todoItem.getDescription());
 //        holder.priorityView.setText(String.valueOf(todoItem.getPriority()));

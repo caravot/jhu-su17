@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 public class Util {
 
@@ -17,7 +18,9 @@ public class Util {
                 TodoProvider.ID,
                 TodoProvider.NAME,
                 TodoProvider.DESCRIPTION,
-                TodoProvider.PRIORITY
+                TodoProvider.PRIORITY,
+                TodoProvider.STATUS,
+                TodoProvider.DUE
         };
 
         // declare a cursor outside the try so we can close it in a finally
@@ -44,28 +47,39 @@ public class Util {
     public static void updateTodo(Context context, TodoItem todo) {
         // set up the data to store or update
         ContentValues values = new ContentValues();
-        values.put(TodoProvider.NAME, todo.getName());
-        values.put(TodoProvider.DESCRIPTION, todo.getDescription());
-        values.put(TodoProvider.PRIORITY, todo.getPriority());
+//        values.put(TodoProvider.NAME, todo.getName());
+//        values.put(TodoProvider.DESCRIPTION, todo.getDescription());
+//        values.put(TodoProvider.PRIORITY, todo.getPriority());
 
         // if the item didn't yet have an id, insert it and set the id on the object
-        if (todo.getId() == -1) {
-            Uri uri = TodoProvider.CONTENT_URI;
-            Uri insertedUri = context.getContentResolver().insert(uri, values);
-            String idString = insertedUri.getLastPathSegment();
-            long id = Long.parseLong(idString);
-            todo.setId(id);
-
-        // otherwise, update the item with that id
-        } else {
-            // create a URI that represents the item
-            Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "" + todo.getId());
-            context.getContentResolver().update(uri, values, TodoProvider.ID + "=" + todo.getId(), null);
-        }
+//        if (todo.getId() == -1) {
+//            Uri uri = TodoProvider.CONTENT_URI;
+//            Uri insertedUri = context.getContentResolver().insert(uri, values);
+//            String idString = insertedUri.getLastPathSegment();
+//            long id = Long.parseLong(idString);
+//            todo.setId(id);
+//
+//        // otherwise, update the item with that id
+//        } else {
+//            // create a URI that represents the item
+//            Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "" + todo.getId());
+//            context.getContentResolver().update(uri, values, TodoProvider.ID + "=" + todo.getId(), null);
+//        }
     }
 
 
     public static TodoItem todoItemFromCursor(Cursor cursor) {
-        return new TodoItem(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3));
+        return new TodoItem();
+
+//        String str = cursor.getString(4);
+//        Status status = Status.valueOf(str);
+//
+//        return new TodoItem(cursor.getLong(0),
+//                cursor.getString(1),
+//                cursor.getString(2),
+//                cursor.getInt(3),
+//                status,
+//                cursor.getString(5)
+//        );
     }
 }
