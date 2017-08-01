@@ -2,10 +2,8 @@ package ravotta.carrie.hw5;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -14,8 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class TodoListActivity extends AppCompatActivity {
     // define an id for the loader we'll use to manage a cursor and stick its data in the list
@@ -32,13 +28,16 @@ public class TodoListActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
+        ////////
+        //List<TodoItem> todoItems = new ArrayList<>();
+        ////////
+
         // use a linear layout manager
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new TodoAdapter(this,
-                new TodoAdapter.OnItemClickedListener() {
+        adapter = new TodoAdapter(this, new TodoAdapter.OnItemClickedListener() {
                     @Override public void onItemClicked(long id) {
                         // start activity to edit the item
                         // we're creating a new item; just pass -1 as the id

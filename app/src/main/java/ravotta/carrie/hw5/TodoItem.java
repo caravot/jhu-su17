@@ -1,76 +1,40 @@
 package ravotta.carrie.hw5;
 
+import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
+import android.databinding.ObservableLong;
+
 public class TodoItem {
-    private long id;
-    private String name;
-    private String description;
-    private int priority;
-    private Status status;
+    public final ObservableLong id = new ObservableLong();
+    public final ObservableField<String> name = new ObservableField<>();
+    public final ObservableField<String> description = new ObservableField<>();
+    public final ObservableInt priority = new ObservableInt();
+    public final ObservableField<Status> status = new ObservableField<>();
 
     public TodoItem() {
-        this.id = -1;
-        this.name = "";
-        this.description = "";
-        this.priority = 1;
-        this.status = Status.PENDING;
+        this.id.set(-1L);
+        this.name.set("");
+        this.description.set("");
+        this.priority.set(1);
+        this.status.set(Status.PENDING);
     }
 
     public TodoItem(long id, String name, String description, int priority, Status status) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.priority = priority;
-        this.status = status;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+        this.id.set(id);
+        this.name.set(name);
+        this.description.set(description);
+        this.priority.set(priority);
+        this.status.set(status);
     }
 
     @Override
     public String toString() {
         return "TodoItem{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", priority=" + priority +
-                ", status=" + status +
+                "id=" + id.get() +
+                ", name='" + name.get() + '\'' +
+                ", description='" + description.get() + '\'' +
+                ", priority=" + priority.get() +
+                ", status=" + status.get() +
                 '}';
     }
 }
