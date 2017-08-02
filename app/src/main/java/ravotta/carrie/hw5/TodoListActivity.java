@@ -2,6 +2,7 @@ package ravotta.carrie.hw5;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -9,43 +10,39 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+
+import ravotta.carrie.hw5.databinding.ActivityTodoListBinding;
 
 public class TodoListActivity extends AppCompatActivity {
     // define an id for the loader we'll use to manage a cursor and stick its data in the list
     private static final int TODO_LOADER = 1;
 
-    private TodoAdapter adapter;
+    private TodoAdapter3 adapter;
+
+    private ActivityTodoListBinding binding;
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_todo_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_todo_list);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ////////
-        //List<TodoItem> todoItems = new ArrayList<>();
-        ////////
-
-        // use a linear layout manager
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        assert recyclerView != null;
-        recyclerView.setLayoutManager(layoutManager);
-
-        adapter = new TodoAdapter(this, new TodoAdapter.OnItemClickedListener() {
-                    @Override public void onItemClicked(long id) {
-                        // start activity to edit the item
-                        // we're creating a new item; just pass -1 as the id
-                        Intent intent = new Intent(TodoListActivity.this, EditActivity.class);
-                        intent.putExtra("itemId", id);
-                        startActivity(intent);
-                    }});
-        recyclerView.setAdapter(adapter);
+        adapter = new TodoAdapter3(this, new TodoAdapter3.OnItemClickedListener() {
+            @Override public void onItemClicked(long id) {
+                // start activity to edit the item
+                // we're creating a new item; just pass -1 as the id
+                Intent intent = new Intent(TodoListActivity.this, EditActivity.class);
+                intent.putExtra("itemId", id);
+                startActivity(intent);
+            }});
+        binding.recyclerView.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -75,8 +72,11 @@ public class TodoListActivity extends AppCompatActivity {
                     TodoProvider.ID,
                     TodoProvider.NAME,
                     TodoProvider.DESCRIPTION,
-                    TodoProvider.PRIORITY
+                    TodoProvider.PRIORITY,
+                    TodoProvider.STATUS,
+                    TodoProvider.DUE
             };
+
             return new CursorLoader(
                     TodoListActivity.this,
                     TodoProvider.CONTENT_URI, // note: this will register for changes
@@ -89,6 +89,7 @@ public class TodoListActivity extends AppCompatActivity {
         //   with the new cursor
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+            Log.d("FinishedLoad", cursor.toString());
             adapter.swapCursor(cursor); // set the data
         }
 

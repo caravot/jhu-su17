@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 /**
  * Created by skyfishjy on 10/31/14.
@@ -46,6 +47,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         mDataValid = cursor != null;
         mRowIdColumn = mDataValid ? mCursor.getColumnIndex("_id") : -1;
         mDataSetObserver = new NotifyingDataSetObserver();
+        Log.d("CRVA", mRowIdColumn  + "hllo");
         if (mCursor != null) {
             mCursor.registerDataSetObserver(mDataSetObserver);
         }
