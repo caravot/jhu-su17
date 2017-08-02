@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableList;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,10 +35,6 @@ public class TodoAdapter3 extends CursorRecyclerViewAdapter<TodoAdapter3.ViewHol
         }
     }
 
-    public TodoAdapter3(Context context) {
-        super(context, null);
-    }
-
     public TodoAdapter3(Context context, OnItemClickedListener onItemClickedListener) {
         super(context, null);
         this.onItemClickedListener = onItemClickedListener;
@@ -50,17 +47,25 @@ public class TodoAdapter3 extends CursorRecyclerViewAdapter<TodoAdapter3.ViewHol
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.todo_row, parent, false);
         view.setClickable(true);
         final ViewHolder vh = new ViewHolder(view);
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override public void onClick(View view) {
-//                onItemClickedListener.onItemClicked(vh.id);
-//            }});
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                onItemClickedListener.onItemClicked(vh.getItemId());
+            }});
         return vh;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position, Cursor cursor) {
-        final TodoItem todoItem = todoItemObservableList.get(position);
+        //final TodoItem todoItem = todoItemObservableList.get(position);
+
+        ///// SOLD
+        holder.itemView.setSelected(selectedRows.contains(position));
+        final TodoItem todoItem = Util.todoItemFromCursor(cursor);
+        Log.d("CARRIE", todoItem.toString());
+        ///// EOLD
+
+
         holder.todoRowBinding.setTodoItem(todoItem);
         //This is much important as when we have to bind its method !
         //TODO holder.todoRowBinding.set(this);

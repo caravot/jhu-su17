@@ -23,7 +23,6 @@ public class TodoListActivity extends AppCompatActivity {
     private TodoAdapter3 adapter;
 
     private ActivityTodoListBinding binding;
-    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +35,7 @@ public class TodoListActivity extends AppCompatActivity {
 
         adapter = new TodoAdapter3(this, new TodoAdapter3.OnItemClickedListener() {
             @Override public void onItemClicked(long id) {
+                Log.d("Carrie", "clicked an item with id: " + id);
                 // start activity to edit the item
                 // we're creating a new item; just pass -1 as the id
                 Intent intent = new Intent(TodoListActivity.this, EditActivity.class);
@@ -89,7 +89,6 @@ public class TodoListActivity extends AppCompatActivity {
         //   with the new cursor
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            Log.d("FinishedLoad", cursor.toString());
             adapter.swapCursor(cursor); // set the data
         }
 

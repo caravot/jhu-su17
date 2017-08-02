@@ -27,8 +27,7 @@ public class Util {
         Cursor cursor = null;
         try {
             // ask the content resolver to find the data for the URI
-            cursor = context.getContentResolver().
-                    query(uri, projection, null, null, null);
+            cursor = context.getContentResolver().query(uri, projection, null, null, null);
 
             // if nothing found, return null
             if (cursor == null || !cursor.moveToFirst())
@@ -69,17 +68,18 @@ public class Util {
 
 
     public static TodoItem todoItemFromCursor(Cursor cursor) {
-        return new TodoItem();
+        //return new TodoItem();
 
-//        String str = cursor.getString(4);
-//        Status status = Status.valueOf(str);
-//
-//        return new TodoItem(cursor.getLong(0),
-//                cursor.getString(1),
-//                cursor.getString(2),
-//                cursor.getInt(3),
-//                status,
-//                cursor.getString(5)
-//        );
+        String str = cursor.getString(4);
+        Log.d("todoItemFromCursor", str + "");
+        Status status = Status.PENDING;
+
+        return new TodoItem(cursor.getLong(0),
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getInt(3),
+                status,
+                cursor.getString(5)
+        );
     }
 }
