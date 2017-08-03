@@ -3,6 +3,7 @@ package ravotta.carrie.hw5;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.databinding.ObservableLong;
+import android.util.Log;
 
 public class TodoItem {
     public final ObservableLong id = new ObservableLong();

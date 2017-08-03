@@ -3,7 +3,6 @@ package ravotta.carrie.hw5;
 import android.content.Context;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
-import android.databinding.ObservableList;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,15 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import ravotta.carrie.hw5.databinding.TodoRowBinding;
 
 public class TodoAdapter3 extends CursorRecyclerViewAdapter<TodoAdapter3.ViewHolder> {
     private Set<Integer> selectedRows = new HashSet<>();
-    private ObservableList<TodoItem> todoItemObservableList;
-    List<TodoItem> todoItems;
 
     public interface OnItemClickedListener {
         void onItemClicked(long id);
@@ -31,6 +27,8 @@ public class TodoAdapter3 extends CursorRecyclerViewAdapter<TodoAdapter3.ViewHol
 
         public ViewHolder(View view) {
             super(view);
+            //TodoItem todoItem = todoRowBinding.getTodoItem();
+            Log.d("ViewHolder", "HERE");
             todoRowBinding = DataBindingUtil.bind(view);
         }
     }
@@ -44,12 +42,14 @@ public class TodoAdapter3 extends CursorRecyclerViewAdapter<TodoAdapter3.ViewHol
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
+        Log.d("CreateView", "view1");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.todo_row, parent, false);
         view.setClickable(true);
         final ViewHolder vh = new ViewHolder(view);
+        Log.d("CreateView", "view2");
         view.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                onItemClickedListener.onItemClicked(vh.getItemId());
+                onItemClickedListener.onItemClicked(vh.todoRowBinding.getTodoItem().id.get());
             }});
         return vh;
     }
@@ -64,7 +64,6 @@ public class TodoAdapter3 extends CursorRecyclerViewAdapter<TodoAdapter3.ViewHol
         final TodoItem todoItem = Util.todoItemFromCursor(cursor);
         Log.d("CARRIE", todoItem.toString());
         ///// EOLD
-
 
         holder.todoRowBinding.setTodoItem(todoItem);
         //This is much important as when we have to bind its method !
