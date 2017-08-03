@@ -15,7 +15,6 @@
 			android:theme="@style/AppTheme.NoActionBar" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
-
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
@@ -24,9 +23,19 @@
 			android:label="@string/edit"
 			android:theme="@style/AppTheme.NoActionBar" >
 		</activity>
+
+        <!-- Database provider -->
 		<provider android:name=".TodoProvider"
 		          android:authorities="ravotta.carrie.hw5"
 		          android:exported="false"/>
+
+        <!-- Alarms -->
+        <receiver android:name=".AlarmReceiver"/>
+        <receiver android:name=".BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 	</application>
 
 </manifest>

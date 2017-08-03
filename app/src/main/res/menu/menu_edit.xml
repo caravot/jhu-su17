@@ -4,9 +4,20 @@
     tools:context=".MainActivity">
 
     <item android:id="@+id/done"
+          android:icon="@drawable/ic_check_24dp"
+          android:title="@string/done"
+          app:showAsAction="ifRoom|withText" />
+
+    <item android:id="@+id/snooze"
+          android:icon="@drawable/ic_snooze_24dp"
+          android:title="@string/snooze"
+          app:showAsAction="ifRoom|withText" />
+
+    <item android:id="@+id/save"
         android:icon="@drawable/ic_save_24dp"
-        android:title="@string/done"
+        android:title="@string/save"
         app:showAsAction="ifRoom|withText" />
+
     <item android:id="@+id/cancel"
         android:icon="@drawable/ic_clear_24dp"
         android:title="@string/cancel"

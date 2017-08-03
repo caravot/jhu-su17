@@ -1,9 +1,12 @@
 package ravotta.carrie.hw5;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -11,6 +14,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import ravotta.carrie.hw5.databinding.ActivityTodoListBinding;
@@ -19,9 +23,14 @@ public class TodoListActivity extends AppCompatActivity {
     // define an id for the loader we'll use to manage a cursor and stick its data in the list
     private static final int TODO_LOADER = 1;
 
+    // listening adaptor
     private TodoAdapter adapter;
 
+    // Data binding for todolist activity
     private ActivityTodoListBinding binding;
+
+    // Alarms
+    private AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +63,28 @@ public class TodoListActivity extends AppCompatActivity {
             }
         });
 
+        // create alarm
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
         // start asynchronous loading of the cursor
         getSupportLoaderManager().initLoader(TODO_LOADER, null, loaderCallbacks);
+    }
+
+    public void setAlarm() {
+        Log.d("setAlarm", "Alarm set");
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // TODO change seconds in time elapse
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
+    }
+
+    public void cancelAlarm(View view) {
+        Log.d("cancelAlarm", "Alarm canceled");
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.cancel(pendingIntent);
     }
 
     // define a loader manager that will asynchronously retrieve data and when finished,
@@ -87,6 +116,9 @@ public class TodoListActivity extends AppCompatActivity {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
             adapter.swapCursor(cursor); // set the data
+
+            // start the alarm
+            setAlarm();
         }
 
         // if the loader has been reset, kill the cursor in the adapter to remove the data from the list
