@@ -8,6 +8,7 @@ import java.util.WeakHashMap;
 
 public class BindingAdapters {
 	private static WeakHashMap<TextView, Integer> lastSetValues = new WeakHashMap<>();
+	private static WeakHashMap<TextView, Status> lastSetStatusValues = new WeakHashMap<>();
 
 	@BindingAdapter("android:text")
 	public static void setIntText(TextView textView, int value) {
@@ -34,6 +35,34 @@ public class BindingAdapters {
                 return value;
             }
 			return 0;
+		}
+	}
+	@BindingAdapter("android:text")
+	public static void setStatesText(TextView textView, Status value) {
+		String oldValue = textView.getText().toString();
+		String newValue = value.name();
+
+		if (!oldValue.equals(newValue)) {
+			textView.setText(newValue);
+			lastSetStatusValues.put(textView, value);
+		}
+	}
+
+	@InverseBindingAdapter(attribute = "android:text")
+	public static Status getStatesText(TextView textView) {
+		try {
+			Status value = Status.valueOf(textView.getText().toString());
+			lastSetStatusValues.put(textView, value);
+
+			return value;
+		} catch (IllegalArgumentException e) {
+			Status value = lastSetStatusValues.get(textView);
+
+			if (value != null) {
+				return value;
+			}
+
+			return Status.values()[0];
 		}
 	}
 }

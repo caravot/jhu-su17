@@ -4,13 +4,12 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import ravotta.carrie.hw5.databinding.ActivityEditBinding;
 
-// an activity to edit a todo item
+// an activity to edit a todoItem
 public class EditActivity extends AppCompatActivity {
     private TodoItem item;
     private ActivityEditBinding binding;
@@ -37,7 +36,6 @@ public class EditActivity extends AppCompatActivity {
             item = new TodoItem();
         }
 
-        Log.d("ITEM", item.toString());
         binding.setTodoItem(item);
     }
 
@@ -52,29 +50,24 @@ public class EditActivity extends AppCompatActivity {
     // handle action bar items pressed
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        switch(id) {
+        switch(item.getItemId()) {
             // if "done" was pressed, save the data in a new item and return it
             case R.id.done:
-                Log.d("ITEM", item.toString());
+                TodoItem todoItem = binding.getTodoItem();
 
                 // update the item in the database
-                Util.updateTodo(this, this.item);
+                Util.updateTodo(this, todoItem);
 
                 // flag that we want to remove this activity from the stack and go back
                 finish();
-                return true;
 
+                return true;
             // if "cancel" was pressed, just return "canceled" without an item
             case R.id.cancel:
                 // flag that we want to remove this activity from the stack and go back
                 finish();
-                return true;
 
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

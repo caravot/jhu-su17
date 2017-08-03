@@ -11,7 +11,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import ravotta.carrie.hw5.databinding.ActivityTodoListBinding;
@@ -20,7 +19,7 @@ public class TodoListActivity extends AppCompatActivity {
     // define an id for the loader we'll use to manage a cursor and stick its data in the list
     private static final int TODO_LOADER = 1;
 
-    private TodoAdapter3 adapter;
+    private TodoAdapter adapter;
 
     private ActivityTodoListBinding binding;
 
@@ -33,11 +32,9 @@ public class TodoListActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_todo_list);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new TodoAdapter3(this, new TodoAdapter3.OnItemClickedListener() {
+        adapter = new TodoAdapter(this, new TodoAdapter.OnItemClickedListener() {
             @Override public void onItemClicked(long id) {
-                Log.d("Carrie", "clicked an item with id: " + id);
                 // start activity to edit the item
-                // we're creating a new item; just pass -1 as the id
                 Intent intent = new Intent(TodoListActivity.this, EditActivity.class);
                 intent.putExtra("itemId", id);
                 startActivity(intent);
@@ -82,7 +79,7 @@ public class TodoListActivity extends AppCompatActivity {
                     TodoProvider.CONTENT_URI, // note: this will register for changes
                     projection,
                     null, null, // groupby, having
-                    TodoProvider.NAME + " asc");
+                    TodoProvider.DUE + " asc ," + TodoProvider.PRIORITY + " asc");
         }
 
         // when the data has been loaded from the content provider, update the list adapter

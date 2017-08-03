@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 public class Util {
 
@@ -30,15 +29,17 @@ public class Util {
             cursor = context.getContentResolver().query(uri, projection, null, null, null);
 
             // if nothing found, return null
-            if (cursor == null || !cursor.moveToFirst())
+            if (cursor == null || !cursor.moveToFirst()) {
                 return null;
+            }
 
             // otherwise return the located item
             return todoItemFromCursor(cursor);
         } finally {
             // BE SURE TO CLOSE THE CURSOR!!!
-            if (cursor != null)
+            if (cursor != null) {
                 cursor.close();
+            }
         }
     }
 
@@ -46,32 +47,30 @@ public class Util {
     public static void updateTodo(Context context, TodoItem todo) {
         // set up the data to store or update
         ContentValues values = new ContentValues();
-//        values.put(TodoProvider.NAME, todo.getName());
-//        values.put(TodoProvider.DESCRIPTION, todo.getDescription());
-//        values.put(TodoProvider.PRIORITY, todo.getPriority());
+        values.put(TodoProvider.NAME, todo.name.get());
+        values.put(TodoProvider.DESCRIPTION, todo.description.get());
+        values.put(TodoProvider.PRIORITY, todo.priority.get());
+        values.put(TodoProvider.STATUS, todo.status.get().toString());
+        values.put(TodoProvider.DUE, todo.due.get());
 
         // if the item didn't yet have an id, insert it and set the id on the object
-//        if (todo.getId() == -1) {
-//            Uri uri = TodoProvider.CONTENT_URI;
-//            Uri insertedUri = context.getContentResolver().insert(uri, values);
-//            String idString = insertedUri.getLastPathSegment();
-//            long id = Long.parseLong(idString);
-//            todo.setId(id);
-//
-//        // otherwise, update the item with that id
-//        } else {
-//            // create a URI that represents the item
-//            Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "" + todo.getId());
-//            context.getContentResolver().update(uri, values, TodoProvider.ID + "=" + todo.getId(), null);
-//        }
+        if (todo.id.get() == -1) {
+            Uri uri = TodoProvider.CONTENT_URI;
+            Uri insertedUri = context.getContentResolver().insert(uri, values);
+            String idString = insertedUri.getLastPathSegment();
+            long id = Long.parseLong(idString);
+            todo.id.set(id);
+
+        // otherwise, update the item with that id
+        } else {
+            // create a URI that represents the item
+            Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "" + todo.id.get());
+            context.getContentResolver().update(uri, values, TodoProvider.ID + "=" + todo.id.get(), null);
+        }
     }
 
-
     public static TodoItem todoItemFromCursor(Cursor cursor) {
-        //return new TodoItem();
-
         String str = cursor.getString(4);
-        Log.d("todoItemFromCursor", str + "");
         Status status = Status.PENDING;
 
         return new TodoItem(cursor.getLong(0),
