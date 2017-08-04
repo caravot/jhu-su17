@@ -3,6 +3,7 @@ package ravotta.carrie.hw5;
 import android.content.Context;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

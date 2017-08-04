@@ -47,7 +47,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         mDataValid = cursor != null;
         mRowIdColumn = mDataValid ? mCursor.getColumnIndex("_id") : -1;
         mDataSetObserver = new NotifyingDataSetObserver();
-        Log.d("CRVA", mRowIdColumn  + "hllo");
+
         if (mCursor != null) {
             mCursor.registerDataSetObserver(mDataSetObserver);
         }

@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.util.Log;
 
 public class TodoProvider extends ContentProvider {
     // Database Constants
@@ -25,6 +26,7 @@ public class TodoProvider extends ContentProvider {
     // URI Constants
     public static final int TODOS = 1;
     public static final int TODO_ITEM = 2;
+    public static final int TODOS_DUE= 3;
     public static final String AUTHORITY = "ravotta.carrie.hw5";
     public static final String BASE_PATH = "todo";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
@@ -36,6 +38,8 @@ public class TodoProvider extends ContentProvider {
         // if we see content://ravotta.carrie.hw5/todo -> return TODOS (1)
         URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/#", TODO_ITEM);
         // if we see content://ravotta.carrie.hw5/todo/42 -> return TODO_ITEM (2)
+        URI_MATCHER.addURI(AUTHORITY, BASE_PATH, TODOS_DUE);
+        // if we see content://ravotta.carrie.hw5/todosdue -> return TODOS_DUE (3)
     }
 
 
@@ -110,6 +114,12 @@ public class TodoProvider extends ContentProvider {
     // retrieve data from the underlying data store
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Log.d("QUERY", "URI: " + uri.toString());
+        Log.d("QUERY", "projection: " +  projection.toString());
+        Log.d("QUERY", "selection: " + selection);
+        Log.d("QUERY", "selectionArgs: " + selectionArgs.toString());
+        Log.d("QUERY", "sortOrder: " + sortOrder);
+
         // uri - the base request from the caller
         // projection - which columns the caller wants to retrieve
         // selection - the "where" clause for the query (without the "where") - usually should have "?" for parameters
@@ -119,6 +129,8 @@ public class TodoProvider extends ContentProvider {
         // behave a little differently depending on the type of URI we find
         // ask the URI_MATCHER to parse the URI and tell us what it looks like
         switch (URI_MATCHER.match(uri)) {
+            // if the URI looks like content://ravotta.carrie.hw5/todosdue (all todos that are due)
+            case TODOS_DUE:
             // if the URI looks like content://ravotta.carrie.hw5/todo (all todos)
             case TODOS: {
                 // get all TODOS from the database

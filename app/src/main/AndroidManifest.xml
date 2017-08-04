@@ -24,6 +24,8 @@
 			android:theme="@style/AppTheme.NoActionBar" >
 		</activity>
 
+        <service android:name=".BoundService" android:exported="true" />
+
         <!-- Database provider -->
 		<provider android:name=".TodoProvider"
 		          android:authorities="ravotta.carrie.hw5"
@@ -34,6 +36,13 @@
         <receiver android:name=".BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+
+        <receiver android:name=".MyReceiver">
+            <intent-filter>
+                <action android:name="ravotta.carrie.count" />
             </intent-filter>
         </receiver>
 	</application>

@@ -5,7 +5,45 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+import static android.R.attr.id;
+
 public class Util {
+
+    // helper method to find items that are due
+    public static TodoItem findDueTodos(Context context) {
+        // set up a URI that represents the specific item
+        Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "" + id);
+
+        // set up a projection to show which columns we want to retrieve
+        String[] projection = {
+                TodoProvider.ID,
+                TodoProvider.NAME,
+                TodoProvider.DESCRIPTION,
+                TodoProvider.PRIORITY,
+                TodoProvider.STATUS,
+                TodoProvider.DUE
+        };
+
+        // declare a cursor outside the try so we can close it in a finally
+        Cursor cursor = null;
+        try {
+            // ask the content resolver to find the data for the URI
+            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+
+            // if nothing found, return null
+            if (cursor == null || !cursor.moveToFirst()) {
+                return null;
+            }
+
+            // otherwise return the located item
+            return todoItemFromCursor(cursor);
+        } finally {
+            // BE SURE TO CLOSE THE CURSOR!!!
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 
     // helper method to find an item
     public static TodoItem findTodo(Context context, long id) {

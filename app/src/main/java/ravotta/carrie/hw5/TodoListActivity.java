@@ -2,7 +2,10 @@ package ravotta.carrie.hw5;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -31,6 +34,8 @@ public class TodoListActivity extends AppCompatActivity {
 
     // Alarms
     private AlarmManager alarmManager;
+
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +75,50 @@ public class TodoListActivity extends AppCompatActivity {
         getSupportLoaderManager().initLoader(TODO_LOADER, null, loaderCallbacks);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("onResume", "here");
+        IntentFilter filter = new IntentFilter("ravotta.carrie.hw5");
+        receiver = new BroadcastReceiver() {
+            @Override public void onReceive(Context context, Intent intent) {
+                Log.d("onReceive", "COUNT: " + intent.getIntExtra("count", 0));
+            }};
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d("onPause", "here");
+        unregisterReceiver(receiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d("onStart", "here");
+        super.onStart();
+        Intent intent = new Intent();
+        intent.setClassName("ravotta.carrie.hw5", "ravotta.carrie.hw5.BoundService");
+        startService(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d("onStop", "here");
+        Intent intent = new Intent();
+        intent.setClassName("ravotta.carrie.hw5", "ravotta.carrie.hw5.BoundService");
+        stopService(intent);
+        super.onStop();
+    }
+
     public void setAlarm() {
         Log.d("setAlarm", "Alarm set");
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // TODO change seconds in time elapse
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
+        //alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
     }
 
     public void cancelAlarm(View view) {
@@ -116,6 +158,7 @@ public class TodoListActivity extends AppCompatActivity {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
             adapter.swapCursor(cursor); // set the data
+
 
             // start the alarm
             setAlarm();
