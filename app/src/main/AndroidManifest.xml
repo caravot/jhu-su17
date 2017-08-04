@@ -1,50 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="ravotta.carrie.hw5">
+    package="ravotta.carrie.hw5">
 
-	<application
-		android:allowBackup="true"
-		android:icon="@mipmap/ic_launcher"
-		android:label="@string/app_name"
-		android:supportsRtl="true"
-		android:theme="@style/AppTheme">
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".TodoListActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-		<activity
-			android:name=".TodoListActivity"
-			android:label="@string/app_name"
-			android:theme="@style/AppTheme.NoActionBar" >
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity
-			android:name=".EditActivity"
-			android:label="@string/edit"
-			android:theme="@style/AppTheme.NoActionBar" >
-		</activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".EditActivity"
+            android:label="@string/edit"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <service android:name=".BoundService" android:exported="true" />
+        <service
+            android:name=".BoundService"
+            android:exported="true" />
 
         <!-- Database provider -->
-		<provider android:name=".TodoProvider"
-		          android:authorities="ravotta.carrie.hw5"
-		          android:exported="false"/>
+        <provider
+            android:name=".TodoProvider"
+            android:authorities="ravotta.carrie.hw5"
+            android:exported="false" />
 
         <!-- Alarms -->
-        <receiver android:name=".AlarmReceiver"/>
+        <receiver android:name=".AlarmReceiver" />
         <receiver android:name=".BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-
         <receiver android:name=".MyReceiver">
             <intent-filter>
                 <action android:name="ravotta.carrie.count" />
             </intent-filter>
         </receiver>
-	</application>
+        <receiver android:name=".NewAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/new_app_widget_info" />
+        </receiver>
+        <receiver android:name=".WidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.javadude.count" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/new_app_widget_info" />
+        </receiver>
+    </application>
 
 </manifest>

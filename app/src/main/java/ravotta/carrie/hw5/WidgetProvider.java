@@ -1,4 +1,4 @@
-package com.javadude.widget;
+package ravotta.carrie.hw5;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
