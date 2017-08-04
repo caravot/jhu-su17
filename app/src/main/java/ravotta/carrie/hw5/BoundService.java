@@ -2,13 +2,9 @@ package ravotta.carrie.hw5;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BoundService extends Service {
 	@Override
@@ -22,7 +18,7 @@ public class BoundService extends Service {
 		@Override public void run() {
 			for(i = 1; !isInterrupted() && i <=100; i++) {
 				Log.d("StartedService", "count = " + i);
-				Intent intent = new Intent("com.javadude.count");
+				Intent intent = new Intent("ravotta.carrie.hw5.count");
 				intent.putExtra("count", i);
 				sendBroadcast(intent);
 				try {

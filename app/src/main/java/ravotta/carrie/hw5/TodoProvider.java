@@ -1,9 +1,11 @@
 package ravotta.carrie.hw5;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -104,10 +106,42 @@ public class TodoProvider extends ContentProvider {
     }
 
     private SQLiteDatabase db;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    };
+
+    private volatile int i = 1;
+    private class CounterThread extends Thread {
+        @Override public void run() {
+            for(i = 1; !isInterrupted() && i <= 10; i++) {
+                Log.d("StartedService", "count = " + i);
+                Intent intent = new Intent("ravotta.carrie.hw5.count");
+                intent.putExtra("count", i);
+                sendBroadcast(intent);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    interrupt();
+                }
+            }
+
+            interrupt();
+        }
+    }
+
+    private CounterThread counterThread;
 
     @Override
     public boolean onCreate() {
         db = new OpenHelper(getContext()).getWritableDatabase();
+
+        if (counterThread == null) {
+            counterThread = new CounterThread();
+            counterThread.start();
+        }
         return true; // data source opened ok!
     }
 
