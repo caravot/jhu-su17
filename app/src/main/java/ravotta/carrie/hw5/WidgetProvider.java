@@ -68,7 +68,7 @@ public class WidgetProvider extends AppWidgetProvider {
             remoteViews.addView(R.id.grid, block);
         }
 
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, TodoListActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent);
 

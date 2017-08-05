@@ -4,15 +4,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import static android.R.attr.id;
 
 public class Util {
 
     // helper method to find items that are due
-    public static TodoItem findDueTodos(Context context) {
+    public static Cursor findDueTodos(Context context) {
         // set up a URI that represents the specific item
-        Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "" + id);
+        Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "due");
 
         // set up a projection to show which columns we want to retrieve
         String[] projection = {
@@ -21,7 +22,7 @@ public class Util {
                 TodoProvider.DESCRIPTION,
                 TodoProvider.PRIORITY,
                 TodoProvider.STATUS,
-                TodoProvider.DUE
+                TodoProvider.DUE_TIME
         };
 
         // declare a cursor outside the try so we can close it in a finally
@@ -32,17 +33,23 @@ public class Util {
 
             // if nothing found, return null
             if (cursor == null || !cursor.moveToFirst()) {
+                Log.d("findDueTodos", "nothing found");
                 return null;
             }
 
             // otherwise return the located item
-            return todoItemFromCursor(cursor);
+            Log.d("findDueTodos", cursor.getCount() + "");
+            return cursor;
+        } catch (Exception e) {
+            Log.d("findDueTodos", "Error: " + e.getMessage());
         } finally {
+            Log.d("findDueTodos", "Canceled");
             // BE SURE TO CLOSE THE CURSOR!!!
             if (cursor != null) {
                 cursor.close();
             }
         }
+        return cursor;
     }
 
     // helper method to find an item
@@ -57,7 +64,7 @@ public class Util {
                 TodoProvider.DESCRIPTION,
                 TodoProvider.PRIORITY,
                 TodoProvider.STATUS,
-                TodoProvider.DUE
+                TodoProvider.DUE_TIME
         };
 
         // declare a cursor outside the try so we can close it in a finally
@@ -89,7 +96,7 @@ public class Util {
         values.put(TodoProvider.DESCRIPTION, todo.description.get());
         values.put(TodoProvider.PRIORITY, todo.priority.get());
         values.put(TodoProvider.STATUS, todo.status.get().toString());
-        values.put(TodoProvider.DUE, todo.due.get());
+        values.put(TodoProvider.DUE_TIME, todo.dueTime.get());
 
         // if the item didn't yet have an id, insert it and set the id on the object
         if (todo.id.get() == -1) {
@@ -116,7 +123,7 @@ public class Util {
                 cursor.getString(2),
                 cursor.getInt(3),
                 status,
-                cursor.getString(5)
+                cursor.getLong(5)
         );
     }
 }

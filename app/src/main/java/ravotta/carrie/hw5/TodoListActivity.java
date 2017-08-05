@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
@@ -20,11 +21,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import java.net.URI;
+
 import ravotta.carrie.hw5.databinding.ActivityTodoListBinding;
+
+import static android.R.attr.id;
 
 public class TodoListActivity extends AppCompatActivity {
     // define an id for the loader we'll use to manage a cursor and stick its data in the list
     private static final int TODO_LOADER = 1;
+
+    // define an id for the loader we'll use to manage a cursor and stick its data in the list
+    private static final int TODOSDUE_LOADER = 2;
 
     // listening adaptor
     private TodoAdapter adapter;
@@ -36,6 +44,9 @@ public class TodoListActivity extends AppCompatActivity {
     private AlarmManager alarmManager;
 
     private BroadcastReceiver receiver;
+
+    // poll due items
+    private CounterThread counterThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +84,34 @@ public class TodoListActivity extends AppCompatActivity {
 
         // start asynchronous loading of the cursor
         getSupportLoaderManager().initLoader(TODO_LOADER, null, loaderCallbacks);
+
+        // watch for due items
+        getSupportLoaderManager().initLoader(TODOSDUE_LOADER, null, loaderCallbacks);
+
+//        if (counterThread == null) {
+//            counterThread = new CounterThread();
+//            counterThread.start();
+//        }
+    }
+
+
+    private volatile int i = 1;
+    private class CounterThread extends Thread {
+        @Override public void run() {
+            for(i = 1; !isInterrupted() && i <= 5; i++) {
+                Log.d("StartedService", "count = " + i);
+                Intent intent = new Intent("ravotta.carrie.hw5.count");
+                intent.putExtra("count", i);
+                //sendBroadcast(intent);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    interrupt();
+                }
+            }
+
+            interrupt();
+        }
     }
 
     @Override
@@ -136,21 +175,30 @@ public class TodoListActivity extends AppCompatActivity {
         //   and create a cursorloader to request a cursor from a content provider (by URI)
         @Override
         public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+            Uri uri = TodoProvider.CONTENT_URI;
+
+            // get only due items
+            if (loaderId == TODOSDUE_LOADER) {
+                Log.d("onCreateLoader", "Only getting todo items that are due");
+                uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "due");
+            }
+
             String[] projection = {
                     TodoProvider.ID,
                     TodoProvider.NAME,
                     TodoProvider.DESCRIPTION,
                     TodoProvider.PRIORITY,
                     TodoProvider.STATUS,
-                    TodoProvider.DUE
+                    TodoProvider.DUE_TIME
             };
 
+            // note: this will register for changes
             return new CursorLoader(
                     TodoListActivity.this,
-                    TodoProvider.CONTENT_URI, // note: this will register for changes
+                    uri,
                     projection,
-                    null, null, // groupby, having
-                    TodoProvider.DUE + " asc ," + TodoProvider.PRIORITY + " asc");
+                    null, null,
+                    TodoProvider.DUE_TIME + " asc, " + TodoProvider.PRIORITY + " asc");
         }
 
         // when the data has been loaded from the content provider, update the list adapter
@@ -159,9 +207,8 @@ public class TodoListActivity extends AppCompatActivity {
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
             adapter.swapCursor(cursor); // set the data
 
-
             // start the alarm
-            setAlarm();
+            //setAlarm();
         }
 
         // if the loader has been reset, kill the cursor in the adapter to remove the data from the list

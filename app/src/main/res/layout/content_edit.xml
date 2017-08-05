@@ -84,6 +84,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@={todoItem.priority}"  />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/due_time"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            <EditText
+                android:id="@+id/due_time"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:inputType="datetime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@={todoItem.dueTime}"  />
         </LinearLayout>
     </ScrollView>
 </layout>

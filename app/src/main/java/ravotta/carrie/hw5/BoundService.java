@@ -36,7 +36,7 @@ public class BoundService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		counterThread.interrupt();
+		//counterThread.interrupt();
 		Log.d("StartedService", "onDestroy");
 	}
 
@@ -48,10 +48,10 @@ public class BoundService extends Service {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		if (counterThread == null) {
-			counterThread = new CounterThread();
-			counterThread.start();
-		}
+//		if (counterThread == null) {
+//			counterThread = new CounterThread();
+//			counterThread.start();
+//		}
 	}
 
 	@Override

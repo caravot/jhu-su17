@@ -51,8 +51,8 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            // if "done" was pressed, save the data in a new item and return it
-            case R.id.done:
+            // if "save" was pressed, save the data in a new item and return it
+            case R.id.save:
                 TodoItem todoItem = binding.getTodoItem();
 
                 // update the item in the database

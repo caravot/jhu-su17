@@ -13,17 +13,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
 
+import static ravotta.carrie.hw5.Status.DUE;
+
 public class TodoProvider extends ContentProvider {
     // Database Constants
     private static final String TODO_TABLE = "todo";        // table name
     public static final String ID = "_id";                  // ID column - NOTE THE UNDERSCORE!
     public static final String NAME = "name";               // name column
     public static final String DESCRIPTION = "description"; // description column
-    public static final String DONE = "done";               // done column - added in version 2
     public static final String PRIORITY = "priority";       // priority column added in version 3
     public static final String STATUS = "status";
-    public static final String DUE = "due";
-    public static final int DB_VERSION = 5;                 // current database version
+    public static final String DUE_TIME = "dueTime";
+    public static final int DB_VERSION = 1;                 // current database version
 
     // URI Constants
     public static final int TODOS = 1;
@@ -41,7 +42,7 @@ public class TodoProvider extends ContentProvider {
         URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/#", TODO_ITEM);
         // if we see content://ravotta.carrie.hw5/todo/42 -> return TODO_ITEM (2)
         URI_MATCHER.addURI(AUTHORITY, BASE_PATH, TODOS_DUE);
-        // if we see content://ravotta.carrie.hw5/todosdue -> return TODOS_DUE (3)
+        // if we see content://ravotta.carrie.hw5/todo/due -> return TODOS_DUE (3)
     }
 
 
@@ -62,8 +63,8 @@ public class TodoProvider extends ContentProvider {
                 db.beginTransaction();
                 // always keep version 1 creation
                 String sql = String.format(
-                        "create table %s (%s integer primary key autoincrement, %s text, %s text, %s text, %s text)",
-                        TODO_TABLE, ID, NAME, DESCRIPTION, STATUS, DUE);
+                        "create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer)",
+                        TODO_TABLE, ID, NAME, DESCRIPTION, PRIORITY, STATUS, DUE_TIME);
                 db.execSQL(sql);
                 onUpgrade(db, 1, DB_VERSION);  // run the upgrades starting from version 1
                 db.setTransactionSuccessful();
@@ -85,17 +86,6 @@ public class TodoProvider extends ContentProvider {
                         throw new IllegalStateException("Unexpected existing database version " + oldVersion);
 
                     case 1:
-                        // do upgrades from version 1 -> version 2
-                        db.execSQL(String.format("alter table %s add %s integer", TODO_TABLE, DONE));
-                        // FALL THROUGH TO APPLY FURTHER UPGRADES
-                    case 2:
-                        // do upgrades from version 2 -> version 3
-                        db.execSQL(String.format("alter table %s add %s text", TODO_TABLE, PRIORITY));
-                        // FALL THROUGH TO APPLY FURTHER UPGRADES
-                    case 4:
-                        // do upgrades from version 3 -> version 4
-                        db.execSQL(String.format("alter table %s add %s text", TODO_TABLE, STATUS));
-                        db.execSQL(String.format("alter table %s add %s text", TODO_TABLE, DUE));
                         // FALL THROUGH TO APPLY FURTHER UPGRADES
                 }
                 db.setTransactionSuccessful();
@@ -113,46 +103,23 @@ public class TodoProvider extends ContentProvider {
         }
     };
 
-    private volatile int i = 1;
-    private class CounterThread extends Thread {
-        @Override public void run() {
-            for(i = 1; !isInterrupted() && i <= 10; i++) {
-                Log.d("StartedService", "count = " + i);
-                Intent intent = new Intent("ravotta.carrie.hw5.count");
-                intent.putExtra("count", i);
-                sendBroadcast(intent);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    interrupt();
-                }
-            }
-
-            interrupt();
-        }
-    }
-
-    private CounterThread counterThread;
-
     @Override
     public boolean onCreate() {
         db = new OpenHelper(getContext()).getWritableDatabase();
 
-        if (counterThread == null) {
-            counterThread = new CounterThread();
-            counterThread.start();
-        }
         return true; // data source opened ok!
     }
 
     // retrieve data from the underlying data store
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Log.d("QUERY", "URI: " + uri.toString());
-        Log.d("QUERY", "projection: " +  projection.toString());
-        Log.d("QUERY", "selection: " + selection);
-        Log.d("QUERY", "selectionArgs: " + selectionArgs.toString());
-        Log.d("QUERY", "sortOrder: " + sortOrder);
+//        Log.d("QUERY", "URI: " + uri.toString());
+//        Log.d("QUERY", "projection: " +  projection.toString());
+//        Log.d("QUERY", "selection: " + selection);
+//        if (selectionArgs != null) {
+//            Log.d("QUERY", "selectionArgs: " + selectionArgs.toString());
+//        }
+//        Log.d("QUERY", "sortOrder: " + sortOrder);
 
         // uri - the base request from the caller
         // projection - which columns the caller wants to retrieve
@@ -162,13 +129,12 @@ public class TodoProvider extends ContentProvider {
 
         // behave a little differently depending on the type of URI we find
         // ask the URI_MATCHER to parse the URI and tell us what it looks like
+        Cursor c;
         switch (URI_MATCHER.match(uri)) {
             // if the URI looks like content://ravotta.carrie.hw5/todosdue (all todos that are due)
             case TODOS_DUE:
-            // if the URI looks like content://ravotta.carrie.hw5/todo (all todos)
-            case TODOS: {
                 // get all TODOS from the database
-                Cursor c = db.query(TODO_TABLE,
+                c = db.query(TODO_TABLE,
                         projection,
                         selection,
                         selectionArgs,
@@ -178,7 +144,28 @@ public class TodoProvider extends ContentProvider {
                 // Set the notification URI on the returned cursor so it can listen for changes that we might make!
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
+                Log.d("TP.query.TODOS_DUE", "Getting cursor");
                 if (getContext() != null && getContext().getContentResolver() != null) {
+                    Log.d("TP.query.TODOS_DUE", "Notify that something changed=" + uri.toString());
+                    c.setNotificationUri(getContext().getContentResolver(), uri);
+                }
+                return c;
+            // if the URI looks like content://ravotta.carrie.hw5/todo (all todos)
+            case TODOS: {
+                // get all TODOS from the database
+                c = db.query(TODO_TABLE,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null, null, // groupby, having
+                        sortOrder);
+
+                // Set the notification URI on the returned cursor so it can listen for changes that we might make!
+                // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
+                // This makes ListView updates completely automatic (as we'll see later)
+                Log.d("TP.query.TODOS", "Getting cursor");
+                if (getContext() != null && getContext().getContentResolver() != null) {
+                    Log.d("TP.query", "Notify that something changed=" + uri.toString() + ":" + selection);
                     c.setNotificationUri(getContext().getContentResolver(), uri);
                 }
                 return c;
@@ -188,7 +175,7 @@ public class TodoProvider extends ContentProvider {
             case TODO_ITEM: {
                 // get specific item
                 String id = uri.getLastPathSegment(); // what's the id?
-                Cursor c = db.query(TODO_TABLE,
+                c = db.query(TODO_TABLE,
                         projection,
                         ID + "=?", // DO NOT simply say ID + "=" + id! SQL INJECTION!
                         new String[] {id},
