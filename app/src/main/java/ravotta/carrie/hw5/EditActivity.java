@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -54,6 +55,12 @@ public class EditActivity extends AppCompatActivity {
             // if "save" was pressed, save the data in a new item and return it
             case R.id.save:
                 TodoItem todoItem = binding.getTodoItem();
+
+                // update due time to be in 10 seconds
+                // TODO update to be 10 seconds
+                long retryDate = System.currentTimeMillis();
+                retryDate += 5 * 60 * 1000;
+                todoItem.dueTime.set(retryDate);
 
                 // update the item in the database
                 Util.updateTodo(this, todoItem);

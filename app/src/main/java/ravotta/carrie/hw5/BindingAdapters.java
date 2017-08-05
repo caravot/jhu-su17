@@ -2,7 +2,10 @@ package ravotta.carrie.hw5;
 
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.widget.TextView;
+import java.text.SimpleDateFormat;
 
 import java.util.WeakHashMap;
 
@@ -10,6 +13,12 @@ public class BindingAdapters {
     private static WeakHashMap<TextView, Long> lastSetLongValues = new WeakHashMap<>();
 	private static WeakHashMap<TextView, Integer> lastSetIntValues = new WeakHashMap<>();
 	private static WeakHashMap<TextView, Status> lastSetStatusValues = new WeakHashMap<>();
+
+    @BindingAdapter("android:relativeDateTime")
+    public static void setRelativeDateTime(TextView textView, long value) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a z");
+        textView.setText(sdf.format(value));
+    }
 
     @BindingAdapter("android:text")
     public static void setLongText(TextView textView, long value) {
