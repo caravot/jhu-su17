@@ -21,7 +21,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import android.util.Log;
+import java.util.Date;
+
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import ravotta.carrie.hw5.databinding.ActivityTodoListBinding;
 
@@ -44,9 +49,6 @@ public class TodoListActivity extends AppCompatActivity {
     private AlarmManager alarmManager;
 
     private BroadcastReceiver receiver;
-
-    // poll due items
-    private CounterThread counterThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,67 +89,36 @@ public class TodoListActivity extends AppCompatActivity {
 
         // watch for due items
         getSupportLoaderManager().initLoader(TODOSDUE_LOADER, null, loaderCallbacks);
-
-//        if (counterThread == null) {
-//            counterThread = new CounterThread();
-//            counterThread.start();
-//        }
-    }
-
-
-    private volatile int i = 1;
-    private class CounterThread extends Thread {
-        @Override public void run() {
-            for(i = 1; !isInterrupted() && i <= 5; i++) {
-                Log.d("StartedService", "count = " + i);
-                Intent intent = new Intent("ravotta.carrie.hw5.count");
-                intent.putExtra("count", i);
-                //sendBroadcast(intent);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    interrupt();
-                }
-            }
-
-            interrupt();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("onResume", "here");
-        IntentFilter filter = new IntentFilter("ravotta.carrie.hw5");
+//        Log.d("onResume", "here");
+        IntentFilter filter = new IntentFilter("ravotta.carrie.hw5.itemsdue");
         receiver = new BroadcastReceiver() {
             @Override public void onReceive(Context context, Intent intent) {
-                Log.d("onReceive", "COUNT: " + intent.getIntExtra("count", 0));
+                Log.d("onResume", "onReceive: Broadcast received");
             }};
         registerReceiver(receiver, filter);
     }
 
     @Override
     protected void onPause() {
-        Log.d("onPause", "here");
+//        Log.d("onPause", "here");
         unregisterReceiver(receiver);
         super.onPause();
     }
 
     @Override
     protected void onStart() {
-        Log.d("onStart", "here");
+//        Log.d("onStart", "here");
         super.onStart();
-        Intent intent = new Intent();
-        intent.setClassName("ravotta.carrie.hw5", "ravotta.carrie.hw5.BoundService");
-        startService(intent);
     }
 
     @Override
     protected void onStop() {
-        Log.d("onStop", "here");
-        Intent intent = new Intent();
-        intent.setClassName("ravotta.carrie.hw5", "ravotta.carrie.hw5.BoundService");
-        stopService(intent);
+//        Log.d("onStop", "here");
         super.onStop();
     }
 
@@ -173,40 +144,71 @@ public class TodoListActivity extends AppCompatActivity {
     private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
         // when the loader is created, setup the projection to retrieve from the database
         //   and create a cursorloader to request a cursor from a content provider (by URI)
+
+        // uri - the base request from the caller
+        // projection - which columns the caller wants to retrieve
+        // selection - the "where" clause for the query (without the "where") - usually should have "?" for parameters
+        // selectionArgs - the values to use when filling in the "?"
+        // sortOrder - the "orderby" clause (without the "orderby")
         @Override
         public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
             Uri uri = TodoProvider.CONTENT_URI;
 
             // get only due items
             if (loaderId == TODOSDUE_LOADER) {
-                Log.d("onCreateLoader", "Only getting todo items that are due");
-                uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "due");
+                uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "nextdue");
+                Date dt = new Date();
+
+                String[] projection = {
+                        TodoProvider.ID,
+                        TodoProvider.DUE_TIME
+                };
+
+                // note: this will register for changes
+                return new CursorLoader(
+                        TodoListActivity.this,
+                        uri,
+                        projection,
+                        TodoProvider.STATUS + "= ? AND " + TodoProvider.DUE_TIME + " <= ?",
+                        new String[] {Status.PENDING.toString(), dt.getTime() + ""},
+                        TodoProvider.DUE_TIME);
+//                        TodoProvider.DUE_TIME + " ASC LIMIT 1");
             }
+            else if (loaderId == TODO_LOADER) {
+                String[] projection = {
+                        TodoProvider.ID,
+                        TodoProvider.NAME,
+                        TodoProvider.DESCRIPTION,
+                        TodoProvider.PRIORITY,
+                        TodoProvider.STATUS,
+                        TodoProvider.DUE_TIME
+                };
 
-            String[] projection = {
-                    TodoProvider.ID,
-                    TodoProvider.NAME,
-                    TodoProvider.DESCRIPTION,
-                    TodoProvider.PRIORITY,
-                    TodoProvider.STATUS,
-                    TodoProvider.DUE_TIME
-            };
-
-            // note: this will register for changes
-            return new CursorLoader(
-                    TodoListActivity.this,
-                    uri,
-                    projection,
-                    null, null,
-                    TodoProvider.DUE_TIME + " asc, " + TodoProvider.PRIORITY + " asc");
+                // note: this will register for changes
+                return new CursorLoader(
+                        TodoListActivity.this,
+                        uri,
+                        projection,
+                        null, null,
+                        TodoProvider.DUE_TIME + " asc, " + TodoProvider.PRIORITY + " asc");
+            }
+            return null;
         }
 
         // when the data has been loaded from the content provider, update the list adapter
         //   with the new cursor
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            adapter.swapCursor(cursor); // set the data
-
+            if (loader.getId() == TODO_LOADER) {
+                adapter.swapCursor(cursor); // set the data
+            } else if (loader.getId() == TODOSDUE_LOADER) {
+                Log.d("onLoadFinished", "Count = " + cursor.getCount());
+                for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                    // do what you need with the cursor here
+                    long dueTime = cursor.getLong(cursor.getColumnIndex(TodoProvider.DUE_TIME));
+                    Log.d("onLoadFinished", Util.timestampToSimpleFormat(dueTime));
+                }
+            }
             // start the alarm
             //setAlarm();
         }

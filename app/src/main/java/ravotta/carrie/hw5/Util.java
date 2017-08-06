@@ -6,9 +6,18 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+
 import static android.R.attr.id;
+import static android.R.attr.value;
+import static ravotta.carrie.hw5.R.id.textView;
 
 public class Util {
+
+    public static String timestampToSimpleFormat(long value) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a z");
+        return sdf.format(value).toString();
+    }
 
     // helper method to find items that are due
     public static Cursor findDueTodos(Context context) {

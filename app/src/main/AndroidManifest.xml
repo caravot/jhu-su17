@@ -42,7 +42,7 @@
         </receiver>
         <receiver android:name=".MyReceiver">
             <intent-filter>
-                <action android:name="ravotta.carrie.count" />
+                <action android:name="ravotta.carrie.hw5.itemsdue" />
             </intent-filter>
         </receiver>
         <receiver android:name=".NewAppWidget">

@@ -13,6 +13,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
 
+import java.net.URI;
+import java.util.Arrays;
+
 import static ravotta.carrie.hw5.Status.DUE;
 
 public class TodoProvider extends ContentProvider {
@@ -30,6 +33,7 @@ public class TodoProvider extends ContentProvider {
     public static final int TODOS = 1;
     public static final int TODO_ITEM = 2;
     public static final int TODOS_DUE= 3;
+    public static final int NEXT_TODO_DUE = 4;
     public static final String AUTHORITY = "ravotta.carrie.hw5";
     public static final String BASE_PATH = "todo";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
@@ -41,8 +45,10 @@ public class TodoProvider extends ContentProvider {
         // if we see content://ravotta.carrie.hw5/todo -> return TODOS (1)
         URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/#", TODO_ITEM);
         // if we see content://ravotta.carrie.hw5/todo/42 -> return TODO_ITEM (2)
-        URI_MATCHER.addURI(AUTHORITY, BASE_PATH, TODOS_DUE);
+        URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/due", TODOS_DUE);
         // if we see content://ravotta.carrie.hw5/todo/due -> return TODOS_DUE (3)
+        URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/nextdue", NEXT_TODO_DUE);
+        // if we see content://ravotta.carrie.hw5/todo/nextdue -> return NEXT_TODO_DUE (4)
     }
 
 
@@ -96,12 +102,7 @@ public class TodoProvider extends ContentProvider {
     }
 
     private SQLiteDatabase db;
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
 
-        }
-    };
 
     @Override
     public boolean onCreate() {
@@ -110,17 +111,15 @@ public class TodoProvider extends ContentProvider {
         return true; // data source opened ok!
     }
 
+    public void todoItemDue() {
+        Log.d("todoItemDue", "Sending broadcast");
+        Intent intent = new Intent("ravotta.carrie.hw5.itemsdue");
+        getContext().sendBroadcast(intent);
+    }
+
     // retrieve data from the underlying data store
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-//        Log.d("QUERY", "URI: " + uri.toString());
-//        Log.d("QUERY", "projection: " +  projection.toString());
-//        Log.d("QUERY", "selection: " + selection);
-//        if (selectionArgs != null) {
-//            Log.d("QUERY", "selectionArgs: " + selectionArgs.toString());
-//        }
-//        Log.d("QUERY", "sortOrder: " + sortOrder);
-
         // uri - the base request from the caller
         // projection - which columns the caller wants to retrieve
         // selection - the "where" clause for the query (without the "where") - usually should have "?" for parameters
@@ -131,7 +130,26 @@ public class TodoProvider extends ContentProvider {
         // ask the URI_MATCHER to parse the URI and tell us what it looks like
         Cursor c;
         switch (URI_MATCHER.match(uri)) {
-            // if the URI looks like content://ravotta.carrie.hw5/todosdue (all todos that are due)
+            // if the URI looks like content://ravotta.carrie.hw5/todo/nextdue (all todos that are due)
+            case NEXT_TODO_DUE:
+                // get all TODOS from the database
+                c = db.query(TODO_TABLE,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null, null, // groupby, having
+                        sortOrder);
+
+                // Set the notification URI on the returned cursor so it can listen for changes that we might make!
+                // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
+                // This makes ListView updates completely automatic (as we'll see later)
+                if (getContext() != null && getContext().getContentResolver() != null) {
+                    Log.d("TP.query.NEXT_TODO_DUE", "Notify that something changed=" + uri.toString());
+                    c.setNotificationUri(getContext().getContentResolver(), uri);
+                    todoItemDue();
+                }
+                return c;
+            // if the URI looks like content://ravotta.carrie.hw5/todo/due (all todos that are due)
             case TODOS_DUE:
                 // get all TODOS from the database
                 c = db.query(TODO_TABLE,
@@ -147,6 +165,7 @@ public class TodoProvider extends ContentProvider {
                 if (getContext() != null && getContext().getContentResolver() != null) {
                     Log.d("TP.query.TODOS_DUE", "Notify that something changed=" + uri.toString());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
+                    todoItemDue();
                 }
                 return c;
             // if the URI looks like content://ravotta.carrie.hw5/todo (all todos)
@@ -163,7 +182,7 @@ public class TodoProvider extends ContentProvider {
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
                 if (getContext() != null && getContext().getContentResolver() != null) {
-                    Log.d("TP.query", "Notify that something changed=" + uri.toString() + ":" + selection);
+                    Log.d("TP.query.TODOS", "Notify that something changed=" + uri.toString());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
                 }
                 return c;
@@ -183,6 +202,7 @@ public class TodoProvider extends ContentProvider {
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
                 if (getContext() != null && getContext().getContentResolver() != null) {
+                    Log.d("TP.query.TODO_ITEM", "Notify that something changed=" + uri.toString());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
                 }
                 return c;
