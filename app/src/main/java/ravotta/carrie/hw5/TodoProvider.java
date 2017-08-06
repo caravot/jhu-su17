@@ -144,7 +144,6 @@ public class TodoProvider extends ContentProvider {
                 // Set the notification URI on the returned cursor so it can listen for changes that we might make!
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
-                Log.d("TP.query.TODOS_DUE", "Getting cursor");
                 if (getContext() != null && getContext().getContentResolver() != null) {
                     Log.d("TP.query.TODOS_DUE", "Notify that something changed=" + uri.toString());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -163,7 +162,6 @@ public class TodoProvider extends ContentProvider {
                 // Set the notification URI on the returned cursor so it can listen for changes that we might make!
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
-                Log.d("TP.query.TODOS", "Getting cursor");
                 if (getContext() != null && getContext().getContentResolver() != null) {
                     Log.d("TP.query", "Notify that something changed=" + uri.toString() + ":" + selection);
                     c.setNotificationUri(getContext().getContentResolver(), uri);

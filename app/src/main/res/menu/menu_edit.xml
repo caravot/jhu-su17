@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
+    <item android:id="@+id/save"
+          android:icon="@drawable/ic_save_24dp"
+          android:title="@string/save"
+          app:showAsAction="ifRoom|withText" />
+
     <item android:id="@+id/done"
           android:icon="@drawable/ic_check_24dp"
           android:title="@string/done"
@@ -12,11 +17,6 @@
           android:icon="@drawable/ic_snooze_24dp"
           android:title="@string/snooze"
           app:showAsAction="ifRoom|withText" />
-
-    <item android:id="@+id/save"
-        android:icon="@drawable/ic_save_24dp"
-        android:title="@string/save"
-        app:showAsAction="ifRoom|withText" />
 
     <item android:id="@+id/cancel"
         android:icon="@drawable/ic_clear_24dp"

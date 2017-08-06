@@ -32,8 +32,8 @@
                 android:layout_toLeftOf="@+id/priority"
                 android:layout_toStartOf="@+id/priority"
                 android:text="@={todoItem.name}"
-                tools:text="Name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                tools:text="Name"/>
 
             <TextView
                 android:id="@+id/status"
@@ -47,6 +47,18 @@
                 android:text="@={todoItem.status}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 tools:text="Status" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/name"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@+id/status"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:relativeDateTime="@{todoItem.dueTime}"/>
 
             <TextView
                 android:id="@+id/description"
@@ -65,13 +77,13 @@
                 android:id="@+id/priority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_margin="16dp"
                 android:text="@={todoItem.priority}"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                tools:text="0" />
-		</RelativeLayout>
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                tools:text="0"/>
+        </RelativeLayout>
 	</android.support.v7.widget.CardView>
 </layout>
