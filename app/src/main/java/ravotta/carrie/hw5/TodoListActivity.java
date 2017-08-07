@@ -21,16 +21,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
-import android.util.Log;
 import java.util.Date;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import ravotta.carrie.hw5.databinding.ActivityTodoListBinding;
-
-import static android.R.attr.id;
 
 public class TodoListActivity extends AppCompatActivity {
     // define an id for the loader we'll use to manage a cursor and stick its data in the list
@@ -45,8 +38,10 @@ public class TodoListActivity extends AppCompatActivity {
     // Data binding for todolist activity
     private ActivityTodoListBinding binding;
 
+    static PendingIntent pendingIntent;
+
     // Alarms
-    private AlarmManager alarmManager;
+    private static AlarmManager alarmManager;
 
     private BroadcastReceiver receiver;
 
@@ -89,6 +84,9 @@ public class TodoListActivity extends AppCompatActivity {
 
         // watch for due items
         getSupportLoaderManager().initLoader(TODOSDUE_LOADER, null, loaderCallbacks);
+
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
@@ -122,13 +120,10 @@ public class TodoListActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    public void setAlarm() {
+    public static void setAlarm() {
         Log.d("setAlarm", "Alarm set");
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         // TODO change seconds in time elapse
-        //alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 15000, pendingIntent);
     }
 
     public void cancelAlarm(View view) {
@@ -169,8 +164,10 @@ public class TodoListActivity extends AppCompatActivity {
                         TodoListActivity.this,
                         uri,
                         projection,
-                        TodoProvider.STATUS + "= ? AND " + TodoProvider.DUE_TIME + " <= ?",
-                        new String[] {Status.PENDING.toString(), dt.getTime() + ""},
+                        TodoProvider.STATUS + "= ?",
+                        new String[] {Status.PENDING.toString()},
+//                        TodoProvider.STATUS + "= ? AND " + TodoProvider.DUE_TIME + " <= ?",
+//                        new String[] {Status.PENDING.toString(), dt.getTime() + ""},
                         TodoProvider.DUE_TIME);
 //                        TodoProvider.DUE_TIME + " ASC LIMIT 1");
             }

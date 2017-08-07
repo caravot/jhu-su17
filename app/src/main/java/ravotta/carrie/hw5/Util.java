@@ -7,10 +7,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
-
-import static android.R.attr.id;
-import static android.R.attr.value;
-import static ravotta.carrie.hw5.R.id.textView;
+import java.util.ArrayList;
 
 public class Util {
 
@@ -20,9 +17,12 @@ public class Util {
     }
 
     // helper method to find items that are due
-    public static Cursor findDueTodos(Context context) {
+    public static ArrayList<TodoItem> findDueTodos(Context context) {
         // set up a URI that represents the specific item
         Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "due");
+
+        // declare return
+        ArrayList<TodoItem> todoItems = new ArrayList<>();
 
         // set up a projection to show which columns we want to retrieve
         String[] projection = {
@@ -38,7 +38,12 @@ public class Util {
         Cursor cursor = null;
         try {
             // ask the content resolver to find the data for the URI
-            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            cursor = context.getContentResolver().query(
+                    uri,
+                    projection,
+                    TodoProvider.STATUS + "= ?",
+                    new String[] {Status.PENDING.toString()},
+                    TodoProvider.DUE_TIME);
 
             // if nothing found, return null
             if (cursor == null || !cursor.moveToFirst()) {
@@ -47,18 +52,16 @@ public class Util {
             }
 
             // otherwise return the located item
-            Log.d("findDueTodos", cursor.getCount() + "");
-            return cursor;
-        } catch (Exception e) {
-            Log.d("findDueTodos", "Error: " + e.getMessage());
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                todoItems.add(todoItemFromCursor(cursor));
+            }
         } finally {
-            Log.d("findDueTodos", "Canceled");
             // BE SURE TO CLOSE THE CURSOR!!!
             if (cursor != null) {
                 cursor.close();
             }
         }
-        return cursor;
+        return todoItems;
     }
 
     // helper method to find an item
