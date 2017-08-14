@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 
 import java.util.WeakHashMap;
 
+import static android.R.attr.value;
+
 public class BindingAdapters {
     private static WeakHashMap<TextView, Long> lastSetLongValues = new WeakHashMap<>();
 	private static WeakHashMap<TextView, Integer> lastSetIntValues = new WeakHashMap<>();

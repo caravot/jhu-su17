@@ -10,6 +10,6 @@ public class MyReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d("RECEIVED", "Broadcast received");
 
-        TodoListActivity.setAlarm();
+        //TodoListActivity.setAlarm(System.currentTimeMillis());
     }
 }

@@ -12,23 +12,52 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class AlarmReceiver extends BroadcastReceiver {
-	@Override
+    private static Notification notification;
+    private static NotificationManager notificationManager;
+    private static final int NOTIFICATION_ID = 1;
+
 	public void onReceive(Context context, Intent intent) {
 		ArrayList<TodoItem> todoItems = Util.findDueTodos(context);
 
-        Log.d("onReceive", Boolean.toString(todoItems == null));
         if (todoItems != null) {
-            Intent intent1 = new Intent(context, TodoListActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-            Notification notification = new NotificationCompat.Builder(context)
+            NotificationCompat.InboxStyle details = new NotificationCompat.InboxStyle()
+                    .setBigContentTitle("Item List")
+                    .setSummaryText(todoItems.size() + " Items Due");
+
+            for (int i = 0; i < Math.min(5, todoItems.size()); i++) {
+                details.addLine("Item " + (i + 1) + " : " + todoItems.get(i).name.get());
+
+                // set item as due
+                todoItems.get(i).status.set(Status.DUE);
+                Util.updateTodo(context, todoItems.get(i));
+            }
+
+            PendingIntent mainAction = createPending(context, 0, "View App");
+            PendingIntent snoozeAction = createPending(context, 3, "Snooze All");
+            PendingIntent clearAction = createPending(context, 4, "All Done");
+
+            notification = new NotificationCompat.Builder(context)
                     .setContentTitle(todoItems.size() + " Items Due")
-                    .setContentText("Yippie!")
+                    .setStyle(details)
+                    .addAction(R.drawable.ic_snooze_24dp, "Snooze All", snoozeAction)
+                    .addAction(R.drawable.ic_clear_24dp, "Mark All as Done", clearAction)
                     .setSmallIcon(R.drawable.ic_add_alert_24dp)
-                    .setContentIntent(pendingIntent)
+                    .setContentIntent(mainAction)
+                    .setAutoCancel(true)
                     .build();
 
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(1, notification);
+            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(NOTIFICATION_ID, notification);
+        } else if (notification != null) {
+            Log.d("CancelNotification", "here");
+            notificationManager.cancel(NOTIFICATION_ID);
         }
 	}
+
+    private PendingIntent createPending(Context context, int id, String info) {
+        Intent intent = new Intent("ravotta.carrie.hw5.itemsdue");
+        intent.putExtra("actionId", id);
+
+        return PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
 }
