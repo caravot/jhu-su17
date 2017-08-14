@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -20,11 +19,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import ravotta.carrie.hw5.databinding.ActivityTodoListBinding;
 
@@ -165,6 +161,9 @@ public class TodoListActivity extends AppCompatActivity {
     }
 
     public static void setAlarm(long alarmTime) {
+        long dueTime = findNextTodoDueTime(this);
+        Log.d("onLoadFinished:Next", Util.timestampToSimpleFormat(dueTime));
+        setAlarm(dueTime);
         // TODO change seconds in time elapse
 //        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
@@ -180,24 +179,30 @@ public class TodoListActivity extends AppCompatActivity {
 
     public void markAllDueItemsDone() {
         ArrayList<TodoItem> todoItems = Util.findDueTodos(this);
-        for (int i = 0; i < todoItems.size(); i++) {
-            // mark item as done
-            todoItems.get(i).status.set(Status.DONE);
 
-            // update the item in the database
-            Util.updateTodo(this, todoItems.get(i));
+        if (todoItems != null) {
+            for (int i = 0; i < todoItems.size(); i++) {
+                // mark item as done
+                todoItems.get(i).status.set(Status.DONE);
+
+                // update the item in the database
+                Util.updateTodo(this, todoItems.get(i));
+            }
         }
     }
 
     public void snoozeAllDueItems() {
         ArrayList<TodoItem> todoItems = Util.findDueTodos(this);
-        for (int i = 0; i < todoItems.size(); i++) {
-            // TODO change time for snooze
-            long retryDate = System.currentTimeMillis() + (1 * 60 * 1000);
-            todoItems.get(i).dueTime.set(retryDate);
 
-            // update the item in the database
-            Util.updateTodo(this, todoItems.get(i));
+        if (todoItems != null) {
+            for (int i = 0; i < todoItems.size(); i++) {
+                // TODO change time for snooze
+                long retryDate = System.currentTimeMillis() + (1 * 60 * 1000);
+                todoItems.get(i).dueTime.set(retryDate);
+
+                // update the item in the database
+                Util.updateTodo(this, todoItems.get(i));
+            }
         }
     }
 
