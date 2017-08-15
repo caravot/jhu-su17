@@ -52,9 +52,25 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            // if "save" was pressed, save the data in a new item and return it
-            case R.id.save:
+            // if "save" or "snooze" was pressed, save the data in a new item and return it
+            case R.id.done: {
                 TodoItem todoItem = binding.getTodoItem();
+                todoItem.status.set(Status.DONE);
+
+                // update the item in the database
+                Util.updateTodo(this, todoItem);
+
+                // flag that we want to remove this activity from the stack and go back
+                finish();
+
+                return true;
+            }
+            // if "save" or "snooze" was pressed, save the data in a new item and return it
+            case R.id.snooze:
+            case R.id.save: {
+                TodoItem todoItem = binding.getTodoItem();
+
+                todoItem.status.set(Status.PENDING);
 
                 // update due time to be in 10 seconds
                 // TODO update to be 10 seconds
@@ -68,12 +84,14 @@ public class EditActivity extends AppCompatActivity {
                 finish();
 
                 return true;
+            }
             // if "cancel" was pressed, just return "canceled" without an item
-            case R.id.cancel:
+            case R.id.cancel: {
                 // flag that we want to remove this activity from the stack and go back
                 finish();
 
                 return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }

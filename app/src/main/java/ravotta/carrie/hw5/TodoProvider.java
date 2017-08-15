@@ -180,9 +180,6 @@ public class TodoProvider extends ContentProvider {
                 if (getContext() != null && getContext().getContentResolver() != null) {
                     Log.d("TODOS", "Notify that something changed=" + uri.toString());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
-
-//                    Intent intent = new Intent("ravotta.carrie.hw5.itemsdue2");
-//                    getContext().sendBroadcast(intent);
                 }
                 return c;
             }
@@ -277,7 +274,6 @@ public class TodoProvider extends ContentProvider {
 
     // update the data store
     @Override public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        Log.d("update", "update " + uri.toString() + ":" + selection);
         // values are the values to update
         // selection is a "where" clause, useful if updating multiple items
         // selectionArgs replaces the "?"s in the selection
@@ -304,9 +300,9 @@ public class TodoProvider extends ContentProvider {
 
         // send a notification that the data has changed
         // this will notify cursors that were registered for the container URI
-//        if (getContext() != null && getContext().getContentResolver() != null) {
-//            getContext().getContentResolver().notifyChange(CONTENT_URI, null);
-//        }
+        if (getContext() != null && getContext().getContentResolver() != null) {
+            getContext().getContentResolver().notifyChange(CONTENT_URI, null);
+        }
 
         if (numUpdated != 0) {
             notifyChange2(uri);

@@ -162,13 +162,13 @@ public class TodoListActivity extends AppCompatActivity {
 
     public void setAlarm(long alarmTime) {
         cancelAlarm();
-        Log.d("setAlarm", "Alarm set");
+        Log.d("setAlarm", "Alarm set to: " + Util.timestampToSimpleFormat(alarmTime));
         //long dueTime = findNextTodoDueTime(this);
         //Log.d("onLoadFinished:Next", Util.timestampToSimpleFormat(dueTime));
         //setAlarm(dueTime);
         // TODO change seconds in time elapse
 //        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
-        alarmTime = System.currentTimeMillis() + (1 * 60 * 1000);
+        //alarmTime = System.currentTimeMillis() + (1 * 60 * 1000);
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
     }
 
@@ -269,14 +269,19 @@ public class TodoListActivity extends AppCompatActivity {
             if (loader.getId() == TODO_LOADER) {
                 Log.d("onLoadFinished", cursor.getNotificationUri().toString());
                 long currentTime = System.currentTimeMillis();
+                nextDueTime = -1;
 
                 // find next due item
                 for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                     long dueTime = cursor.getLong(cursor.getColumnIndex(TodoProvider.DUE_TIME));
-                    if (dueTime <= currentTime && (nextDueTime == -1 || dueTime <= nextDueTime)) {
-                        Log.d("onLoadFinished", "setting duetime");
+                    if (nextDueTime == -1 || dueTime <= nextDueTime) {
+                        Log.d("onLoadFinished", "setting duetime to: " + Util.timestampToSimpleFormat(dueTime));
                         nextDueTime = dueTime;
                     }
+                }
+
+                if (nextDueTime != currentTime && nextDueTime != -1) {
+                    setAlarm(nextDueTime);
                 }
 
 //                todoItems = Util.findDueTodos(getApplicationContext());
