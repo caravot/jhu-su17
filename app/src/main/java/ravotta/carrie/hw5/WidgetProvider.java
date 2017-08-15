@@ -60,13 +60,13 @@ public class WidgetProvider extends AppWidgetProvider {
             case 3: color = Color.MAGENTA; break;
         }
 
-        if (count % 10 == 0) {
-            remoteViews.removeAllViews(R.id.grid);
-        } else {
-            RemoteViews block = new RemoteViews(context.getPackageName(), R.layout.block);
-            block.setInt(R.id.block, "setBackgroundColor", color);
-            remoteViews.addView(R.id.grid, block);
-        }
+//        if (count % 10 == 0) {
+//            remoteViews.removeAllViews(R.id.grid);
+//        } else {
+//            RemoteViews block = new RemoteViews(context.getPackageName(), R.layout.block);
+//            block.setInt(R.id.block, "setBackgroundColor", color);
+//            remoteViews.addView(R.id.grid, block);
+//        }
 
         Intent intent = new Intent(context, TodoListActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
