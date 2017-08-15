@@ -19,48 +19,6 @@ public class Util {
     }
 
     // helper method to find items that are due
-    public static long findNextTodoDueTime(Context context) {
-        // set up a URI that represents the specific item
-        Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "nextdue");
-
-        // set up a projection to show which columns we want to retrieve
-        String[] projection = {
-                TodoProvider.DUE_TIME
-        };
-
-        long nextDueTime = -1;
-
-        // declare a cursor outside the try so we can close it in a finally
-        Cursor cursor = null;
-        try {
-            // ask the content resolver to find the data for the URI
-            cursor = context.getContentResolver().query(
-                    uri,
-                    projection,
-                    TodoProvider.STATUS + "!= ? AND " + TodoProvider.DUE_TIME + "<= ?",
-                    new String[] {Status.DONE.toString(), Long.toString(System.currentTimeMillis())},
-                    TodoProvider.DUE_TIME);
-
-            // if nothing found, return null
-            if (cursor == null || !cursor.moveToFirst()) {
-                Log.d("findDueTodos", "nothing found");
-                return nextDueTime;
-            }
-
-            // otherwise return the located item
-            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                nextDueTime = cursor.getLong(cursor.getColumnIndex(TodoProvider.DUE_TIME));
-            }
-        } finally {
-            // BE SURE TO CLOSE THE CURSOR!!!
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return nextDueTime;
-    }
-
-    // helper method to find items that are due
     public static ArrayList<TodoItem> findDueTodos(Context context) {
         // set up a URI that represents the specific item
         Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "due");
@@ -91,7 +49,6 @@ public class Util {
 
             // if nothing found, return null
             if (cursor == null || !cursor.moveToFirst()) {
-                Log.d("findDueTodos", "nothing found");
                 return null;
             }
 

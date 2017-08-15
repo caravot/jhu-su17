@@ -2,14 +2,10 @@ package ravotta.carrie.hw5;
 
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 
 import java.util.WeakHashMap;
-
-import static android.R.attr.value;
 
 public class BindingAdapters {
     private static WeakHashMap<TextView, Long> lastSetLongValues = new WeakHashMap<>();

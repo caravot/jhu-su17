@@ -1,6 +1,5 @@
 package ravotta.carrie.hw5;
 
-import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -12,11 +11,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
-
-import java.net.URI;
-import java.util.Arrays;
-
-import static ravotta.carrie.hw5.Status.DUE;
 
 public class TodoProvider extends ContentProvider {
     // Database Constants
@@ -107,12 +101,6 @@ public class TodoProvider extends ContentProvider {
         return true; // data source opened ok!
     }
 
-    public void todoItemDue() {
-        Log.d("todoItemDue", "Sending broadcast");
-        Intent intent = new Intent("ravotta.carrie.hw5.itemsdue");
-        getContext().sendBroadcast(intent);
-    }
-
     // retrieve data from the underlying data store
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
@@ -140,9 +128,7 @@ public class TodoProvider extends ContentProvider {
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
                 if (getContext() != null && getContext().getContentResolver() != null) {
-                    Log.d("TP.query.NEXT_TODO_DUE", "Notify that something changed=" + uri.toString() + "::" + getContext().getPackageName());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
-                    //todoItemDue();
                 }
                 return c;
             // if the URI looks like content://ravotta.carrie.hw5/todo/due (all todos that are due)
@@ -159,9 +145,10 @@ public class TodoProvider extends ContentProvider {
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
                 if (getContext() != null && getContext().getContentResolver() != null) {
-                    Log.d("TODOS_DUE", "Notify that something changed=" + uri.toString());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
-                    //todoItemDue();
+                    Intent intent = new Intent("ravotta.carrie.hw5.itemsduecount");
+                    intent.putExtra("count", c.getCount());
+                    getContext().sendBroadcast(intent);
                 }
                 return c;
             // if the URI looks like content://ravotta.carrie.hw5/todo (all todos)
@@ -178,7 +165,6 @@ public class TodoProvider extends ContentProvider {
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
                 if (getContext() != null && getContext().getContentResolver() != null) {
-                    Log.d("TODOS", "Notify that something changed=" + uri.toString());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
                 }
                 return c;
@@ -198,7 +184,6 @@ public class TodoProvider extends ContentProvider {
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
                 if (getContext() != null && getContext().getContentResolver() != null) {
-                    Log.d("TP.query.TODO_ITEM", "Notify that something changed=" + uri.toString());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
                 }
                 return c;
@@ -291,9 +276,9 @@ public class TodoProvider extends ContentProvider {
                 // get specific item
                 String id = uri.getLastPathSegment(); // what's the id?
                 numUpdated = db.update(TODO_TABLE, values, ID + "=?", new String[]{id});
-//                if (getContext() != null && getContext().getContentResolver() != null) {
-//                    getContext().getContentResolver().notifyChange(uri, null);
-//                }
+                if (getContext() != null && getContext().getContentResolver() != null) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
                 break;
             }
         }
@@ -302,22 +287,14 @@ public class TodoProvider extends ContentProvider {
         // this will notify cursors that were registered for the container URI
         if (getContext() != null && getContext().getContentResolver() != null) {
             getContext().getContentResolver().notifyChange(CONTENT_URI, null);
-        }
 
-        if (numUpdated != 0) {
-            notifyChange2(uri);
+            // set update if items changed
+            if (numUpdated != 0) {
+                Intent intent = new Intent("ravotta.carrie.hw5.itemsdue");
+                getContext().sendBroadcast(intent);
+            }
         }
 
         return numUpdated;
-    }
-
-    private void notifyChange2(Uri uri) {
-        if (getContext() == null) {
-            throw new RuntimeException("No content available!");
-        }
-        Log.d("notifyChange", "notifyChange");
-        //getContext().getContentResolver().notifyChange(uri, null);
-        Intent intent = new Intent("ravotta.carrie.hw5.itemsdue");
-        getContext().sendBroadcast(intent);
     }
 }

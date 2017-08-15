@@ -1,29 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/widget"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_white"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin">
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/widget_bar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_green_dark"
-        android:text="X Items are Due"
-        android:layout_weight="0"
-        android:textAppearance="@android:style/TextAppearance.Medium"
-        android:textColor="@android:color/white"/>
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/button"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:background="@drawable/ic_snooze_24dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:icon="@drawable/ic_snooze_24dp"/>
+        <TextView
+            android:id="@+id/appwidget_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/appwidget_text"
+            android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Title.Inverse"
+            />
 
+        <ImageButton
+            android:id="@+id/snooze"
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/widget_margin"
+            android:background="@drawable/ic_snooze_24dp"
+            android:contentDescription="@string/snooze_all"
+            android:text="@string/snooze"/>
+
+        <ImageButton
+            android:id="@+id/add_item"
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_add_24dp"
+            android:contentDescription="@string/add_item"
+            android:text="@string/add_widget"/>
+    </LinearLayout>
 </LinearLayout>

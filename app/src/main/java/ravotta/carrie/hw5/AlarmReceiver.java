@@ -17,7 +17,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 1;
 
 	public void onReceive(Context context, Intent intent) {
-        Log.d("AlarmReceiver", "AlarmReceiver");
 		ArrayList<TodoItem> todoItems = Util.findDueTodos(context);
 
         if (todoItems != null) {
@@ -52,7 +51,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(NOTIFICATION_ID, notification);
         } else if (notification != null) {
-            Log.d("CancelNotification", "here");
             notificationManager.cancel(NOTIFICATION_ID);
         }
 	}

@@ -4,14 +4,13 @@
     <string name="priority">Priority</string>
     <string name="description">Description</string>
     <string name="name">Name</string>
-    <string name="sample_name">Sample Name</string>
-    <string name="sample_description">Sample Description</string>
-    <string name="_1">1</string>
     <string name="save">Save</string>
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>
     <string name="snooze">Snooze</string>
     <string name="due_time">Due Time</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
+    <string name="appwidget_text">0 Items Due</string>
+    <string name="add_widget">Add Widget</string>
+    <string name="snooze_all">Snooze All</string>
+    <string name="add_item">Add New Item</string>
 </resources>

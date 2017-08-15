@@ -24,10 +24,6 @@
             android:label="@string/edit"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <service
-            android:name=".BoundService"
-            android:exported="true" />
-
         <!-- Database provider -->
         <provider
             android:name=".TodoProvider"
@@ -45,15 +41,17 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".NewAppWidget">
+
+        <!-- Widget -->
+        <receiver android:name=".Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="ravotta.carrie.hw5.itemsdue" />
+                <action android:name="ravotta.carrie.hw5.itemsduecount" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/new_app_widget_info" />
+                android:resource="@xml/widget_info" />
         </receiver>
     </application>
 </manifest>
