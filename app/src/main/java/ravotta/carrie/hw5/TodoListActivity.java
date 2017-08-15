@@ -109,11 +109,11 @@ public class TodoListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d("onResume", "here");
-        IntentFilter filter = new IntentFilter("ravotta.carrie.hw5.itemsdue");
+        IntentFilter filter = new IntentFilter("ravotta.carrie.hw5.itemsdue2");
         receiver = new BroadcastReceiver() {
             @Override public void onReceive(Context context, Intent intent) {
                 int actionId = intent.getIntExtra("actionId", -1);
-                Log.d("onResumeInfoCCCC", actionId + ":" + (actionId == SNOOZE_ALL));
+                Log.d("onResumeInfo", actionId + "");
                 if (actionId == SNOOZE_ALL) {
                     snoozeAllDueItems();
                     cancelAlarm();
@@ -160,12 +160,15 @@ public class TodoListActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public static void setAlarm(long alarmTime) {
-        long dueTime = findNextTodoDueTime(this);
-        Log.d("onLoadFinished:Next", Util.timestampToSimpleFormat(dueTime));
-        setAlarm(dueTime);
+    public void setAlarm(long alarmTime) {
+        cancelAlarm();
+        Log.d("setAlarm", "Alarm set");
+        //long dueTime = findNextTodoDueTime(this);
+        //Log.d("onLoadFinished:Next", Util.timestampToSimpleFormat(dueTime));
+        //setAlarm(dueTime);
         // TODO change seconds in time elapse
 //        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
+        alarmTime = System.currentTimeMillis() + (1 * 60 * 1000);
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
     }
 
@@ -200,6 +203,9 @@ public class TodoListActivity extends AppCompatActivity {
                 long retryDate = System.currentTimeMillis() + (1 * 60 * 1000);
                 todoItems.get(i).dueTime.set(retryDate);
 
+                // mark item as pending
+                todoItems.get(i).status.set(Status.PENDING);
+
                 // update the item in the database
                 Util.updateTodo(this, todoItems.get(i));
             }
@@ -213,6 +219,7 @@ public class TodoListActivity extends AppCompatActivity {
         //   and create a cursorloader to request a cursor from a content provider (by URI)
         @Override
         public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+            Log.d("onCreateLoader", "onCreateLoader");
             Uri uri = TodoProvider.CONTENT_URI;
 
             // get only due items
@@ -260,33 +267,34 @@ public class TodoListActivity extends AppCompatActivity {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
             if (loader.getId() == TODO_LOADER) {
-//                long currentTime = System.currentTimeMillis();
+                Log.d("onLoadFinished", cursor.getNotificationUri().toString());
+                long currentTime = System.currentTimeMillis();
 
                 // find next due item
-//                for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-//                    long dueTime = cursor.getLong(cursor.getColumnIndex(TodoProvider.DUE_TIME));
-//                    if (dueTime <= currentTime && (nextDueTime == -1 || dueTime <= nextDueTime)) {
-//                        Log.d("onLoadFinished", "setting duetime");
-//                        nextDueTime = dueTime;
-//                    }
+                for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                    long dueTime = cursor.getLong(cursor.getColumnIndex(TodoProvider.DUE_TIME));
+                    if (dueTime <= currentTime && (nextDueTime == -1 || dueTime <= nextDueTime)) {
+                        Log.d("onLoadFinished", "setting duetime");
+                        nextDueTime = dueTime;
+                    }
+                }
+
+//                todoItems = Util.findDueTodos(getApplicationContext());
+//
+//                // start the alarm if due items
+//                if (todoItems != null && todoItems.size() > 0) {
+//                    //Log.d("onLoadFinished", "Setting Alarm");
+//                    // update due time to be in 10 seconds
+//                    // TODO update to be 10 seconds
+//                    //long retryDate = System.currentTimeMillis() + (1 * 60 * 1000);
+//                    //setAlarm(System.currentTimeMillis());
 //                }
-
-                todoItems = Util.findDueTodos(getApplicationContext());
-
-                // start the alarm if due items
-                if (todoItems != null && todoItems.size() > 0) {
-                    Log.d("onLoadFinished", "Setting Alarm");
-                    // update due time to be in 10 seconds
-                    // TODO update to be 10 seconds
-                    //long retryDate = System.currentTimeMillis() + (1 * 60 * 1000);
-                    setAlarm(System.currentTimeMillis());
-                }
-                // else get the next item due
-                else {
-                    long dueTime = findNextTodoDueTime(getApplicationContext());
-                    Log.d("onLoadFinished:Next", Util.timestampToSimpleFormat(dueTime));
-                    setAlarm(dueTime);
-                }
+//                // else get the next item due
+//                else {
+//                    long dueTime = findNextTodoDueTime(getApplicationContext());
+//                    Log.d("Next", Util.timestampToSimpleFormat(dueTime));
+//                    setAlarm(dueTime);
+//                }
 
                 adapter.swapCursor(cursor); // set the data
             } else if (loader.getId() == TODOSDUE_LOADER) {
@@ -303,6 +311,7 @@ public class TodoListActivity extends AppCompatActivity {
         // if the loader has been reset, kill the cursor in the adapter to remove the data from the list
         @Override
         public void onLoaderReset(Loader<Cursor> cursor) {
+            Log.d("onLoaderReset", "onLoaderReset");
             adapter.swapCursor(null); // clear the data
         }
     };

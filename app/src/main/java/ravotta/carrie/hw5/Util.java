@@ -17,12 +17,6 @@ public class Util {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a z");
         return sdf.format(value).toString();
     }
-    
-//    public static long findNextDueItemTime(Context context) {
-//        ArrayList<TodoItem> todoItems = findDueTodos(context);
-//
-//
-//    }
 
     // helper method to find items that are due
     public static long findNextTodoDueTime(Context context) {

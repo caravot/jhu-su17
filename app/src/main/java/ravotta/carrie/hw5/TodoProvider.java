@@ -82,9 +82,6 @@ public class TodoProvider extends ContentProvider {
         // run upgrade logic to convert from one version to a later version
         @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // UPGRADE REALLY SHOULD SAVE EXISTING DATA IF AT ALL POSSIBLE
-            //   - use "alter table" where possible
-            // The following example assumes we're up to version 3
-
             try {
                 db.beginTransaction();
                 switch(oldVersion) {
@@ -102,7 +99,6 @@ public class TodoProvider extends ContentProvider {
     }
 
     private SQLiteDatabase db;
-
 
     @Override
     public boolean onCreate() {
@@ -144,9 +140,9 @@ public class TodoProvider extends ContentProvider {
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
                 if (getContext() != null && getContext().getContentResolver() != null) {
-                    Log.d("TP.query.NEXT_TODO_DUE", "Notify that something changed=" + uri.toString());
+                    Log.d("TP.query.NEXT_TODO_DUE", "Notify that something changed=" + uri.toString() + "::" + getContext().getPackageName());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
-                    todoItemDue();
+                    //todoItemDue();
                 }
                 return c;
             // if the URI looks like content://ravotta.carrie.hw5/todo/due (all todos that are due)
@@ -163,9 +159,9 @@ public class TodoProvider extends ContentProvider {
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
                 if (getContext() != null && getContext().getContentResolver() != null) {
-                    Log.d("TP.query.TODOS_DUE", "Notify that something changed=" + uri.toString());
+                    Log.d("TODOS_DUE", "Notify that something changed=" + uri.toString());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
-                    todoItemDue();
+                    //todoItemDue();
                 }
                 return c;
             // if the URI looks like content://ravotta.carrie.hw5/todo (all todos)
@@ -182,8 +178,11 @@ public class TodoProvider extends ContentProvider {
                 // When updates are made, we indicate the affected URIs and all cursors registered like this are notified
                 // This makes ListView updates completely automatic (as we'll see later)
                 if (getContext() != null && getContext().getContentResolver() != null) {
-                    Log.d("TP.query.TODOS", "Notify that something changed=" + uri.toString());
+                    Log.d("TODOS", "Notify that something changed=" + uri.toString());
                     c.setNotificationUri(getContext().getContentResolver(), uri);
+
+//                    Intent intent = new Intent("ravotta.carrie.hw5.itemsdue2");
+//                    getContext().sendBroadcast(intent);
                 }
                 return c;
             }
@@ -278,6 +277,7 @@ public class TodoProvider extends ContentProvider {
 
     // update the data store
     @Override public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        Log.d("update", "update " + uri.toString() + ":" + selection);
         // values are the values to update
         // selection is a "where" clause, useful if updating multiple items
         // selectionArgs replaces the "?"s in the selection
@@ -295,18 +295,33 @@ public class TodoProvider extends ContentProvider {
                 // get specific item
                 String id = uri.getLastPathSegment(); // what's the id?
                 numUpdated = db.update(TODO_TABLE, values, ID + "=?", new String[]{id});
-                if (getContext() != null && getContext().getContentResolver() != null) {
-                    getContext().getContentResolver().notifyChange(uri, null);
-                }
+//                if (getContext() != null && getContext().getContentResolver() != null) {
+//                    getContext().getContentResolver().notifyChange(uri, null);
+//                }
                 break;
             }
         }
 
         // send a notification that the data has changed
         // this will notify cursors that were registered for the container URI
-        if (getContext() != null && getContext().getContentResolver() != null) {
-            getContext().getContentResolver().notifyChange(CONTENT_URI, null);
+//        if (getContext() != null && getContext().getContentResolver() != null) {
+//            getContext().getContentResolver().notifyChange(CONTENT_URI, null);
+//        }
+
+        if (numUpdated != 0) {
+            notifyChange2(uri);
         }
+
         return numUpdated;
+    }
+
+    private void notifyChange2(Uri uri) {
+        if (getContext() == null) {
+            throw new RuntimeException("No content available!");
+        }
+        Log.d("notifyChange", "notifyChange");
+        //getContext().getContentResolver().notifyChange(uri, null);
+        Intent intent = new Intent("ravotta.carrie.hw5.itemsdue");
+        getContext().sendBroadcast(intent);
     }
 }

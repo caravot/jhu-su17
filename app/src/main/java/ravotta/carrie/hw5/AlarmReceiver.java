@@ -17,6 +17,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 1;
 
 	public void onReceive(Context context, Intent intent) {
+        Log.d("AlarmReceiver", "AlarmReceiver");
 		ArrayList<TodoItem> todoItems = Util.findDueTodos(context);
 
         if (todoItems != null) {
@@ -28,8 +29,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                 details.addLine("Item " + (i + 1) + " : " + todoItems.get(i).name.get());
 
                 // set item as due
-                todoItems.get(i).status.set(Status.DUE);
-                Util.updateTodo(context, todoItems.get(i));
+                if (todoItems.get(i).status.get() != Status.DUE) {
+                    todoItems.get(i).status.set(Status.DUE);
+                    Util.updateTodo(context, todoItems.get(i));
+                }
             }
 
             PendingIntent mainAction = createPending(context, 0, "View App");
@@ -39,10 +42,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             notification = new NotificationCompat.Builder(context)
                     .setContentTitle(todoItems.size() + " Items Due")
                     .setStyle(details)
+                    .setContentIntent(mainAction)
                     .addAction(R.drawable.ic_snooze_24dp, "Snooze All", snoozeAction)
                     .addAction(R.drawable.ic_clear_24dp, "Mark All as Done", clearAction)
                     .setSmallIcon(R.drawable.ic_add_alert_24dp)
-                    .setContentIntent(mainAction)
                     .setAutoCancel(true)
                     .build();
 
@@ -55,7 +58,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	}
 
     private PendingIntent createPending(Context context, int id, String info) {
-        Intent intent = new Intent("ravotta.carrie.hw5.itemsdue");
+        Intent intent = new Intent("ravotta.carrie.hw5.itemsdue2");
         intent.putExtra("actionId", id);
 
         return PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
