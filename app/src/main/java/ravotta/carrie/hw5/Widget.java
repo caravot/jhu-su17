@@ -9,10 +9,21 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import java.util.ArrayList;
+
 public class Widget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
+        ArrayList<TodoItem> todoItems = Util.findDueTodos(context);
+
+        // notify that items are due
+        if (todoItems != null) {
+            Intent intent = new Intent("ravotta.carrie.hw5.itemsduecount");
+            intent.putExtra("count", todoItems.size());
+            context.sendBroadcast(intent);
+
+        }
         super.onEnabled(context);
     }
 
@@ -21,13 +32,15 @@ public class Widget extends AppWidgetProvider {
         super.onDisabled(context);
     }
 
+    // create a pending intent for a specific action
     private static PendingIntent createPending(Context context, int id, String info) {
-        Intent intent = new Intent("ravotta.carrie.hw5.itemsdue2");
+        Intent intent = new Intent("ravotta.carrie.hw5.action");
         intent.putExtra("actionId", id);
 
         return PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    // update the specific widget
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, int count) {
         // pluralize the count in human readable form
         String quantityString = context.getResources().getQuantityString(R.plurals.items, count, count);
@@ -59,7 +72,7 @@ public class Widget extends AppWidgetProvider {
     }
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("widget-onReceive", "onReceive");
+        // ensure our intent is what were looking for
         if ("ravotta.carrie.hw5.itemsduecount".equals(intent.getAction())) {
             int count = intent.getIntExtra("count", -1);
 
@@ -67,6 +80,7 @@ public class Widget extends AppWidgetProvider {
             AppWidgetManager instance = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = instance.getAppWidgetIds(componentName);
 
+            // update all widget registered
             for(int i = 0; i < appWidgetIds.length; i++) {
                 updateAppWidget(context, instance, appWidgetIds[i], count);
             }

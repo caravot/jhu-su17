@@ -28,23 +28,23 @@ public class TodoListActivity extends AppCompatActivity {
     // define an id for the loader we'll use to manage a cursor and stick its data in the list
     private static final int TODO_LOADER = 1;
 
+    // defined action ids for common functions
     private static final int SNOOZE_ALL = 3;
-
     private static final int ALL_DONE = 4;
-
     private static final int ADD_ITEM = 5;
 
     // listening adaptor
     private TodoAdapter adapter;
 
-    // Data binding for list activity
+    // data binding for list activity
     private ActivityTodoListBinding binding;
 
     static PendingIntent pendingIntent;
 
-    // Alarms
+    // alarm
     private static AlarmManager alarmManager;
 
+    // receive broadcasts
     private BroadcastReceiver receiver;
 
     // time when next item is due
@@ -54,26 +54,23 @@ public class TodoListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String info = getIntent().getStringExtra("info");
-        if (info != null) {
-            Log.d("infoExtra", info);
-        }
-
+        // setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_todo_list);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // click to edit an item
         adapter = new TodoAdapter(this, new TodoAdapter.OnItemClickedListener() {
             @Override public void onItemClicked(long id) {
-                // start activity to edit the item
                 Intent intent = new Intent(TodoListActivity.this, EditActivity.class);
                 intent.putExtra("itemId", id);
                 startActivity(intent);
             }});
         binding.recyclerView.setAdapter(adapter);
 
+        // button to add item
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +84,7 @@ public class TodoListActivity extends AppCompatActivity {
             }
         });
 
-        // create alarm
+        // create alarm service
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         // start asynchronous loading of the cursor
@@ -101,20 +98,22 @@ public class TodoListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        IntentFilter filter = new IntentFilter("ravotta.carrie.hw5.itemsdue2");
+        // only receive broadcasts we care about
+        IntentFilter filter = new IntentFilter("ravotta.carrie.hw5.action");
         receiver = new BroadcastReceiver() {
             @Override public void onReceive(Context context, Intent intent) {
+                // get what function action the calling system requested
                 int actionId = intent.getIntExtra("actionId", -1);
 
                 if (actionId == SNOOZE_ALL) {
                     snoozeAllDueItems();
-                    cancelAlarm();
+                    setAlarm();
 
                     Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
                     context.sendBroadcast(closeIntent);
                 } else if (actionId == ALL_DONE) {
                     markAllDueItemsDone();
-                    cancelAlarm();
+                    setAlarm();
                 } else if (actionId == ADD_ITEM) {
                     // start activity to edit the item
                     Intent addIntent = new Intent(TodoListActivity.this, EditActivity.class);
@@ -128,8 +127,6 @@ public class TodoListActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         Log.d("onPause", "onPause");
-        //unregisterReceiver(receiver);
-//        cancelAlarm();
         super.onPause();
     }
 
@@ -142,27 +139,34 @@ public class TodoListActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         Log.d("onStop", "onStop");
-//        cancelAlarm();
-//        unregisterReceiver(receiver);
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        // TODO ensure this method works as intended
         Log.d("onDestroy","onDestroy");
         unregisterReceiver(receiver);
         cancelAlarm();
         super.onDestroy();
     }
 
-    public void setAlarm(long alarmTime) {
+    // set alarm to use real time wakeup
+    public void setAlarm() {
+        // ensures that only one alarm is present
         cancelAlarm();
-        Log.d("setAlarm", "Alarm set to: " + Util.timestampToSimpleFormat(alarmTime));
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
+        // get the next due time regardless of when that is
+        long dueTime = Util.findNextDueTime(this);
+
+        // set alarm if there is an item due
+        if (dueTime != -1) {
+            Log.d("setAlarm", "Alarm set to: " + Util.timestampToSimpleFormat(dueTime));
+
+            alarmManager.set(AlarmManager.RTC_WAKEUP, dueTime, pendingIntent);
+        }
     }
 
+    // cancel the alarm
     public void cancelAlarm() {
         Log.d("cancelAlarm", "cancelAlarm");
         Intent intent = new Intent(this, AlarmReceiver.class);
@@ -171,6 +175,7 @@ public class TodoListActivity extends AppCompatActivity {
         alarmManager.cancel(pIntent);
     }
 
+    // mark all items that are DUE as DONE
     public void markAllDueItemsDone() {
         ArrayList<TodoItem> todoItems = Util.findDueTodos(this);
 
@@ -185,13 +190,13 @@ public class TodoListActivity extends AppCompatActivity {
         }
     }
 
+    // set all due item times to be 10 seconds from now
     public void snoozeAllDueItems() {
         ArrayList<TodoItem> todoItems = Util.findDueTodos(this);
 
         if (todoItems != null) {
             for (int i = 0; i < todoItems.size(); i++) {
-                // TODO change time for snooze
-                long retryDate = System.currentTimeMillis() + (1 * 60 * 1000);
+                long retryDate = System.currentTimeMillis() + (10 * 1000);
                 todoItems.get(i).dueTime.set(retryDate);
 
                 // mark item as pending
@@ -203,17 +208,15 @@ public class TodoListActivity extends AppCompatActivity {
         }
     }
 
-    // define a loader manager that will asynchronously retrieve data and when finished,
-    //   update the list's adapter with the changes
+    // asynchronously retrieve data and when finished, update the list's adapter with the changes
     private LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
-        // when the loader is created, setup the projection to retrieve from the database
-        //   and create a cursorloader to request a cursor from a content provider (by URI)
+        // setup the projection to retrieve from the database
+        // create a cursor loader to request a cursor from a content provider (by URI)
         @Override
         public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
-            Log.d("onCreateLoader", "onCreateLoader");
             Uri uri = TodoProvider.CONTENT_URI;
 
-            // get items
+            // get all items that are not DONE
             if (loaderId == TODO_LOADER) {
                 String[] projection = {
                         TodoProvider.ID,
@@ -224,7 +227,7 @@ public class TodoListActivity extends AppCompatActivity {
                         TodoProvider.DUE_TIME
                 };
 
-                // note: this will register for changes
+                // register for changes
                 return new CursorLoader(
                         TodoListActivity.this,
                         uri,
@@ -236,26 +239,11 @@ public class TodoListActivity extends AppCompatActivity {
             return null;
         }
 
-        // when the data has been loaded from the content provider, update the list adapter
-        //   with the new cursor
+        // when data loaded update the list adapter with the new cursor
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
             if (loader.getId() == TODO_LOADER) {
-                long currentTime = System.currentTimeMillis();
-                nextDueTime = -1;
-
-                // find next due item
-                for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                    long dueTime = cursor.getLong(cursor.getColumnIndex(TodoProvider.DUE_TIME));
-                    if (nextDueTime == -1 || dueTime <= nextDueTime) {
-                        Log.d("onLoadFinished", "Setting due time to: " + Util.timestampToSimpleFormat(dueTime));
-                        nextDueTime = dueTime;
-                    }
-                }
-
-                if (nextDueTime != currentTime && nextDueTime != -1) {
-                    setAlarm(nextDueTime);
-                }
+                setAlarm();
 
                 adapter.swapCursor(cursor); // set the data
             }

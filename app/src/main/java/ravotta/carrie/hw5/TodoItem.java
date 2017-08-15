@@ -6,6 +6,7 @@ import android.databinding.ObservableLong;
 import android.util.Log;
 
 public class TodoItem {
+    // observable fields for two way data binding
     public final ObservableLong id = new ObservableLong();
     public final ObservableField<String> name = new ObservableField<>();
     public final ObservableField<String> description = new ObservableField<>();
@@ -13,6 +14,7 @@ public class TodoItem {
     public final ObservableField<Status> status = new ObservableField<>();
     public final ObservableLong dueTime = new ObservableLong();
 
+    // new blank item
     public TodoItem() {
         this.id.set(-1L);
         this.name.set("");
@@ -22,6 +24,7 @@ public class TodoItem {
         this.dueTime.set(0L);
     }
 
+    // create item with details
     public TodoItem(long id, String name, String description, int priority, Status status, Long dueTime) {
         this.id.set(id);
         this.name.set(name);

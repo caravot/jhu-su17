@@ -1,5 +1,6 @@
 package ravotta.carrie.hw5;
 
+// item due status
 public enum Status {
     PENDING("PENDING"),
     DONE("DONE"),

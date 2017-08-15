@@ -9,13 +9,55 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import static ravotta.carrie.hw5.R.id.textView;
-
 public class Util {
-
+    // human readable time format
     public static String timestampToSimpleFormat(long value) {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a z");
         return sdf.format(value).toString();
+    }
+
+    // helper method to find the time the next item is due
+    public static long findNextDueTime(Context context) {
+        // set up a URI that represents the specific item
+        Uri uri = Uri.withAppendedPath(TodoProvider.CONTENT_URI, "nextdue");
+
+        // set up a projection to show which columns we want to retrieve
+        String[] projection = {
+                TodoProvider.ID,
+                TodoProvider.NAME,
+                TodoProvider.DESCRIPTION,
+                TodoProvider.PRIORITY,
+                TodoProvider.STATUS,
+                TodoProvider.DUE_TIME
+        };
+
+        // declare a cursor outside the try so we can close it in a finally
+        Cursor cursor = null;
+        try {
+            // ask the content resolver to find the data for the URI
+            cursor = context.getContentResolver().query(
+                    uri,
+                    projection,
+                    TodoProvider.STATUS + "!= ?",
+                    new String[] {Status.DONE.toString()},
+                    TodoProvider.DUE_TIME);
+
+            // if nothing found, return null
+            if (cursor == null || !cursor.moveToFirst()) {
+                return -1L;
+            }
+            // otherwise return the first located item
+            else {
+                TodoItem todoItem = todoItemFromCursor(cursor);
+                return todoItem.dueTime.get();
+            }
+
+        } finally {
+            // BE SURE TO CLOSE THE CURSOR!!!
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
     // helper method to find items that are due
@@ -127,6 +169,7 @@ public class Util {
         }
     }
 
+    // translate cursor to actual item
     public static TodoItem todoItemFromCursor(Cursor cursor) {
         return new TodoItem(cursor.getLong(0),
                 cursor.getString(1),

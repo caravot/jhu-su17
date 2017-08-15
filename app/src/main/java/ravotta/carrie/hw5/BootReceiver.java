@@ -11,14 +11,11 @@ import android.util.Log;
 public class BootReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
-        // TODO finish this and test; trigger is turn off/on the phone
-        Log.d("bootreceiver", "here");
 		Intent intent1 = new Intent(context, AlarmReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//
-//        // sleep 15 seconds
+
 		alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
 	}
 }

@@ -73,8 +73,7 @@ public class EditActivity extends AppCompatActivity {
                 todoItem.status.set(Status.PENDING);
 
                 // update due time to be in 10 seconds
-                // TODO update to be 10 seconds
-                long retryDate = System.currentTimeMillis() + (1 * 60 * 1000);
+                long retryDate = System.currentTimeMillis() + (10 * 1000);
                 todoItem.dueTime.set(retryDate);
 
                 // update the item in the database

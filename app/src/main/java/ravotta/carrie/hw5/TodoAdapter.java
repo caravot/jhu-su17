@@ -3,7 +3,6 @@ package ravotta.carrie.hw5;
 import android.content.Context;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
-import android.support.v4.content.CursorLoader;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,8 +57,7 @@ public class TodoAdapter extends CursorRecyclerViewAdapter<TodoAdapter.ViewHolde
         final TodoItem todoItem = Util.todoItemFromCursor(cursor);
 
         holder.todoRowBinding.setTodoItem(todoItem);
-        //This is much important as when we have to bind its method !
-        //TODO holder.todoRowBinding.set(this);
+
         //This is to bind immediately as it schedules binding, so to make force binding!
         holder.todoRowBinding.executePendingBindings();
     }

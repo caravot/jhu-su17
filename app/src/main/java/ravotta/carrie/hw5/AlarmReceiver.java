@@ -17,13 +17,16 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 1;
 
 	public void onReceive(Context context, Intent intent) {
+        // get all items due
 		ArrayList<TodoItem> todoItems = Util.findDueTodos(context);
 
         if (todoItems != null) {
+            // set the item list view
             NotificationCompat.InboxStyle details = new NotificationCompat.InboxStyle()
                     .setBigContentTitle("Item List")
                     .setSummaryText(todoItems.size() + " Items Due");
 
+            // get only the first 5 items due
             for (int i = 0; i < Math.min(5, todoItems.size()); i++) {
                 details.addLine("Item " + (i + 1) + " : " + todoItems.get(i).name.get());
 
@@ -34,10 +37,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }
             }
 
+            // setup action buttons
             PendingIntent mainAction = createPending(context, 0, "View App");
             PendingIntent snoozeAction = createPending(context, 3, "Snooze All");
             PendingIntent clearAction = createPending(context, 4, "All Done");
 
+            // create notification
             notification = new NotificationCompat.Builder(context)
                     .setContentTitle(todoItems.size() + " Items Due")
                     .setStyle(details)
@@ -55,8 +60,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 	}
 
+	// create intents for action buttons
     private PendingIntent createPending(Context context, int id, String info) {
-        Intent intent = new Intent("ravotta.carrie.hw5.itemsdue2");
+        Intent intent = new Intent("ravotta.carrie.hw5.action");
         intent.putExtra("actionId", id);
 
         return PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
